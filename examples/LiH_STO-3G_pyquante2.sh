@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-python water_3-21g_pyquante2.py | tee water_3-21g_pyquante2.out
+python LiH_STO-3G_pyquante2.py | tee LiH_STO-3G_pyquante2.out

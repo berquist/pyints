@@ -27,3 +27,7 @@ npt.assert_allclose(np.array([E_tot_qchem]), E_total_qchem, rtol=1e-7, atol=1e-5
 S_pyquante2 = np.loadtxt('pyquante2.S.txt')
 T_pyquante2 = np.loadtxt('pyquante2.T.txt')
 V_pyquante2 = np.loadtxt('pyquante2.V.txt')
+
+npt.assert_allclose(S_qchem, S_pyquante2, rtol=1e-7, atol=1e-5)
+npt.assert_allclose(T_qchem, T_pyquante2, rtol=1e-7, atol=1e-5)
+npt.assert_allclose(V_qchem, V_pyquante2, rtol=1e-7, atol=1e-5)

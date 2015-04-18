@@ -6,25 +6,27 @@ import numpy as np
 
 import pyquante2
 
-water = pyquante2.molecule([
-    (8,  0.0000,   0.0000,   0.1173),
-    (1,  0.0000,   0.7572,  -0.4692),
-    (1,  0.0000,  -0.7572,  -0.4692)],
-                 units='Angstrom',
-                 charge=0,
-                 multiplicity=1,
-                 name='water')
+with open('LiH.xyz') as molfile:
+    mollines = molfile.readlines()[2:]
 
-print(water)
+mol = pyquante2.geo.molecule.read_xyz_lines(mollines,
+                                            units='Angstrom',
+                                            charge=0,
+                                            multiplicity=1,
+                                            name='LiH')
 
-water_basis = pyquante2.basisset(water, '3-21g')
+del mollines
 
-print(water_basis)
-# print('There are {} basis functions.'.format(len(water_basis)))
-print('There are {} shells.'.format(len(water_basis.shells)))
-print(water_basis.shells)
+print(mol)
 
-solver = pyquante2.uhf(water, water_basis)
+mol_basis = pyquante2.basisset(mol, 'STO-3G')
+
+print(mol_basis)
+# print('There are {} basis functions.'.format(len(mol_basis)))
+print('There are {} shells.'.format(len(mol_basis.shells)))
+print(mol_basis.shells)
+
+solver = pyquante2.uhf(mol, mol_basis)
 solver.converge(tol=1e-10, maxiters=1000)
 
 print(solver)
@@ -41,4 +43,3 @@ i1 = solver.i1
 np.savetxt('pyquante2.S.txt', i1.S)
 np.savetxt('pyquante2.T.txt', i1.T)
 np.savetxt('pyquante2.V.txt', i1.V)
-

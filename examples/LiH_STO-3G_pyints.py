@@ -18,25 +18,25 @@ from pyints.utils import fact2
 # 5. make calls for step 4
 
 ### Step 1
-with open('water.xyz') as water_file:
-    water_lines = water_file.readlines()[2:]
+with open('LiH.xyz') as molfile:
+    mollines = molfile.readlines()[2:]
 
-water = pyquante2.geo.molecule.read_xyz_lines(water_lines,
-                                              units='Angstrom',
-                                              charge=0,
-                                              multiplicity=1,
-                                              name='water')
+mol = pyquante2.geo.molecule.read_xyz_lines(mollines,
+                                            units='Angstrom',
+                                            charge=0,
+                                            multiplicity=1,
+                                            name='LiH')
 
-# print(water)
-del water_lines
+# print(mol)
+del mollines
 
 ### Step 2 and step 3
-water_basis = pyquante2.basisset(water, '3-21g')
+mol_basis = pyquante2.basisset(mol, 'STO-3G')
 
 # print('Basis:')
-# print(water_basis)
+# print(mol_basis)
 
-bfs = water_basis.bfs
+bfs = mol_basis.bfs
 nbfs = len(bfs)
 
 ### Step 4
