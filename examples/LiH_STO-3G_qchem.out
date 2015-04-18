@@ -1,0 +1,425 @@
+/home/espeon/opt/apps/qchem/trunk_intel_release/exe/qcprog.exe .LiH_STO-3G_qchem.in.21464.qcin.1 /home/espeon/scratch/qchem/qchem21464/
+
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 4.3 (beta), Q-Chem, Inc., Pleasanton, CA (2015)
+
+ Y. Shao,  Z. Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  J. Deng,  X. Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  R. Z. Khaliullin,  
+ T. Kus,  A. Landau,  J. Liu,  E. I. Proynov,  Y. M. Rhee,  R. M. Richard,  
+ M. A. Rohrdanz,  R. P. Steele,  E. J. Sundstrom,  H. L. Woodcock III,  
+ P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  B. Austin,  
+ S. A. Baeppler,  G. J. O. Beran,  Y. A. Bernard,  E. Berquist,  
+ K. Brandhorst,  K. B. Bravaya,  S. T. Brown,  D. Casanova,  C.-M. Chang,  
+ Y. Chen,  S. H. Chien,  K. D. Closser,  D. L. Crittenden,  M. Diedenhofen,  
+ R. A. DiStasio Jr.,  H. Do,  A. D. Dutoi,  R. G. Edgar,  P.-T. Fang,  
+ S. Fatehi,  Q. Feng,  L. Fusti-Molnar,  A. Ghysels,  
+ A. Golubeva-Zadorozhnaya,  J. Gomes,  A. Gunina,  M. W. D. Hanson-Heine,  
+ P. H. P. Harbach,  A. W. Hauser,  E. G. Hohenstein,  Z. C. Holden,  K. Hui,  
+ T.-C. Jagau,  H. Ji,  B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  Jihan Kim,  
+ R. A. King,  P. Klunzinger,  D. Kosenkov,  T. Kowalczyk,  C. M. Krauter,  
+ K. U. Lao,  A. Laurent,  K. V. Lawler,  S. Lehtola,  S. V. Levchenko,  
+ C. Y. Lin,  Y.-S. Lin,  F. Liu,  E. Livshits,  R. C. Lochan,  A. Luenser,  
+ P. Manohar,  S. F. Manzer,  S.-P. Mao,  N. Mardirossian,  A. V. Marenich,  
+ L. A. Martinez-Martinez,  S. A. Maurer,  N. J. Mayhall,  K. Nanda,  
+ C. M. Oana,  R. Olivares-Amaya,  D. P. O'Neill,  J. A. Parkhill,  
+ T. M. Perrine,  R. Peverati,  P. A. Pieniazek,  F. Plasser,  A. Prociuk,  
+ D. R. Rehn,  E. Rosta,  N. J. Russ,  N. Sergueev,  S. M. Sharada,  
+ S. Sharma,  D. W. Small,  A. Sodt,  T. Stauch,  T. Stein,  D. Stuck,  
+ Y.-C. Su,  A. J. W. Thom,  T. Tsuchimochi,  L. Vogt,  O. Vydrov,  T. Wang,  
+ M. A. Watson,  J. Wenzel,  A. White,  C. F. Williams,  V. Vanovschi,  
+ S. Yeganeh,  S. R. Yost,  Z.-Q. You,  I. Y. Zhang,  X. Zhang,  Y. Zhao,  
+ B. R. Brooks,  G. K. L. Chan,  D. M. Chipman,  C. J. Cramer,  
+ W. A. Goddard III,  M. S. Gordon,  W. J. Hehre,  A. Klamt,  
+ H. F. Schaefer III,  M. W. Schmidt,  C. D. Sherrill,  D. G. Truhlar,  
+ A. Warshel,  X. Xu,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ J.-D. Chai,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  S. R. Gwaltney,  
+ C.-P. Hsu,  Y. Jung,  J. Kong,  D. S. Lambrecht,  W. Liang,  C. Ochsenfeld,  
+ V. A. Rassolov,  L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  
+ J. M. Herbert,  A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  J. Baker,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ H. Dachsel,  R. J. Doerksen,  G. Hawkins,  A. Heyden,  S. Hirata,  
+ G. Kedziora,  F. J. Keil,  C. Kelley,  P. P. Korambath,  W. Kurlancheek,  
+ A. M. Lee,  M. S. Lee,  D. Liotard,  I. Lotan,  P. E. Maslen,  N. Nair,  
+ D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
+ N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
+
+ Please cite Q-Chem as follows:
+ Y. Shao et al., Mol. Phys. 113, 184-215 (2014)
+ DOI: 10.1080/00268976.2014.952696
+
+ Q-Chem 4.3.0 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 4.550.3 (Singapore Sling Deluxe).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Sat Apr 18 17:02:08 2015  
+
+Host: osmium
+0
+
+     Scratch files written to /home/espeon/scratch/qchem/qchem21464//
+ Mar15 |home|espeon|opt|apps|qchem|trunk_RNUM -1
+
+Checking the input file for inconsistencies...	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$rem
+ method = hf
+ basis = sto-3g
+ scf_convergence = 10
+ thresh = 14
+ scf_final_print = 3
+ print_general_basis = true
+ iprint = 1000
+ symmetry = false
+ sym_ignore = true
+$end
+
+$molecule
+0 1
+Li 0.0000 0.0000 0.0000
+H  0.0000 0.0000 1.5949
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      Li      0.0000000000     0.0000000000     0.0000000000
+    2      H       0.0000000000     0.0000000000     1.5949000000
+ ----------------------------------------------------------------
+ Nuclear Repulsion Energy =     0.9953800441 hartrees
+ There are        2 alpha and        2 beta electrons
+ Requested basis set is STO-3G
+Basis set in general basis input format:
+-----------------------------------------------------------------------
+$basis
+Li   0
+S    3    1.000000
+   1.61195750E+01    1.54328970E-01 
+   2.93620070E+00    5.35328140E-01 
+   7.94650500E-01    4.44634540E-01 
+SP   3    1.000000
+   6.36289700E-01   -9.99672300E-02   1.55916270E-01 
+   1.47860100E-01    3.99512830E-01   6.07683720E-01 
+   4.80887000E-02    7.00115470E-01   3.91957390E-01 
+****
+H    0
+S    3    1.000000
+   3.42525091E+00    1.54328970E-01 
+   6.23913730E-01    5.35328140E-01 
+   1.68855400E-01    4.44634540E-01 
+****
+$end
+-----------------------------------------------------------------------
+ There are 3 shells and 6 basis functions
+
+Total QAlloc Memory Limit   2000 MB
+Mega-Array Size        61 MB
+MEM_STATIC part        62 MB
+
+                       Distance Matrix (Angstroms)
+             Li(  1)
+   H (  2)  1.594900
+ 
+ A cutoff of  1.0D-14 yielded      6 shell pairs
+ There are        27 function pairs
+ 
+ -------------------------------------------------------
+ OpenMP Integral Computing Module                       
+ Release: version 1.0, May 2013, Q-Chem Inc. Pittsburgh 
+ -------------------------------------------------------
+ Integral Job Info:
+ Integral job number is                      11
+ Integral operator is                         1
+ short-range coefficients               -999999
+ long-range coefficients                -999999
+ Omega coefficients                           0
+ if combine SR and LR in K              -999999
+ Integral screening is                        0
+ Integral computing path is                   2
+ max size of driver memory is            800000
+ size of driver memory is                 45569
+ size of scratch memory is               945100
+ max col of scratch BK array                289
+ max len of scratch array in speh3           22
+ max len of scratch index in speh4            8
+ max int batch size is                      520
+ min int batch size is                       52
+ fixed nKL is                                52
+ max L of basis functions is                  1
+ order of int derivative is                   0
+ number of shells is                          3
+ number of basis is                           6
+ number of cartesian basis is                 6
+ number of contracted shell pairs             6
+ number of primitive shell pairs             54
+ maxK2 (contraction) of shell pair            9
+ max number of K2 of shell pair               1
+ max number of CS2 of shell pair              3
+ max number of PS2 of shell pair             27
+ mem total for path MDJ                    6006
+ -------------------------------------------------------
+ Smallest overlap matrix eigenvalue = 3.45E-01
+
+  Scale SEOQF with 1.000000e+00/1.000000e+00/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000027 hartrees
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ SCF converges when DIIS error is below 1.0E-10
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1      -7.5694039737      5.34E-02
+    2      -7.8528596007      2.46E-02
+    3      -7.8609650814      5.31E-03
+    4      -7.8618445140      1.91E-03
+    5      -7.8620266538      9.41E-05
+    6      -7.8620269562      8.44E-06
+    7      -7.8620269586      2.93E-07
+    8      -7.8620269586      9.92E-09
+    9      -7.8620269586      8.13E-08
+   10      -7.8620269586      1.59E-08
+   11      -7.8620269586      7.76E-09
+   12      -7.8620269586      2.13E-07
+   13      -7.8620269586      6.08E-08
+   14      -7.8620269586      2.93E-08
+   15      -7.8620269586      3.07E-10
+   16      -7.8620269586      1.90E-12 Convergence criterion met
+ ---------------------------------------
+ One-Electron    Energy =   -12.4461161719
+ Total Coulomb   Energy =     5.7617212051
+ Alpha Exchange  Energy =    -1.0865060167
+ Beta  Exchange  Energy =    -1.0865060167
+ DFT   Exchange  Energy =     0.0000000000
+ DFT Correlation Energy =     0.0000000000
+ Nuclear Repu.   Energy =     0.9953800414
+ Nuclear Attr.   Energy =   -20.4023111798
+ Kinetic         Energy =     7.9561950080
+ SCF time:  CPU 0.02 s  wall 0.03 s
+ Final Alpha MO Eigenvalues
+            1           2           3           4           5           6
+    1  -2.3486442  -0.2857047   0.0782618   0.1639384   0.1639384   0.5491293
+ Final Alpha MO Coefficients
+            1           2           3           4           5           6
+    1   0.9912454  -0.1674235  -0.2099775   0.0000000   0.0000000   0.0928383
+    2   0.0326781   0.4547932   0.7996172   0.0000000  -0.0000000  -0.7047249
+    3  -0.0000000  -0.0000000   0.0000000  -0.0000002   1.0000000  -0.0000000
+    4  -0.0000000   0.0000000  -0.0000000   1.0000000   0.0000002   0.0000000
+    5  -0.0063471   0.3462000  -0.6121383  -0.0000000   0.0000000  -0.9810008
+    6   0.0044703   0.5487806  -0.1397933  -0.0000000   0.0000000   1.1873744
+ Final Alpha density matrix.
+            1           2           3           4           5           6
+    1   1.0105981  -0.0437511  -0.0000000  -0.0000000  -0.0642535  -0.0874476
+    2  -0.0437511   0.2079047  -0.0000000   0.0000000   0.1572420   0.2497278
+    3  -0.0000000  -0.0000000   0.0000000   0.0000000  -0.0000000  -0.0000000
+    4  -0.0000000   0.0000000   0.0000000   0.0000000   0.0000000   0.0000000
+    5  -0.0642535   0.1572420  -0.0000000   0.0000000   0.1198947   0.1899594
+    6  -0.0874476   0.2497278  -0.0000000   0.0000000   0.1899594   0.3011801
+ Final Alpha Fock Matrix
+               1               2               3               4
+    1   -2.3460130488   -0.6399251460    0.0000000000    0.0000000000
+    2   -0.6399251460   -0.2275778936    0.0000000000    0.0000000000
+    3    0.0000000000    0.0000000000    0.1639384258   -0.0000000000
+    4    0.0000000000    0.0000000000   -0.0000000000    0.1639384254
+    5    0.0141113462   -0.1048921895    0.0000000000   -0.0000000000
+    6   -0.1834458778   -0.2695067157    0.0000000000   -0.0000000000
+               5               6
+    1    0.0141113462   -0.1834458778
+    2   -0.1048921895   -0.2695067157
+    3    0.0000000000    0.0000000000
+    4   -0.0000000000   -0.0000000000
+    5   -0.0006524450   -0.2354066587
+    6   -0.2354066587   -0.1504620866
+ Core Hamiltonian Matrix
+           1         2         3         4         5         6
+    1  -4.73789  -1.06458   0.00000   0.00000  -0.01620  -0.30557
+    2  -1.06458  -1.39642   0.00000   0.00000  -0.12245  -0.69637
+    3   0.00000   0.00000  -1.13628   0.00000   0.00000   0.00000
+    4   0.00000   0.00000   0.00000  -1.13628   0.00000   0.00000
+    5  -0.01620  -0.12245   0.00000   0.00000  -1.23467  -0.84086
+    6  -0.30557  -0.69637   0.00000   0.00000  -0.84086  -1.45930
+ Orthonormalization Matrix
+           1         2         3         4         5         6
+    1   1.02307  -0.12871   0.00000  -0.00000  -0.00452   0.00641
+    2  -0.12871   1.11171  -0.00000  -0.00000   0.11410  -0.28006
+    3   0.00000  -0.00000   1.00000   0.00000   0.00000   0.00000
+    4  -0.00000  -0.00000   0.00000   1.00000   0.00000   0.00000
+    5  -0.00452   0.11410   0.00000   0.00000   1.14639  -0.36017
+    6   0.00641  -0.28006   0.00000   0.00000  -0.36017   1.23385
+ Overlap Matrix
+             1             2             3             4             5
+    1    1.00000000    0.24113665    0.00000000    0.00000000    0.00000000
+    2    0.24113665    1.00000000    0.00000000    0.00000000    0.00000000
+    3    0.00000000    0.00000000    1.00000000    0.00000000    0.00000000
+    4    0.00000000    0.00000000    0.00000000    1.00000000    0.00000000
+    5    0.00000000    0.00000000    0.00000000    0.00000000    1.00000000
+    6    0.06724498    0.39654496    0.00000000    0.00000000    0.51386406
+             6
+    1    0.06724498
+    2    0.39654496
+    3    0.00000000
+    4    0.00000000
+    5    0.51386406
+    6    1.00000000
+ Kinetic Energy Matrix
+           1         2         3         4         5         6
+    1   3.57679  -0.02024   0.00000   0.00000   0.00000  -0.01579
+    2  -0.02024   0.10216   0.00000   0.00000   0.00000   0.04250
+    3   0.00000   0.00000   0.31968   0.00000   0.00000   0.00000
+    4   0.00000   0.00000   0.00000   0.31968   0.00000   0.00000
+    5   0.00000   0.00000   0.00000   0.00000   0.31968   0.12943
+    6  -0.01579   0.04250   0.00000   0.00000   0.12943   0.76003
+ Nuclear Attraction Matrix
+           1         2         3         4         5         6
+    1  -8.31467  -1.04435   0.00000   0.00000  -0.01620  -0.28979
+    2  -1.04435  -1.49859   0.00000   0.00000  -0.12245  -0.73886
+    3   0.00000   0.00000  -1.45596   0.00000   0.00000   0.00000
+    4   0.00000   0.00000   0.00000  -1.45596   0.00000   0.00000
+    5  -0.01620  -0.12245   0.00000   0.00000  -1.55435  -0.97029
+    6  -0.28979  -0.73886   0.00000   0.00000  -0.97029  -2.21933
+ Multipole Matrix (1,0,0)
+           1         2         3         4         5         6
+    1   0.00000   0.00000   0.14724   0.00000   0.00000   0.00000
+    2   0.00000   0.00000   1.80330   0.00000   0.00000   0.00000
+    3   0.14724   1.80330   0.00000   0.00000   0.00000   0.32886
+    4   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    5   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    6   0.00000   0.00000   0.32886   0.00000   0.00000   0.00000
+ Multipole Matrix (0,1,0)
+           1         2         3         4         5         6
+    1   0.00000   0.00000   0.00000   0.14724   0.00000   0.00000
+    2   0.00000   0.00000   0.00000   1.80330   0.00000   0.00000
+    3   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    4   0.14724   1.80330   0.00000   0.00000   0.00000   0.32886
+    5   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    6   0.00000   0.00000   0.00000   0.32886   0.00000   0.00000
+ Multipole Matrix (0,0,1)
+           1         2         3         4         5         6
+    1   0.00000   0.00000   0.00000   0.00000   0.14724   0.03670
+    2   0.00000   0.00000   0.00000   0.00000   1.80330   0.93925
+    3   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    4   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    5   0.14724   1.80330   0.00000   0.00000   0.00000   1.43159
+    6   0.03670   0.93925   0.00000   0.00000   1.43159   3.01392
+ Multipole Matrix (2,0,0)
+           1         2         3         4         5         6
+    1   0.13802   0.11421   0.00000   0.00000   0.00000   0.02572
+    2   0.11421   3.88914   0.00000   0.00000   0.00000   0.61920
+    3   0.00000   0.00000   7.05010   0.00000   0.00000   0.00000
+    4   0.00000   0.00000   0.00000   2.35003   0.00000   0.00000
+    5   0.00000   0.00000   0.00000   0.00000   2.35003   0.63675
+    6   0.02572   0.61920   0.00000   0.00000   0.63675   0.64952
+ Multipole Matrix (1,1,0)
+           1         2         3         4         5         6
+    1   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    2   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    3   0.00000   0.00000   0.00000   2.35003   0.00000   0.00000
+    4   0.00000   0.00000   2.35003   0.00000   0.00000   0.00000
+    5   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    6   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+ Multipole Matrix (0,2,0)
+           1         2         3         4         5         6
+    1   0.13802   0.11421   0.00000   0.00000   0.00000   0.02572
+    2   0.11421   3.88914   0.00000   0.00000   0.00000   0.61920
+    3   0.00000   0.00000   2.35003   0.00000   0.00000   0.00000
+    4   0.00000   0.00000   0.00000   7.05010   0.00000   0.00000
+    5   0.00000   0.00000   0.00000   0.00000   2.35003   0.63675
+    6   0.02572   0.61920   0.00000   0.00000   0.63675   0.64952
+ Multipole Matrix (1,0,1)
+           1         2         3         4         5         6
+    1   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    2   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    3   0.00000   0.00000   0.00000   0.00000   2.35003   0.63675
+    4   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    5   0.00000   0.00000   2.35003   0.00000   0.00000   0.00000
+    6   0.00000   0.00000   0.63675   0.00000   0.00000   0.00000
+ Multipole Matrix (0,1,1)
+           1         2         3         4         5         6
+    1   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    2   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    3   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+    4   0.00000   0.00000   0.00000   0.00000   2.35003   0.63675
+    5   0.00000   0.00000   0.00000   2.35003   0.00000   0.00000
+    6   0.00000   0.00000   0.00000   0.63675   0.00000   0.00000
+ Multipole Matrix (0,0,2)
+           1         2         3         4         5         6
+    1   0.13802   0.11421   0.00000   0.00000   0.00000   0.05510
+    2   0.11421   3.88914   0.00000   0.00000   0.00000   2.88387
+    3   0.00000   0.00000   2.35003   0.00000   0.00000   0.00000
+    4   0.00000   0.00000   0.00000   2.35003   0.00000   0.00000
+    5   0.00000   0.00000   0.00000   0.00000   7.05010   4.41880
+    6   0.05510   2.88387   0.00000   0.00000   4.41880   9.73326
+ SCF   energy in the final basis set = -7.8620269586
+ Total energy in the final basis set = -7.8620269586
+ Analysis of SCF Wavefunction
+ 
+ --------------------------------------------------------------
+ 
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+ -2.349  -0.286
+ -- Virtual --
+  0.078   0.164   0.164   0.549
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Li                   -0.016117
+      2 H                     0.016117
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z      -4.8575
+       Tot       4.8575
+    Quadrupole Moments (Debye-Ang)
+        XX      -5.2782     XY      -0.0000     YY      -5.2782
+        XZ       0.0000     YZ      -0.0000     ZZ      -8.8300
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -5.4453    XYZ       0.0000
+       YYZ      -5.4453    XZZ       0.0000    YZZ      -0.0000
+       ZZZ     -17.8938
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX     -12.4612   XXXY      -0.0000   XXYY      -4.1537
+      XYYY      -0.0000   YYYY     -12.4612   XXXZ       0.0000
+      XXYZ      -0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXZZ      -9.4403   XYZZ      -0.0000   YYZZ      -9.4403
+      XZZZ       0.0000   YZZZ      -0.0000   ZZZZ     -44.4995
+ -----------------------------------------------------------------
+Archival summary:
+1\1\osmium\SP\HF\STO-3G\i11\espeon\SatApr1817:02:082015SatApr1817:02:082015\0\\#,HF,STO-3G,\\0,1\Li\H,1,1.5949\\HF=-7.86202696\\@
+
+ Total job time:  0.31s(wall), 0.31s(cpu) 
+ Sat Apr 18 17:02:08 2015
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
