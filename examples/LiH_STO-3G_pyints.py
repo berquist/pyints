@@ -7,17 +7,9 @@ import numpy as np
 import pyquante2
 
 # from pyints.integrals import obarasaika
-from obarasaika.obara_saika import get_overlap
-from obarasaika.obara_saika import get_kinetic
+import obarasaika.obara_saika as os
 from pyints.utils import fact2
 
-# 1. read in the molecular geometry in an appropriate form
-# 2. read in the basis set in an appropriate form
-# 3. from the desired basis set and molecular geometry, place the basis functions at atomic centers
-# 4. create calls to integral code for step 3
-# 5. make calls for step 4
-
-### Step 1
 with open('LiH.xyz') as molfile:
     mollines = molfile.readlines()[2:]
 
@@ -30,66 +22,199 @@ mol = pyquante2.geo.molecule.read_xyz_lines(mollines,
 # print(mol)
 del mollines
 
-### Step 2 and step 3
 mol_basis = pyquante2.basisset(mol, 'STO-3G')
 
 # print('Basis:')
 # print(mol_basis)
 
 bfs = mol_basis.bfs
-nbfs = len(bfs)
-
-### Step 4
 
 ## overlap (S) integrals
 
-def norm(pgbf):
-    """Return the normalization constant for a primitive Cartesian basis
-    function.
-    """
-    nx, ny, nz = pgbf.powers
-    zeta = pgbf.exponent
-    p1 = pow(2*zeta/pi, 0.75)
-    p2 = pow(4*zeta, (nx+ny+nz)/0.5)
-    p3 = pow(fact2(2*nx-1)*fact2(2*ny-1)*fact2(2*nz-1), -0.5)
-    return p1*p2*p3
+def overlap(alpha1, lmn1, A, alpha2, lmn2, B):
+    za, zb, la, lb, ra, rb = alpha1, alpha2, lmn1, lmn2, A, B
+    return os.get_overlap(za, zb, ra, rb, la + lb)
 
-S_unnorm_pyints = np.zeros(shape=(nbfs, nbfs))
-S_unnorm_pyquante2 = np.zeros(shape=(nbfs, nbfs))
-S_norm_pyints = np.zeros(shape=(nbfs, nbfs))
-S_norm_pyquante2 = np.zeros(shape=(nbfs, nbfs))
-for mu, cgbf_a in enumerate(bfs):
-    ra, la = cgbf_a.origin, list(cgbf_a.powers)
-    for nu, cgbf_b in enumerate(bfs):
-        rb, lb = cgbf_b.origin, list(cgbf_b.powers)
-        s_norm_pyquante2 = pyquante2.ints.one.S(cgbf_a, cgbf_b)
-        S_norm_pyquante2[mu, nu] = s_norm_pyquante2
-        # loop over primitives in each contracted function
-        for pgbf_a, ca in zip(cgbf_a.pgbfs, cgbf_a.coefs):
-            za = pgbf_a.exponent
-            for pgbf_b, cb in zip(cgbf_b.pgbfs, cgbf_a.coefs):
-                zb = pgbf_b.exponent
-                s_unnorm_pyints = get_overlap(za, zb, ra, rb, la + lb)
-                s_unnorm_pyquante2 = pyquante2.ints.one.overlap(za, la, ra, zb, lb, rb)
-                S_unnorm_pyints[mu, nu] += (ca*cb*s_unnorm_pyints)
-                S_unnorm_pyquante2[mu, nu] += (ca*cb*s_unnorm_pyquante2)
-                S_norm_pyints[mu, nu] += (ca*cb*norm(pgbf_a)*norm(pgbf_b)*s_unnorm_pyints)
+def S(a, b):
+    if b.contracted:
+        return sum(cb * S(pb, a) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * S(b, pa) for (ca, pa) in a)
+    return a.norm * b.norm * overlap(a.exponent, list(a.powers), a.origin,
+                                     b.exponent, list(b.powers), b.origin)
+
+def makeS(mol, bfs):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = S(a, b)
+    return ints
+
+S_pyints = makeS(mol, bfs)
+
+np.savetxt('pyints.S.txt', S_pyints)
 
 ## kinetic energy (T) integrals
 
-# # loop over contracted basis functions
-# for cgbf_a in bfs:
-#     ra, ca = cgbf_a.origin, list(cgbf_a.powers)
-#     for cgbf_b in bfs:
-#         rb, cb = cgbf_b.origin, list(cgbf_b.powers)
-#         # loop over primitives
-#         for pgbf_a in zip(cgbf_a.coefs, cgbf_a.pnorms, cgbf_a.pexps):
-#             za = pgbf_a[2]
-#             for pgbf_b in zip(cgbf_b.coefs, cgbf_b.pnorms, cgbf_b.pexps):
-#                 zb = pgbf_b[2]
-#                 t = get_kinetic(za, zb, ra, rb, ca + cb)
-#                 print(t)
+def kinetic(alpha1, lmn1, A, alpha2, lmn2, B):
+    za, zb, la, lb, ra, rb = alpha1, alpha2, lmn1, lmn2, A, B
+    return os.get_kinetic(za, zb, ra, rb, la + lb)
+
+def T(a, b):
+    if b.contracted:
+        return sum(cb * T(pb, a) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * T(b, pa) for (ca, pa) in a)
+    return a.norm * b.norm * kinetic(a.exponent, list(a.powers), a.origin,
+                                     b.exponent, list(b.powers), b.origin)
+
+def makeT(mol, bfs):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = T(a, b)
+    return ints
+
+T_pyints = makeT(mol, bfs)
+
+np.savetxt('pyints.T.txt', T_pyints)
 
 ## nuclear attraction (V) integrals
 
-## Coulomb (TEI/ERI) integrals
+def nuclear_attraction(alpha1, lmn1, A, alpha2, lmn2, B, C):
+    za, zb, la, lb, ra, rb, rc = alpha1, alpha2, lmn1, lmn2, A, B, C
+    return os.get_nuclear(za, zb, ra, rb, rc, la + lb)
+
+def V(a, b, C):
+    if b.contracted:
+        return sum(cb * V(pb, a, C) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * V(b, pa, C) for (ca, pa) in a)
+    return a.norm * b.norm * nuclear_attraction(a.exponent, list(a.powers), a.origin,
+                                                b.exponent, list(b.powers), b.origin,
+                                                C)
+
+def makeV(mol, bfs):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = sum(at.Z * V(a, b, at.r) for at in mol)
+    return ints
+
+V_pyints = makeV(mol, bfs)
+
+np.savetxt('pyints.V.txt', V_pyints)
+
+## Cartesian moment (M) integrals
+
+def cartesian_moment(alpha1, lmn1, A, alpha2, lmn2, B, C, order):
+    za, zb, la, lb, ra, rb, rc = alpha1, alpha2, lmn1, lmn2, A, B, C
+    return os.get_moment(za, zb, ra, rb, rc, la + lb, order)
+
+def M(a, b, C, order):
+    if b.contracted:
+        return sum(cb * M(pb, a, C, order) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * M(b, pa, C, order) for (ca, pa) in a)
+    return a.norm * b.norm * cartesian_moment(a.exponent, list(a.powers), a.origin,
+                                              b.exponent, list(b.powers), b.origin,
+                                              C, order)
+
+def makeM(mol, bfs, origin, order):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = M(a, b, origin, order)
+    return ints
+
+M001_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 0, 1])
+M002_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 0, 2])
+M010_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 1, 0])
+M011_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 1, 1])
+M020_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 2, 0])
+M100_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 0, 0])
+M101_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 0, 1])
+M110_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 1, 0])
+M200_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [2, 0, 0])
+
+np.savetxt('pyints.M001.txt', M001_pyints)
+np.savetxt('pyints.M002.txt', M002_pyints)
+np.savetxt('pyints.M010.txt', M010_pyints)
+np.savetxt('pyints.M011.txt', M011_pyints)
+np.savetxt('pyints.M020.txt', M020_pyints)
+np.savetxt('pyints.M100.txt', M100_pyints)
+np.savetxt('pyints.M101.txt', M101_pyints)
+np.savetxt('pyints.M110.txt', M110_pyints)
+np.savetxt('pyints.M200.txt', M200_pyints)
+
+## electric field (E) integrals
+
+def electric_field(alpha1, lmn1, A, alpha2, lmn2, B, C, order):
+    pass
+
+def E(a, b, C, order):
+    if b.contracted:
+        return sum(cb * E(pb, a, C, order) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * E(b, pa, C, order) for (ca, pa) in a)
+    return a.norm * b.norm * electric_field(a.exponent, list(a.powers), a.origin,
+                                            b.exponent, list(b.powers), b.origin,
+                                            C, order)
+
+def makeE(mol, bfs, origin, order):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = E(a, b, origin, order)
+    return ints
+
+
+## angular momentum (L) integrals
+
+def angular_momentum(alpha1, lmn1, A, alpha2, lmn2, B, C):
+    pass
+
+def L(a, b, C):
+    if b.contracted:
+        return sum(cb * L(pb, a, C) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * L(b, pa, C) for (ca, pa) in a)
+    return a.norm * b.norm * angular_momentum(a.exponent, list(a.powers), a.origin,
+                                              b.exponent, list(b.powers), b.origin,
+                                              C)
+
+def makeL(mol, bfs, origin):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = L(a, b, origin)
+    return ints
+
+
+## spin-orbit interaction (J) integrals
+
+def spin_orbit(alpha1, lmn1, A, alpha2, lmn2, B, C):
+    pass
+
+def J(a, b, C):
+    if b.contracted:
+        return sum(cb * J(pb, a, C) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * J(b, pa, C) for (ca, pa) in a)
+    return a.norm * b.norm * spin_orbit(a.exponent, list(a.powers), a.origin,
+                                        b.exponent, list(b.powers), b.origin,
+                                        C)
+
+def makeJ(mol, bfs, origin):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = J(a, b, origin)
+    return ints

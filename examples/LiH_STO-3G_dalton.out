@@ -1,0 +1,2693 @@
+
+
+     ************************************************************************
+     *************** Dalton - An Electronic Structure Program ***************
+     ************************************************************************
+
+    This is output from DALTON 2013.4
+   ----------------------------------------------------------------------------
+    NOTE:
+     
+    Dalton is an experimental code for the evaluation of molecular
+    properties using (MC)SCF, DFT, CI, and CC wave functions.
+    The authors accept no responsibility for the performance of
+    the code or for the correctness of the results.
+     
+    The code (in whole or part) is provided under a licence and
+    is not to be reproduced for further distribution without
+    the written permission of the authors or their representatives.
+     
+    See the home page "http://daltonprogram.org" for further information.
+     
+    If results obtained with this code are published,
+    the appropriate citations would be both of:
+     
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
+       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
+       P. Dahle, E. K. Dalskov, U. Ekstroem, T. Enevoldsen,
+       J. J. Eriksen, P. Ettenhuber, B. Fernandez, L. Ferrighi,
+       H. Fliegl, L. Frediani, K. Hald, A. Halkier, C. Haettig,
+       H. Heiberg, T. Helgaker, A. C. Hennum, H. Hettema,
+       E. Hjertenaes, S. Hoest, I.-M. Hoeyvik, M. F. Iozzi,
+       B. Jansik, H. J. Aa. Jensen, D. Jonsson, P. Joergensen,
+       J. Kauczor, S. Kirpekar, T. Kjaergaard, W. Klopper,
+       S. Knecht, R. Kobayashi, H. Koch, J. Kongsted, A. Krapp,
+       K. Kristensen, A. Ligabue, O. B. Lutnaes, J. I. Melo,
+       K. V. Mikkelsen, R. H. Myhre, C. Neiss, C. B. Nielsen,
+       P. Norman, J. Olsen, J. M. H. Olsen, A. Osted,
+       M. J. Packer, F. Pawlowski, T. B. Pedersen, P. F. Provasi,
+       S. Reine, Z. Rinkevicius, T. A. Ruden, K. Ruud, V. Rybkin,
+       P. Salek, C. C. M. Samson, A. Sanchez de Meras, T. Saue,
+       S. P. A. Sauer, B. Schimmelpfennig, K. Sneskov,
+       A. H. Steindal, K. O. Sylvester-Hvid, P. R. Taylor,
+       A. M. Teale, E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen,
+       L. Thoegersen, O. Vahtras, M. A. Watson, D. J. D. Wilson,
+       M. Ziolkowski and H. Aagren,
+       "The Dalton quantum chemistry program system",
+       WIREs Comput. Mol. Sci. 2013. (doi: 10.1002/wcms.1172)
+    
+    and
+    
+       Dalton, a Molecular Electronic Structure Program,
+       Release DALTON2013.4 (2014), see http://daltonprogram.org
+   ----------------------------------------------------------------------------
+
+    Authors in alphabetical order (major contribution(s) in parenthesis):
+
+  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
+  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
+  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,             KTH Stockholm,                Sweden      (DALTON installation and execution frameworks)
+  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
+  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
+  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
+  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
+  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
+  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
+  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
+  Janus J. Eriksen,         Aarhus University,            Denmark     (PE-MP2/SOPPA, TDA)
+  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
+  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
+  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
+  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
+  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
+  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
+  Kasper Hald,              Aarhus University,            Denmark     (CC module)
+  Asger Halkier,            Aarhus University,            Denmark     (CC module)
+  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
+  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
+  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
+  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
+  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
+  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
+  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
+  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
+  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding, QM/MM)
+  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
+  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
+  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
+  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
+  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
+  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
+  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex response in RESPONS)
+  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding, PE library, QM/MM)
+  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
+  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
+  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
+  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
+  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
+  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and  much more)
+  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
+  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
+  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Kristian Sneskov,         Aarhus University,            Denmark     (QM/MM, PE-CC)
+  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM)
+  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
+  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
+  David P. Tew,             University of Bristol,        England     (CCSD(R12))
+  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
+  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+ --------------------------------------------------------------------------------
+
+     Date and time (Linux)  : Tue Apr 21 23:42:57 2015
+     Host name              : osmium                                  
+
+ * Work memory size             :    64000000 =  488.28 megabytes.
+
+ * Directories for basis set searches:
+   1) /home/espeon/development/pyints/examples
+   2) /home/espeon/opt/apps/dalton/DALTON-2013.0-Source/build/basis
+
+
+Compilation information
+-----------------------
+
+ Who compiled             | espeon
+ Host                     | osmium
+ System                   | Linux-3.16.2-1-ARCH
+ CMake generator          | Unix Makefiles
+ Processor                | x86_64
+ 64-bit integers          | OFF
+ MPI                      | OFF
+ Fortran compiler         | /usr/bin/gfortran
+ C compiler               | /usr/bin/gcc
+ C++ compiler             | /usr/bin/g++
+ BLAS                     | /lib64/libblas.so
+ LAPACK                   | /lib64/liblapack.so
+ Static linking           | OFF
+ Last Git revision        | 7abef2ada27562fe5e02849d6caeaa67c961732f
+ Configuration time       | 2014-11-15 15:23:26.110066
+
+
+   Content of the .dal input file
+ ----------------------------------
+
+BASIS                                             
+STO-3G                                            
+---                                               
+---                                               
+Atomtypes=2 Angstrom Nosymmetry                   
+Charge=3.0 Atoms=1                                
+Li 0.0000 0.0000 0.0000                           
+Charge=1.0 Atoms=1                                
+H  0.0000 0.0000 1.5949                           
+                                                  
+**DALTON INPUT                                    
+.RUN WAVE FUNCTION                                
+**WAVE FUNCTIONS                                  
+.HF                                               
+**INTEGRAL                                        
+.1ELPOT                                           
+.ANGMOM                                           
+.DIPLEN                                           
+.DIPVEL                                           
+.KINENE                                           
+.QUADRU                                           
+.SPIN-ORBIT                                       
+.PRINT                                            
+5                                                 
+**END OF DALTON INPUT                             
+
+
+       *******************************************************************
+       *********** Output from DALTON general input processing ***********
+       *******************************************************************
+
+ --------------------------------------------------------------------------------
+   Overall default print level:    0
+   Print level for DALTON.STAT:    1
+
+    HERMIT 1- and 2-electron integral sections will be executed
+    "Old" integral transformation used (limited to max 255 basis functions)
+    Wave function sections will be executed (SIRIUS module)
+ --------------------------------------------------------------------------------
+
+
+   ****************************************************************************
+   *************** Output of molecule and basis set information ***************
+   ****************************************************************************
+
+
+    The two title cards from your ".mol" input:
+    ------------------------------------------------------------------------
+ 1: ---                                                                     
+ 2: ---                                                                     
+    ------------------------------------------------------------------------
+
+  Coordinates are entered in Angstrom and converted to atomic units.
+          - Conversion factor : 1 bohr = 0.52917721 A
+
+  Atomic type no.    1
+  --------------------
+  Nuclear charge:   3.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   3 :
+     "/home/espeon/opt/apps/dalton/DALTON-2013.0-Source/build/basis/STO-3G"
+
+  Atomic type no.    2
+  --------------------
+  Nuclear charge:   1.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   1 :
+     "/home/espeon/opt/apps/dalton/DALTON-2013.0-Source/build/basis/STO-3G"
+
+
+                         SYMGRP: Point group information
+                         -------------------------------
+
+@    Point group: C1 
+
+
+                                 Isotopic Masses
+                                 ---------------
+
+                           Li          7.016005
+                           H           1.007825
+
+                       Total mass:     8.023830 amu
+                       Natural abundance:  92.486 %
+
+ Center-of-mass coordinates (a.u.):    0.000000    0.000000    0.378561
+
+
+  Atoms and basis sets
+  --------------------
+
+  Number of atom types :    2
+  Total number of atoms:    2
+
+  Basis set used is "STO-3G" from the basis set library.
+
+  label    atoms   charge   prim   cont     basis
+  ----------------------------------------------------------------------
+  Li          1    3.0000    15     5      [6s3p|2s1p]                                        
+  H           1    1.0000     3     1      [3s|1s]                                            
+  ----------------------------------------------------------------------
+  total:      2    4.0000    18     6
+  ----------------------------------------------------------------------
+
+  Threshold for neglecting AO integrals:  1.00D-12
+
+
+  Cartesian Coordinates (a.u.)
+  ----------------------------
+
+  Total number of coordinates:    6
+  Li      :     1  x   0.0000000000    2  y   0.0000000000    3  z   0.0000000000
+  H       :     4  x   0.0000000000    5  y   0.0000000000    6  z   3.0139241968
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            Li          H     
+            ------      ------
+ Li    :    0.000000
+ H     :    1.594900    0.000000
+
+
+  Max    interatomic separation is    1.5949 Angstrom (    3.0139 Bohr)
+  between atoms    2 and    1, "H     " and "Li    ".
+
+  Min HX interatomic separation is    1.5949 Angstrom (    3.0139 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  H          Li           1.594900
+
+
+
+
+ Principal moments of inertia (u*A**2) and principal axes
+ --------------------------------------------------------
+
+   IA       0.000000          0.000000    0.000000    1.000000
+   IB       2.241611          0.000000    1.000000    0.000000
+   IC       2.241611          1.000000    0.000000    0.000000
+
+
+ Rotational constants
+ --------------------
+
+@    The molecule is linear.
+
+               B =       225453.50 MHz     (    7.520319 cm-1)
+
+
+@  Nuclear repulsion energy :    0.995380044141 Hartree
+
+
+                     .---------------------------------------.
+                     | Starting in Integral Section (HERMIT) |
+                     `---------------------------------------'
+
+
+
+ ***************************************************************************************
+ ****************** Output from **INTEGRALS input processing (HERMIT) ******************
+ ***************************************************************************************
+
+
+ Default print level:        5
+
+ * Nuclear model: Point charge
+
+ Calculation of one- and two-electron Hamiltonian integrals.
+
+ The following one-electron property integrals are calculated as requested:
+          - overlap integrals
+          - dipole length integrals
+          - dipole velocity integrals
+          - quadrupole moment integrals
+          - electronic kinetic energy
+          - spatial spin-orbit integrals
+          - electronic angular momentum around the origin
+          - Potential energy Hamiltonian integrals
+
+ Center of mass  (bohr):      0.000000000000      0.000000000000      0.378560880975
+ Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
+
+
+     ************************************************************************
+     ************************** Output from HERONE **************************
+     ************************************************************************
+
+
+
+                            **************************
+                            *** Output from ONEDR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  1 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+ Undifferentiated overlap integrals 
+
+  6.7245D-02
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  2 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+ Undifferentiated overlap integrals 
+
+  3.9654D-01
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  3 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+ Undifferentiated overlap integrals 
+
+  0.0000D+00  0.0000D+00  5.1386D-01
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  4 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from WRTUND ***
+                            **************************
+
+
+ Overlap matrix
+
+
+ ICOUNT, NBUF     10    1 NNBAST, NNBASX      21      21
+     1    1    1           0.100000000000D+01
+     2    2    1           0.241136651184D+00
+     3    2    2           0.100000000000D+01
+     6    3    3           0.100000000000D+01
+    10    4    4           0.100000000000D+01
+    15    5    5           0.100000000000D+01
+    16    6    1           0.672449780858D-01
+    17    6    2           0.396544964204D+00
+    20    6    5           0.513864061985D+00
+    21    6    6           0.100000000000D+01
+
+    10 atomic overlap integrals written in   1 buffers.
+ Percentage non-zero integrals:  45.45
+
+ One-el. Ham. matrix
+
+
+ ICOUNT, NBUF     12    1 NNBAST, NNBASX      21      21
+     1    1    1          -0.473788829813D+01
+     2    2    1          -0.106458382816D+01
+     3    2    2          -0.139642241195D+01
+     6    3    3          -0.113627699934D+01
+    10    4    4          -0.113627699934D+01
+    11    5    1          -0.162016457237D-01
+    12    5    2          -0.122445397832D+00
+    15    5    5          -0.123467153002D+01
+    16    6    1          -0.305571841372D+00
+    17    6    2          -0.696367235871D+00
+    20    6    5          -0.840858810998D+00
+    21    6    6          -0.145930200626D+01
+
+    12 one-el. Hamil. integrals written in   1 buffers.
+ Percentage non-zero integrals:  54.55
+
+ Kin. energy matrix
+
+
+ ICOUNT, NBUF     10    1 NNBAST, NNBASX      21      21
+     1    1    1           0.357678642449D+01
+     2    2    1          -0.202373805613D-01
+     3    2    2           0.102163366117D+00
+     6    3    3           0.319681669225D+00
+    10    4    4           0.319681669225D+00
+    15    5    5           0.319681669225D+00
+    16    6    1          -0.157859751054D-01
+    17    6    2           0.424967349405D-01
+    20    6    5           0.129428423393D+00
+    21    6    6           0.760031857654D+00
+
+    10 kinetic energy integrals written in   1 buffers.
+ Percentage non-zero integrals:  45.45
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: HUCKOVLP !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2       0.24113665     1.00000000
+       3       0.00000000     0.00000000     1.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000
+       6       0.06724498     0.39654496     0.00000000     0.00000000
+       7       0.99916351     0.26711663     0.00000000     0.00000000
+       8      -0.02226873     0.94090660     0.00000000     0.00000000
+       9       0.00000000     0.00000000     0.91244515     0.00000000
+      10       0.00000000     0.00000000     0.00000000     0.91244515
+      12       0.08445613     0.46841460     0.00000000     0.00000000
+
+               Column   5     Column   6     Column   7     Column   8
+       5       1.00000000
+       6       0.51386406     1.00000000
+       7       0.00000000     0.07738068     1.00000000
+       8       0.00000000     0.37269803    -0.00000006     1.00000000
+      11       0.91244515     0.45412897     0.00000000     0.00000000
+      12       0.54529039     0.99165347     0.09607926     0.44582132
+
+               Column   9     Column  10     Column  11     Column  12
+       9       1.00000000
+      10       0.00000000     1.00000000
+      11       0.00000000     0.00000000     1.00000000
+      12       0.00000000     0.00000000     0.49810261     1.00000000
+    ==== End of matrix output ====
+
+
+                         +-------------------------------+
+                         ! Integrals of operator: HUCKEL !
+                         +-------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2       0.24113665     1.00000000
+       3       0.00000000     0.00000000     1.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000
+       6       0.06724498     0.39654496     0.00000000     0.00000000
+       7       0.99916351     0.26711663     0.00000000     0.00000000
+       8      -0.02226873     0.94090660     0.00000000     0.00000000
+       9       0.00000000     0.00000000     0.91244515     0.00000000
+      10       0.00000000     0.00000000     0.00000000     0.91244515
+      12       0.08445613     0.46841460     0.00000000     0.00000000
+
+               Column   5     Column   6     Column   7     Column   8
+       5       1.00000000
+       6       0.51386406     1.00000000
+       7       0.00000000     0.07738068    -2.47770000
+       8       0.00000000     0.37269803     0.00000000    -0.19630000
+      11       0.91244515     0.45412897     0.00000000     0.00000000
+      12       0.54529039     0.99165347     0.00000000     0.00000000
+
+               Column   9     Column  10     Column  11     Column  12
+       9      -0.13000000
+      10       0.00000000    -0.13000000
+      11       0.00000000     0.00000000    -0.13000000
+      12       0.00000000     0.00000000     0.00000000    -0.50000000
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: OVERLAP !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2       0.24113665     1.00000000
+       3       0.00000000     0.00000000     1.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000
+       6       0.06724498     0.39654496     0.00000000     0.00000000
+
+               Column   5     Column   6
+       5       1.00000000
+       6       0.51386406     1.00000000
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: HJPOPOVL !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       1.00000000     0.24113665     0.00000000     0.00000000     0.00000000
+       2       0.24113665     1.00000000     0.00000000     0.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
+       6       0.11013604     0.16981735     0.00000000     0.00000000     0.29597541
+
+               Column   6
+       1       0.02435392
+       2       0.62327258
+       5       0.73175271
+       6       1.00000000
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: XDIPLEN !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       3       0.14723998     1.80329832     0.00000000
+       6       0.00000000     0.00000000     0.32886291     0.00000000
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: YDIPLEN !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.14723998     1.80329832     0.00000000     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.32886291
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: ZDIPLEN !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.14723998     1.80329832     0.00000000     0.00000000
+       6       0.03670043     0.93924815     0.00000000     0.00000000
+
+               Column   5     Column   6
+       6       1.43158651     3.01392420
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XXQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.06900875
+       2       0.05710301     1.94457020
+       3       0.00000000     0.00000000     1.17501638
+       4       0.00000000     0.00000000     0.00000000     2.35003276
+       6       0.02020584     0.87576876     0.00000000     0.00000000
+
+               Column   5     Column   6
+       5       2.35003276
+       6       1.26388751     2.59569689
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XYQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.00000000     0.00000000    -0.58750819     0.00000000
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XZQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000    -0.58750819     0.00000000
+       6       0.00000000     0.00000000    -0.15918649     0.00000000
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: YYQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.06900875
+       2       0.05710301     1.94457020
+       3       0.00000000     0.00000000     2.35003276
+       4       0.00000000     0.00000000     0.00000000     1.17501638
+       6       0.02020584     0.87576876     0.00000000     0.00000000
+
+               Column   5     Column   6
+       5       2.35003276
+       6       1.26388751     2.59569689
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: YZQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000     0.00000000    -0.58750819
+       6       0.00000000     0.00000000     0.00000000    -0.15918649
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: ZZQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.06900875
+       2       0.05710301     1.94457020
+       3       0.00000000     0.00000000     2.35003276
+       4       0.00000000     0.00000000     0.00000000     2.35003276
+       6       0.01286076     0.30960094     0.00000000     0.00000000
+
+               Column   5     Column   6
+       5       1.17501638
+       6       0.31837299     0.32476213
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: KINENERG !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       3.57678642
+       2      -0.02023738     0.10216337
+       3       0.00000000     0.00000000     0.31968167
+       4       0.00000000     0.00000000     0.00000000     0.31968167
+       6      -0.01578598     0.04249673     0.00000000     0.00000000
+
+               Column   5     Column   6
+       5       0.31968167
+       6       0.12942842     0.76003186
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: XDIPVEL !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       3      -0.35912885    -0.23195889     0.00000000
+       6       0.00000000     0.00000000     0.17049668     0.00000000
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: YDIPVEL !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4      -0.35912885    -0.23195889     0.00000000     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.17049668
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: ZDIPVEL !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5      -0.35912885    -0.23195889     0.00000000     0.00000000
+       6      -0.07590260    -0.13224203     0.00000000     0.00000000
+
+               Column   5     Column   6
+       6      -0.09859894     0.00000000
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: POTENERG !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       8.31467472
+       2       1.04434645     1.49858578
+       3       0.00000000     0.00000000     1.45595867
+       4       0.00000000     0.00000000     0.00000000     1.45595867
+       5       0.01620165     0.12244540     0.00000000     0.00000000
+       6       0.28978587     0.73886397     0.00000000     0.00000000
+
+               Column   5     Column   6
+       5       1.55435320
+       6       0.97028723     2.21933386
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: X1SPNORB !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4      -0.03952338    -0.01624905     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000    -0.47570600
+       6       0.00000000     0.00000000     0.00000000    -0.12195032
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: Y1SPNORB !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       3       0.03952338     0.01624905     0.00000000
+       5       0.00000000     0.00000000     0.47570600     0.00000000
+       6       0.00000000     0.00000000     0.12195032     0.00000000
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: Z1SPNORB !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.00000000     0.00000000    -0.50439911     0.00000000
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: XANGMOM !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000     0.00000000     1.00000000
+       6       0.00000000     0.00000000     0.00000000     0.51386406
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: YANGMOM !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000    -1.00000000     0.00000000
+       6       0.00000000     0.00000000    -0.51386406     0.00000000
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: ZANGMOM !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.00000000     0.00000000     1.00000000     0.00000000
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+     ************************************************************************
+     ************************** Output from TWOINT **************************
+     ************************************************************************
+
+
+
+                                Output from PAOVEC
+                                ------------------
+
+  BIGVEC     F
+  MAXSHL     3
+  NHKTSH     1    2    1
+  KHKTSH     1    3    1
+  SPHRSH     F    F    F
+  KCKTSH     1    3    1
+  NUCOSH     6    3    3
+  NORBSH     2    1    1
+  IORBSB     0    1    2    3    4
+    5    0
+ JSTRSH (gen. con.) for ISHELL =    1
+     0    0
+ JSTRSH (seg. con.) for ISHELL =    1
+     0    3
+ JSTRSH (gen. con.) for ISHELL =    2
+     6
+ JSTRSH (seg. con.) for ISHELL =    2
+     6
+ JSTRSH (gen. con.) for ISHELL =    3
+     9
+ JSTRSH (seg. con.) for ISHELL =    3
+     9
+ NPRIMS (gen. con.) for ISHELL =    1
+     6    0
+ NPRIMS (seg. con.) for ISHELL =    1
+     3    3
+ NPRIMS (gen. con.) for ISHELL =    2
+     3
+ NPRIMS (seg. con.) for ISHELL =    2
+     3
+ NPRIMS (gen. con.) for ISHELL =    3
+     3
+ NPRIMS (seg. con.) for ISHELL =    3
+     3
+ NCONTS (gen. con.) for ISHELL =    1
+     2    0
+ NCONTS (seg. con.) for ISHELL =    1
+    -1   -2
+ NCONTS (gen. con.) for ISHELL =    2
+     1
+ NCONTS (seg. con.) for ISHELL =    2
+    -1
+ NCONTS (gen. con.) for ISHELL =    3
+     1
+ NCONTS (seg. con.) for ISHELL =    3
+    -1
+ CENTSH for ISHELL =    1
+         0.0000000000        0.0000000000        0.0000000000
+ CENTSH for ISHELL =    2
+         0.0000000000        0.0000000000        0.0000000000
+ CENTSH for ISHELL =    3
+         0.0000000000        0.0000000000        3.0139241968
+ IORBSH for ISHELL =    1
+     0    1
+ IORBSH for ISHELL =    2
+     2
+ IORBSH for ISHELL =    3
+     5
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    2    1
+  NCENTA-D     2    1    2    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    2    1
+  NCENTA-D     2    1    2    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    2    1
+  NCENTA-D     2    1    2    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    1    1
+  NCENTA-D     2    2    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    1    1
+  NCENTA-D     2    2    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    1    1
+  NCENTA-D     2    2    1    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    2    1
+  NCENTA-D     2    2    2    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    2    1
+  NCENTA-D     2    2    2    1
+ SYMLOP: processing undifferentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           0
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    2    2
+  NCENTA-D     2    2    2    2
+ SYMLOP: processing undifferentiated integrals
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ Number of two-electron integrals written:          83 ( 35.9% )
+ Megabytes written:                              0.007
+
+
+
+  Maximum work space allocations in TWOINT
+  ----------------------------------------
+
+  Total allocation:                           9496
+  Expansion coefficients (electron 1):         324
+  Expansion coefficients (electron 2):         324
+  Two-electron densities:                        0
+  SO integrals:                                 36
+  AO integrals:                                 36
+  Hermite integrals:                          3240
+  Hermite integral pointer:                      0
+  Hermite-Cartesian integrals:                 540
+  Gamma functions:                             972
+  Work space for Hermite integrals:           3240
+  Allocations in C1DRIV:                      1620
+  Allocations in C2DRIV:                         7
+  Allocations in C2HINT:                        91
+  Allocations in C2EINT:                         0
+
+  Allocations in INTEXP:                         0
+  Allocations in PPRIM :                         0
+  Allocations in DRSYM2:                         0
+
+
+
+  Performance of TWOINT
+  ---------------------
+
+  Number of contracted functions:    6
+  Number of primitive  functions:   18
+
+  Number of integrals written                    :          83
+  Number of contracted integrals (counting zeros):         231
+  Number of primitive integrals (counting zeros) :       14706
+
+
+  Average time for non-zero (written) integrals:   40.2 microseconds
+  Average time for zero/non-zero integrals     :   14.4 microseconds
+  Average time for primitive integrals         :    0.2 microseconds
+
+  Average reduction of primitive ODC vectors:    4.17 %
+  Average reduction of contracted ODC vectors:   0.00 %
+
+
+                                Output from PAOVEC
+                                ------------------
+
+  BIGVEC     F
+  MAXSHL     3
+  NHKTSH     1    2    1
+  KHKTSH     1    3    1
+  SPHRSH     F    F    F
+  KCKTSH     1    3    1
+  NUCOSH     6    3    3
+  NORBSH     2    1    1
+  IORBSB     0    1    2    3    4
+    5    0
+ JSTRSH (gen. con.) for ISHELL =    1
+     0    0
+ JSTRSH (seg. con.) for ISHELL =    1
+     0    3
+ JSTRSH (gen. con.) for ISHELL =    2
+     6
+ JSTRSH (seg. con.) for ISHELL =    2
+     6
+ JSTRSH (gen. con.) for ISHELL =    3
+     9
+ JSTRSH (seg. con.) for ISHELL =    3
+     9
+ NPRIMS (gen. con.) for ISHELL =    1
+     6    0
+ NPRIMS (seg. con.) for ISHELL =    1
+     3    3
+ NPRIMS (gen. con.) for ISHELL =    2
+     3
+ NPRIMS (seg. con.) for ISHELL =    2
+     3
+ NPRIMS (gen. con.) for ISHELL =    3
+     3
+ NPRIMS (seg. con.) for ISHELL =    3
+     3
+ NCONTS (gen. con.) for ISHELL =    1
+     2    0
+ NCONTS (seg. con.) for ISHELL =    1
+    -1   -2
+ NCONTS (gen. con.) for ISHELL =    2
+     1
+ NCONTS (seg. con.) for ISHELL =    2
+    -1
+ NCONTS (gen. con.) for ISHELL =    3
+     1
+ NCONTS (seg. con.) for ISHELL =    3
+    -1
+ CENTSH for ISHELL =    1
+         0.0000000000        0.0000000000        0.0000000000
+ CENTSH for ISHELL =    2
+         0.0000000000        0.0000000000        0.0000000000
+ CENTSH for ISHELL =    3
+         0.0000000000        0.0000000000        3.0139241968
+ IORBSH for ISHELL =    1
+     0    1
+ IORBSH for ISHELL =    2
+     2
+ IORBSH for ISHELL =    3
+     5
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    2    1
+  NCENTA-D     1    1    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    2    1
+  NCENTA-D     1    1    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    2    2
+  NCENTA-D     1    1    2    2
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    2    1
+  NCENTA-D     1    1    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    2    1
+  NCENTA-D     1    1    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    2    2
+  NCENTA-D     1    1    2    2
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    2    1
+  NCENTA-D     1    1    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    2    1
+  NCENTA-D     1    1    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    2    2
+  NCENTA-D     1    1    2    2
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    2    1
+  NCENTA-D     2    1    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    2    1
+  NCENTA-D     2    1    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    2    2
+  NCENTA-D     2    1    2    2
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    1    1
+  NCENTA-D     2    1    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    2    1
+  NCENTA-D     2    1    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    2    1
+  NCENTA-D     2    1    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    1    2    2
+  NCENTA-D     2    1    2    2
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    1    1
+  NCENTA-D     2    2    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    1    1
+  NCENTA-D     2    2    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    1    1
+  NCENTA-D     2    2    1    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    2    1
+  NCENTA-D     2    2    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    2    1
+  NCENTA-D     2    2    2    1
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     2    2    2    2
+  NCENTA-D     2    2    2    2
+ SYMLOP: processing differentiated integrals
+
+
+                  +----------------------------------------------+
+                  ! Number of written 2-el. spin-orbit integrals !
+                  +----------------------------------------------+
+
+
+
+  Symmetry           x         y         z
+  ----------------------------------------
+
+      1             55        55        34
+
+        144 spin-orbit two-electron integrals and 
+        108 flags have been written on disk.
+
+
+
+
+  Maximum work space allocations in TWOINT
+  ----------------------------------------
+
+  Total allocation:                          23823
+  Expansion coefficients (electron 1):        3888
+  Expansion coefficients (electron 2):        3888
+  Two-electron densities:                        0
+  SO integrals:                                108
+  AO integrals:                                108
+  Hermite integrals:                          6480
+  Hermite integral pointer:                      0
+  Hermite-Cartesian integrals:                1080
+  Gamma functions:                            1458
+  Work space for Hermite integrals:           6480
+  Allocations in C1DRIV:                      3564
+  Allocations in C2DRIV:                        55
+  Allocations in C2HINT:                         0
+  Allocations in C2EINT:                       103
+
+  Allocations in INTEXP:                         0
+  Allocations in PPRIM :                         0
+  Allocations in DRSYM2:                         0
+
+
+
+  Performance of TWOINT
+  ---------------------
+
+  Number of contracted functions:    6
+  Number of primitive  functions:   18
+
+  Number of integrals written                    :          83
+  Number of contracted integrals (counting zeros):         231
+  Number of primitive integrals (counting zeros) :       14706
+
+
+  Average time for non-zero (written) integrals:   40.2 microseconds
+  Average time for zero/non-zero integrals     :   14.4 microseconds
+  Average time for primitive integrals         :    0.2 microseconds
+
+  Average reduction of primitive ODC vectors:    4.17 %
+  Average reduction of contracted ODC vectors:   0.00 %
+
+   Two-electron spin-orbit integrals
+   =================================
+   Spin-orbit 2-electron CPU  time      0. seconds
+   Spin-orbit 2-electron wall time      0. seconds
+ >>>> Total CPU  time used in HERMIT:   0.01 seconds
+ >>>> Total wall time used in HERMIT:   0.01 seconds
+
+
+                        .----------------------------------.
+                        | End of Integral Section (HERMIT) |
+                        `----------------------------------'
+
+
+
+                   .--------------------------------------------.
+                   | Starting in Wave Function Section (SIRIUS) |
+                   `--------------------------------------------'
+
+
+ *** Output from Huckel module :
+
+     Using EWMO model:          T
+     Using EHT  model:          F
+     Number of Huckel orbitals each symmetry:    6
+
+ EWMO - Energy Weighted Maximum Overlap - is a Huckel type method,
+        which normally is better than Extended Huckel Theory.
+ Reference: Linderberg and Ohrn, Propagators in Quantum Chemistry (Wiley, 1973)
+
+ Huckel EWMO eigenvalues for symmetry :  1
+           -2.483511      -0.580537      -0.169653      -0.130000      -0.130000
+           -0.070299
+
+ **********************************************************************
+ *SIRIUS* a direct, restricted step, second order MCSCF program       *
+ **********************************************************************
+
+ 
+     Date and time (Linux)  : Tue Apr 21 23:42:58 2015
+     Host name              : osmium                                  
+
+ Title lines from ".mol" input file:
+     ---                                                                     
+     ---                                                                     
+
+ Print level on unit LUPRI =   2 is   0
+ Print level on unit LUW4  =   2 is   5
+
+@    Restricted, closed shell Hartree-Fock calculation.
+
+ Initial molecular orbitals are obtained according to
+ ".MOSTART EWMO  " input option
+
+     Wave function specification
+     ============================
+@    Wave function type        >>> HF <<<
+@    Number of closed shell electrons           4
+@    Number of electrons in active shells       0
+@    Total charge of the molecule               0
+
+@    Spin multiplicity and 2 M_S                1         0
+@    Total number of symmetries                 1 (point group: C1 )
+@    Reference state symmetry                   1 (irrep name : A  )
+
+     Orbital specifications
+     ======================
+     Abelian symmetry species          All |    1
+                                           |  A  
+                                       --- |  ---
+@    Occupied SCF orbitals               2 |    2
+     Secondary orbitals                  4 |    4
+     Total number of orbitals            6 |    6
+     Number of basis functions           6 |    6
+
+     Optimization information
+     ========================
+@    Number of configurations                 1
+@    Number of orbital rotations              8
+     ------------------------------------------
+@    Total number of variables                9
+
+     Maximum number of Fock   iterations      0
+     Maximum number of DIIS   iterations     60
+     Maximum number of QC-SCF iterations     60
+     Threshold for SCF convergence     1.00D-05
+
+
+ >>>>> DIIS optimization of Hartree-Fock <<<<<
+
+ C1-DIIS algorithm; max error vectors =    8
+
+ Iter      Total energy        Error norm    Delta(E)  DIIS dim.
+ -----------------------------------------------------------------------------
+
+
+     ***********************************************************************
+     ************************* Output from FORMSUP *************************
+     ***********************************************************************
+
+    Precalculated two-electron integrals are transformed to P-supermatrix elements.
+    Threshold for discarding integrals            :  1.00D-12
+    Include integrals for general density matrices:         F
+
+  Symmetry                             1
+  Basis functions per symmetry         6
+
+ NBATCH:    1 LDA22: 5120 LSORT:  63982116 NSTEP:    1
+ BATCHES PER PASS:    1
+
+
+          NUMBER OF INTEGRALS READ          83
+          NUMBER OF INTEGRALS SORTED        83
+          NUMBER OF BUFFERS ON LUDASP        1
+
+
+          NUMBER OF RECORDS IN EACH CHAIN
+             1
+
+          NUMBER OF INTEGRALS IN EACH CHAIN
+            83
+
+    TIME IN SUP_SORT :     0.00 SEC.
+
+    TIME IN SUP1  :     0.00 SEC.
+
+    TOTAL TIME    :     0.00 SEC.
+@  1    -7.80828089195        5.56444D-01   -7.81D+00    1
+      Virial theorem: -V/T =      1.948046
+@      MULPOP Li      0.47; H      -0.47; 
+ -----------------------------------------------------------------------------
+@  2    -7.86163639924        4.62685D-02   -5.34D-02    2
+      Virial theorem: -V/T =      1.985282
+@      MULPOP Li      0.02; H      -0.02; 
+ -----------------------------------------------------------------------------
+@  3    -7.86200270911        6.03470D-03   -3.66D-04    3
+      Virial theorem: -V/T =      1.987896
+@      MULPOP Li     -0.02; H       0.02; 
+ -----------------------------------------------------------------------------
+@  4    -7.86202599195        1.20813D-03   -2.33D-05    4
+      Virial theorem: -V/T =      1.988137
+@      MULPOP Li     -0.02; H       0.02; 
+ -----------------------------------------------------------------------------
+@  5    -7.86202696094        3.19937D-05   -9.69D-07    5
+      Virial theorem: -V/T =      1.988163
+@      MULPOP Li     -0.02; H       0.02; 
+ -----------------------------------------------------------------------------
+@  6    -7.86202696148        1.56266D-06   -5.47D-10    6
+
+@ *** DIIS converged in   6 iterations !
+@     Converged SCF energy, gradient:     -7.862026961483    1.56D-06
+    - total time used in SIRFCK :              0.00 seconds
+
+
+ *** SCF orbital energy analysis ***
+
+ Only the five lowest virtual orbital energies printed in each symmetry.
+
+ Number of electrons :    4
+ Orbital occupations :    2
+
+ Sym       Hartree-Fock orbital energies
+
+1 A      -2.34864419    -0.28570479     0.07826185     0.16393840     0.16393840
+          0.54912921
+
+    E(LUMO) :     0.07826185 au (symmetry 1)
+  - E(HOMO) :    -0.28570479 au (symmetry 1)
+  ------------------------------------------
+    gap     :     0.36396665 au
+
+ >>> Writing SIRIFC interface file <<<
+
+ >>>> CPU and wall time for SCF :       0.033       0.004
+
+
+                       .-----------------------------------.
+                       | >>> Final results from SIRIUS <<< |
+                       `-----------------------------------'
+
+
+@    Spin multiplicity:           1
+@    Spatial symmetry:            1 ( irrep  A   in C1  )
+@    Total charge of molecule:    0
+
+@    Final HF energy:              -7.862026961483                 
+@    Nuclear repulsion:             0.995380044141
+@    Electronic energy:            -8.857407005624
+
+@    Final gradient norm:           0.000001562660
+
+ 
+     Date and time (Linux)  : Tue Apr 21 23:42:58 2015
+     Host name              : osmium                                  
+
+ (Only coefficients >0.0100 are printed.)
+
+ Molecular orbitals for symmetry species 1  (A  )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4
+   1 Li  :1s    -0.9912   0.1674   0.2100  -0.0000
+   2 Li  :1s    -0.0327  -0.4548  -0.7996   0.0000
+   3 Li  :2px   -0.0000  -0.0000  -0.0000  -0.9795
+   4 Li  :2py   -0.0000   0.0000   0.0000  -0.2014
+   5 Li  :2pz    0.0063  -0.3462   0.6121  -0.0000
+   6 H   :1s    -0.0045  -0.5488   0.1398  -0.0000
+
+
+
+ >>>> Total CPU  time used in SIRIUS :      0.22 seconds
+ >>>> Total wall time used in SIRIUS :      0.17 seconds
+
+ 
+     Date and time (Linux)  : Tue Apr 21 23:42:58 2015
+     Host name              : osmium                                  
+
+
+                     .---------------------------------------.
+                     | End of Wave Function Section (SIRIUS) |
+                     `---------------------------------------'
+
+ >>>> Total CPU  time used in DALTON:   0.82 seconds
+ >>>> Total wall time used in DALTON:   0.69 seconds
+
+ 
+     Date and time (Linux)  : Tue Apr 21 23:42:58 2015
+     Host name              : osmium                                  
