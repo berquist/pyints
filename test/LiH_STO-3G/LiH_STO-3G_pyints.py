@@ -218,3 +218,67 @@ def makeJ(mol, bfs, origin):
         for nu, b in enumerate(bfs):
             ints[mu, nu] = J(a, b, origin)
     return ints
+
+## spin-orbit interaction (J) integrals from King and Furlani's
+## formulation
+
+# template:
+# os.get_nuclear(ai, aj, ri, rj, rc, [li[0], li[1], li[2], lj[0], lj[1], lj[2]])
+
+def spin_orbit_KF(alpha1, lmn1, A, alpha2, lmn2, B, C, component):
+    ai, aj, li, lj, ri, rj, rc = alpha1, alpha2, lmn1, lmn2, A, B, C
+    xi, yi, zi, xj, yj, zj = li[0], li[1], li[2], lj[0], lj[1], lj[2]
+    if component == 2:
+        return (   xi*yj*os.get_nuclear(ai, aj, ri, rj, rc, [xi-1, yi, zi, xj, yj-1, zj]) \
+                -2*ai*yj*os.get_nuclear(ai, aj, ri, rj, rc, [xi+1, yi, zi, xj, yj-1, zj]) \
+                -2*aj*xi*os.get_nuclear(ai, aj, ri, rj, rc, [xi-1, yi, zi, xj, yj+1, zj]) \
+                +4*ai*aj*os.get_nuclear(ai, aj, ri, rj, rc, [xi+1, yi, zi, xj, yj+1, zj]) \
+                  -yi*xj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi-1, zi, xj-1, yj, zj]) \
+                +2*ai*xj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi+1, zi, xj-1, yj, zj]) \
+                +2*aj*yi*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi-1, zi, xj+1, yj, zj]) \
+                -4*ai*aj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi+1, zi, xj+1, yj, zj]))
+    if component == 0:
+        return (   yi*zj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi-1, zi, xj, yj, zj-1]) \
+                -2*aj*yi*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi-1, zi, xj, yj, zj+1]) \
+                -2*ai*zj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi+1, zi, xj, yj, zj-1]) \
+                +4*ai*aj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi+1, zi, xj, yj, zj+1]) \
+                  -zi*yj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi-1, xj, yj-1, zj]) \
+                +2*aj*zi*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi-1, xj, yj+1, zj]) \
+                +2*ai*yj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi+1, xj, yj-1, zj]) \
+                -4*ai*aj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi+1, xj, yj+1, zj]))
+    if component == 1:
+        return (   zi*xj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi-1, xj-1, yj, zj]) \
+                -2*aj*zi*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi-1, xj+1, yj, zj]) \
+                -2*ai*xj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi+1, xj-1, yj, zj]) \
+                +4*ai*aj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi+1, xj+1, yj, zj]) \
+                  -xi*zj*os.get_nuclear(ai, aj, ri, rj, rc, [xi-1, yi, zi, xj, yj, zj-1]) \
+                +2*aj*xi*os.get_nuclear(ai, aj, ri, rj, rc, [xi-1, yi, zi, xj, yj, zj+1]) \
+                +2*ai*zj*os.get_nuclear(ai, aj, ri, rj, rc, [xi+1, yi, zi, xj, yj, zj-1]) \
+                -4*ai*aj*os.get_nuclear(ai, aj, ri, rj, rc, [xi+1, yi, zi, xj, yj, zj+1]))
+
+def J_KF(a, b, C, component):
+    if b.contracted:
+        return sum(cb * J_KF(pb, a, C, component) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * J_KF(b, pa, C, component) for (ca, pa) in a)
+    return a.norm * b.norm * spin_orbit_KF(a.exponent, list(a.powers), a.origin,
+                                           b.exponent, list(b.powers), b.origin,
+                                           C, component)
+
+def makeJ_KF(mol, bfs):
+    nbfs = len(bfs)
+    ints_X = np.zeros(shape=(nbfs, nbfs))
+    ints_Y = np.zeros(shape=(nbfs, nbfs))
+    ints_Z = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints_X[mu, nu] = sum(at.Z * J_KF(a, b, at.r, 0) for at in mol)
+            ints_Y[mu, nu] = sum(at.Z * J_KF(a, b, at.r, 1) for at in mol)
+            ints_Z[mu, nu] = sum(at.Z * J_KF(a, b, at.r, 2) for at in mol)
+    return ints_X, ints_Y, ints_Z
+
+J1X_pyints, J1Y_pyints, J1Z_pyints = makeJ_KF(mol, bfs)
+
+np.savetxt('pyints.J1X.txt', J1X_pyints)
+np.savetxt('pyints.J1Y.txt', J1Y_pyints)
+np.savetxt('pyints.J1Z.txt', J1Z_pyints)

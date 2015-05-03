@@ -6,6 +6,8 @@ import numpy as np
 import numpy.linalg as npl
 import numpy.testing as npt
 
+from pyints.utils import antisymmetrize_L
+
 ### Load all the variables from Q-Chem.
 
 D_qchem = np.loadtxt('qchem.final_alpha_density_matrix.txt')
@@ -50,11 +52,6 @@ S_pyints = np.loadtxt('pyints.S.txt')
 T_pyints = np.loadtxt('pyints.T.txt')
 V_pyints = np.loadtxt('pyints.V.txt')
 
-npt.assert_allclose(S_pyints, S_pyquante2, rtol=1e-7, atol=1e-5)
-npt.assert_allclose(T_pyints, T_pyquante2, rtol=1e-7, atol=1e-5)
-# This fails, not sure why.
-# npt.assert_allclose(V_pyints, V_pyquante2, rtol=1e-7, atol=1e-5)
-
 M001_pyints = np.loadtxt('pyints.M001.txt')
 M002_pyints = np.loadtxt('pyints.M002.txt')
 M010_pyints = np.loadtxt('pyints.M010.txt')
@@ -64,6 +61,15 @@ M100_pyints = np.loadtxt('pyints.M100.txt')
 M101_pyints = np.loadtxt('pyints.M101.txt')
 M110_pyints = np.loadtxt('pyints.M110.txt')
 M200_pyints = np.loadtxt('pyints.M200.txt')
+
+J1X_pyints = np.loadtxt('pyints.J1X.txt')
+J1Y_pyints = np.loadtxt('pyints.J1Y.txt')
+J1Z_pyints = np.loadtxt('pyints.J1Z.txt')
+
+npt.assert_allclose(S_pyints, S_pyquante2, rtol=1e-7, atol=1e-5)
+npt.assert_allclose(T_pyints, T_pyquante2, rtol=1e-7, atol=1e-5)
+# This fails, not sure why.
+# npt.assert_allclose(V_pyints, V_pyquante2, rtol=1e-7, atol=1e-5)
 
 npt.assert_allclose(M001_qchem, M001_pyints, rtol=1e-7, atol=1e-5)
 npt.assert_allclose(M002_qchem, M002_pyints, rtol=1e-7, atol=1e-5)
@@ -102,6 +108,11 @@ LX_dalton = np.loadtxt('dalton.xangmom.txt')
 LY_dalton = np.loadtxt('dalton.yangmom.txt')
 LZ_dalton = np.loadtxt('dalton.zangmom.txt')
 
+# DALTON is returning symmetrized matrices. Antisymmetrize them.
+J1X_dalton = antisymmetrize_L(J1X_dalton)
+J1Y_dalton = antisymmetrize_L(J1Y_dalton)
+J1Z_dalton = antisymmetrize_L(J1Z_dalton)
+
 npt.assert_allclose(S_qchem, S_dalton, rtol=1e-7, atol=1e-5)
 npt.assert_allclose(T_qchem, T_dalton, rtol=1e-7, atol=1e-5)
 # DALTON nuclear attraction integrals are the opposite sign?
@@ -125,5 +136,9 @@ npt.assert_allclose(M100_dalton, M100_pyints, rtol=1e-7, atol=1e-5)
 # npt.assert_allclose(M101_dalton, M101_pyints, rtol=1e-7, atol=1e-5)
 # npt.assert_allclose(M110_dalton, M110_pyints, rtol=1e-7, atol=1e-5)
 # npt.assert_allclose(M200_dalton, M200_pyints, rtol=1e-7, atol=1e-5)
+
+npt.assert_allclose(J1X_dalton, J1X_pyints, rtol=1e-7, atol=1e-5)
+npt.assert_allclose(J1Y_dalton, J1Y_pyints, rtol=1e-7, atol=1e-5)
+npt.assert_allclose(J1Z_dalton, J1Z_pyints, rtol=1e-7, atol=1e-5)
 
 ### Load all the variables from Molcas.
