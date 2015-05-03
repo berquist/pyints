@@ -8,6 +8,7 @@ import pyquante2
 
 # from pyints.integrals import obarasaika
 import obarasaika.obara_saika as os
+from pyints.utils import iterator4
 from pyints.utils import fact2
 
 with open('LiH.xyz') as molfile:
@@ -51,6 +52,7 @@ def makeS(mol, bfs):
             ints[mu, nu] = S(a, b)
     return ints
 
+print('making S...')
 S_pyints = makeS(mol, bfs)
 
 np.savetxt('pyints.S.txt', S_pyints)
@@ -77,6 +79,7 @@ def makeT(mol, bfs):
             ints[mu, nu] = T(a, b)
     return ints
 
+print('making T...')
 T_pyints = makeT(mol, bfs)
 
 np.savetxt('pyints.T.txt', T_pyints)
@@ -104,6 +107,7 @@ def makeV(mol, bfs):
             ints[mu, nu] = sum(at.Z * V(a, b, at.r) for at in mol)
     return ints
 
+print('making V...')
 V_pyints = makeV(mol, bfs)
 
 np.savetxt('pyints.V.txt', V_pyints)
@@ -131,6 +135,7 @@ def makeM(mol, bfs, origin, order):
             ints[mu, nu] = M(a, b, origin, order)
     return ints
 
+print('making M...')
 M001_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 0, 1])
 M002_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 0, 2])
 M010_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 1, 0])
@@ -173,6 +178,7 @@ def makeE(mol, bfs, origin, order):
             ints[mu, nu] = E(a, b, origin, order)
     return ints
 
+print('making E...')
 
 ## angular momentum (L) integrals
 
@@ -196,6 +202,7 @@ def makeL(mol, bfs, origin):
             ints[mu, nu] = L(a, b, origin)
     return ints
 
+print('making L...')
 
 ## spin-orbit interaction (J) integrals
 
@@ -219,11 +226,13 @@ def makeJ(mol, bfs, origin):
             ints[mu, nu] = J(a, b, origin)
     return ints
 
+print('making J...')
+
 ## spin-orbit interaction (J) integrals from King and Furlani's
 ## formulation
 
 # template:
-# os.get_nuclear(ai, aj, ri, rj, rc, [li[0], li[1], li[2], lj[0], lj[1], lj[2]])
+# os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj, zj])
 
 def spin_orbit_KF(alpha1, lmn1, A, alpha2, lmn2, B, C, component):
     ai, aj, li, lj, ri, rj, rc = alpha1, alpha2, lmn1, lmn2, A, B, C
@@ -277,8 +286,78 @@ def makeJ_KF(mol, bfs):
             ints_Z[mu, nu] = sum(at.Z * J_KF(a, b, at.r, 2) for at in mol)
     return ints_X, ints_Y, ints_Z
 
+print('making J_KF...')
 J1X_pyints, J1Y_pyints, J1Z_pyints = makeJ_KF(mol, bfs)
 
 np.savetxt('pyints.J1X.txt', J1X_pyints)
 np.savetxt('pyints.J1Y.txt', J1Y_pyints)
 np.savetxt('pyints.J1Z.txt', J1Z_pyints)
+
+## two-electron repulsion integrals (ERI)
+
+def coulomb_repulsion(za, la, ra, zb, lb, rb, zc, lc, rc, zd, ld, rd):
+    return os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, la + lb + lc + ld)
+
+def ERI(a, b, c, d):
+    if d.contracted:
+        return sum(cd * ERI(pd, c, a, b) for (cd, pd) in d)
+    return a.norm * b.norm * c.norm * d.norm * \
+        coulomb_repulsion(a.exponent, list(a.powers), a.origin,
+                          b.exponent, list(b.powers), b.origin,
+                          c.exponent, list(c.powers), c.origin,
+                          d.exponent, list(d.powers), d.origin)
+
+def makeERI(bfs):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs, nbfs, nbfs))
+    for i, j, k, l in iterator4(nbfs):
+        ints[i, j, k, l] \
+            = ints[i, j, l, k] \
+            = ints[j, i, k, l] \
+            = ints[j, i, l, k] \
+            = ints[k, l, i, j] \
+            = ints[k, l, j, i] \
+            = ints[l, k, i, j] \
+            = ints[l, k, j, i] \
+            = ERI(bfs[i], bfs[j], bfs[k], bfs[l])
+    return ints
+
+print('making ERI...')
+ERI_pyints = makeERI(bfs)
+
+np.save('pyints.ERI.npy', ERI_pyints)
+
+## two-electron spin-orbit integrals (J2) from King and Furlani's
+## formulation.
+
+# template:
+# os.get_coulomb(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj, zj])
+# get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, c):
+
+# def J2_KF(a, b, c, d, component):
+#     return a.norm * b.norm * c.norm * d.norm * spin_orbit_2_KF(a.exponent, list(a.powers), a.origin,
+#                                                                b.exponent, list(b.powers), b.origin,
+#                                                                c.exponent, list(c.powers), c.origin,
+#                                                                d.exponent, list(d.powers), d.origin,
+#                                                                component)
+
+# def makeJ2_KF(mol, bfs):
+#     nbfs = len(bfs)
+#     ints_X = np.zeros(shape=(nbfs, nbfs, nbfs, nbfs))
+#     ints_Y = np.zeros(shape=(nbfs, nbfs, nbfs, nbfs))
+#     ints_Z = np.zeros(shape=(nbfs, nbfs, nbfs, nbfs))
+#     for mu, a in enumerate(bfs):
+#         for nu, b in enumerate(bfs):
+#             for lm, c in enumerate(bfs):
+#                 for sg, d in enumerate(bfs):
+#                     ints_X[mu, nu, lm, sg] = J2_KF(a, b, c, d, 0)
+#                     ints_Y[mu, nu, lm, sg] = J2_KF(a, b, c, d, 1)
+#                     ints_Z[mu, nu, lm, sg] = J2_KF(a, b, c, d, 2)
+#     return ints_X, ints_Y, ints_Z
+
+print('making J2_KF...')
+# J2X_pyints, J2Y_pyints, J2Z_pyints = makeJ2_KF(mol, bfs)
+
+# np.savetxt('pyints.J2X.txt', J1X_pyints)
+# np.savetxt('pyints.J2Y.txt', J1Y_pyints)
+# np.savetxt('pyints.J2Z.txt', J1Z_pyints)
