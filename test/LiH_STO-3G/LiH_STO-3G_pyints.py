@@ -11,6 +11,20 @@ import obarasaika.obara_saika as os
 from pyints.utils import iterator4
 from pyints.utils import fact2
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--S', action='store_true')
+parser.add_argument('--T', action='store_true')
+parser.add_argument('--V', action='store_true')
+parser.add_argument('--M', action='store_true')
+parser.add_argument('--L', action='store_true')
+parser.add_argument('--E', action='store_true')
+parser.add_argument('--J', action='store_true')
+parser.add_argument('--J_KF', action='store_true')
+parser.add_argument('--ERI', action='store_true')
+parser.add_argument('--J2_KF', action='store_true')
+args = parser.parse_args()
+
 with open('LiH.xyz') as molfile:
     mollines = molfile.readlines()[2:]
 
@@ -52,10 +66,10 @@ def makeS(mol, bfs):
             ints[mu, nu] = S(a, b)
     return ints
 
-print('making S...')
-S_pyints = makeS(mol, bfs)
-
-np.savetxt('pyints.S.txt', S_pyints)
+if args.S:
+    print('making S...')
+    S_pyints = makeS(mol, bfs)
+    np.savetxt('pyints.S.txt', S_pyints)
 
 ## kinetic energy (T) integrals
 
@@ -79,10 +93,10 @@ def makeT(mol, bfs):
             ints[mu, nu] = T(a, b)
     return ints
 
-print('making T...')
-T_pyints = makeT(mol, bfs)
-
-np.savetxt('pyints.T.txt', T_pyints)
+if args.T:
+    print('making T...')
+    T_pyints = makeT(mol, bfs)
+    np.savetxt('pyints.T.txt', T_pyints)
 
 ## nuclear attraction (V) integrals
 
@@ -107,10 +121,10 @@ def makeV(mol, bfs):
             ints[mu, nu] = sum(at.Z * V(a, b, at.r) for at in mol)
     return ints
 
-print('making V...')
-V_pyints = makeV(mol, bfs)
-
-np.savetxt('pyints.V.txt', V_pyints)
+if args.V:
+    print('making V...')
+    V_pyints = makeV(mol, bfs)
+    np.savetxt('pyints.V.txt', V_pyints)
 
 ## Cartesian moment (M) integrals
 
@@ -135,26 +149,26 @@ def makeM(mol, bfs, origin, order):
             ints[mu, nu] = M(a, b, origin, order)
     return ints
 
-print('making M...')
-M001_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 0, 1])
-M002_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 0, 2])
-M010_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 1, 0])
-M011_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 1, 1])
-M020_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 2, 0])
-M100_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 0, 0])
-M101_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 0, 1])
-M110_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 1, 0])
-M200_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [2, 0, 0])
-
-np.savetxt('pyints.M001.txt', M001_pyints)
-np.savetxt('pyints.M002.txt', M002_pyints)
-np.savetxt('pyints.M010.txt', M010_pyints)
-np.savetxt('pyints.M011.txt', M011_pyints)
-np.savetxt('pyints.M020.txt', M020_pyints)
-np.savetxt('pyints.M100.txt', M100_pyints)
-np.savetxt('pyints.M101.txt', M101_pyints)
-np.savetxt('pyints.M110.txt', M110_pyints)
-np.savetxt('pyints.M200.txt', M200_pyints)
+if args.M:
+    print('making M...')
+    M001_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 0, 1])
+    M002_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 0, 2])
+    M010_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 1, 0])
+    M011_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 1, 1])
+    M020_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 2, 0])
+    M100_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 0, 0])
+    M101_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 0, 1])
+    M110_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 1, 0])
+    M200_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [2, 0, 0])
+    np.savetxt('pyints.M001.txt', M001_pyints)
+    np.savetxt('pyints.M002.txt', M002_pyints)
+    np.savetxt('pyints.M010.txt', M010_pyints)
+    np.savetxt('pyints.M011.txt', M011_pyints)
+    np.savetxt('pyints.M020.txt', M020_pyints)
+    np.savetxt('pyints.M100.txt', M100_pyints)
+    np.savetxt('pyints.M101.txt', M101_pyints)
+    np.savetxt('pyints.M110.txt', M110_pyints)
+    np.savetxt('pyints.M200.txt', M200_pyints)
 
 ## electric field (E) integrals
 
@@ -178,7 +192,8 @@ def makeE(mol, bfs, origin, order):
             ints[mu, nu] = E(a, b, origin, order)
     return ints
 
-print('making E...')
+if args.E:
+    print('making E...')
 
 ## angular momentum (L) integrals
 
@@ -202,7 +217,8 @@ def makeL(mol, bfs, origin):
             ints[mu, nu] = L(a, b, origin)
     return ints
 
-print('making L...')
+if args.L:
+    print('making L...')
 
 ## spin-orbit interaction (J) integrals
 
@@ -226,7 +242,8 @@ def makeJ(mol, bfs, origin):
             ints[mu, nu] = J(a, b, origin)
     return ints
 
-print('making J...')
+if args.J:
+    print('making J...')
 
 ## spin-orbit interaction (J) integrals from King and Furlani's
 ## formulation
@@ -274,6 +291,7 @@ def J_KF(a, b, C, component):
                                            b.exponent, list(b.powers), b.origin,
                                            C, component)
 
+
 def makeJ_KF(mol, bfs):
     nbfs = len(bfs)
     ints_X = np.zeros(shape=(nbfs, nbfs))
@@ -286,12 +304,12 @@ def makeJ_KF(mol, bfs):
             ints_Z[mu, nu] = sum(at.Z * J_KF(a, b, at.r, 2) for at in mol)
     return ints_X, ints_Y, ints_Z
 
-print('making J_KF...')
-J1X_pyints, J1Y_pyints, J1Z_pyints = makeJ_KF(mol, bfs)
-
-np.savetxt('pyints.J1X.txt', J1X_pyints)
-np.savetxt('pyints.J1Y.txt', J1Y_pyints)
-np.savetxt('pyints.J1Z.txt', J1Z_pyints)
+if args.J_KF:
+    print('making J_KF...')
+    J1X_pyints, J1Y_pyints, J1Z_pyints = makeJ_KF(mol, bfs)
+    np.savetxt('pyints.J1X.txt', J1X_pyints)
+    np.savetxt('pyints.J1Y.txt', J1Y_pyints)
+    np.savetxt('pyints.J1Z.txt', J1Z_pyints)
 
 ## two-electron repulsion integrals (ERI)
 
@@ -322,42 +340,77 @@ def makeERI(bfs):
             = ERI(bfs[i], bfs[j], bfs[k], bfs[l])
     return ints
 
-print('making ERI...')
-ERI_pyints = makeERI(bfs)
-
-np.save('pyints.ERI.npy', ERI_pyints)
+if args.ERI:
+    print('making ERI...')
+    ERI_pyints = makeERI(bfs)
+    np.save('pyints.ERI.npy', ERI_pyints)
 
 ## two-electron spin-orbit integrals (J2) from King and Furlani's
 ## formulation.
 
-# template:
-# os.get_coulomb(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj, zj])
-# get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, c):
+def spin_orbit_2_KF(za, la, ra, zb, lb, rb, zc, lc, rc, zd, ld, rd, component):
+    ai, aj = za, zb
+    # ak, al = zc, zd
+    xi, yi, zi = la[0], la[1], la[2]
+    xj, yj, zj = lb[0], lb[1], lb[2]
+    xk, yk, zk = lc[0], lc[1], lc[2]
+    xl, yl, zl = ld[0], ld[1], ld[2]
+    if component == 2:
+        return (   xi*yi*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi-1, yi, zi, xj, yj-1, zj, xk, yk, zk, xl, yl, zl]) \
+                -2*ai*yj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi+1, yi, zi, xj, yj-1, zj, xk, yk, zk, xl, yl, zl]) \
+                -2*aj*xi*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi-1, yi, zi, xj, yj+1, zj, xk, yk, zk, xl, yl, zl]) \
+                +4*ai*aj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi+1, yi, zi, xj, yj+1, zj, xk, yk, zk, xl, yl, zl]) \
+                  -yi*xj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi-1, zi, xj-1, yj, zj, xk, yk, zk, xl, yl, zl]) \
+                +2*ai*xj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi+1, zi, xj-1, yj, zj, xk, yk, zk, xl, yl, zl]) \
+                +2*aj*yi*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi-1, zi, xj+1, yj, zj, xk, yk, zk, xl, yl, zl]) \
+                -4*ai*aj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi+1, zi, xj+1, yj, zj, xk, yk, zk, xl, yl, zl]))
+    if component == 0:
+        return (   yi*zj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi-1, zi, xj, yj, zj-1, xk, yk, zk, xl, yl, zl]) \
+                -2*aj*yi*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi-1, zi, xj, yj, zj+1, xk, yk, zk, xl, yl, zl]) \
+                -2*ai*zj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi+1, zi, xj, yj, zj-1, xk, yk, zk, xl, yl, zl]) \
+                +4*ai*aj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi+1, zi, xj, yj, zj+1, xk, yk, zk, xl, yl, zl]) \
+                  -zi*yj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi, zi-1, xj, yj-1, zj, xk, yk, zk, xl, yl, zl]) \
+                +2*aj*zi*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi, zi-1, xj, yj+1, zj, xk, yk, zk, xl, yl, zl]) \
+                +2*ai*yj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi, zi+1, xj, yj-1, zj, xk, yk, zk, xl, yl, zl]) \
+                -4*ai*aj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi, zi+1, xj, yj+1, zj, xk, yk, zk, xl, yl, zl]))
+    if component == 1:
+        return (   zi*xj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi, zi-1, xj-1, yj, zj, xk, yk, zk, xl, yl, zl]) \
+                -2*aj*zi*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi, zi-1, xj+1, yj, zj, xk, yk, zk, xl, yl, zl]) \
+                -2*ai*xj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi, zi+1, xj-1, yj, zj, xk, yk, zk, xl, yl, zl]) \
+                +4*ai*aj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi, yi, zi+1, xj+1, yj, zj, xk, yk, zk, xl, yl, zl]) \
+                  -xi*zj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi-1, yi, zi, xj, yj, zj-1, xk, yk, zk, xl, yl, zl]) \
+                +2*aj*xi*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi-1, yi, zi, xj, yj, zj+1, xk, yk, zk, xl, yl, zl]) \
+                +2*ai*zj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi+1, yi, zi, xj, yj, zj-1, xk, yk, zk, xl, yl, zl]) \
+                -4*ai*aj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi+1, yi, zi, xj, yj, zj+1, xk, yk, zk, xl, yl, zl]))
 
-# def J2_KF(a, b, c, d, component):
-#     return a.norm * b.norm * c.norm * d.norm * spin_orbit_2_KF(a.exponent, list(a.powers), a.origin,
-#                                                                b.exponent, list(b.powers), b.origin,
-#                                                                c.exponent, list(c.powers), c.origin,
-#                                                                d.exponent, list(d.powers), d.origin,
-#                                                                component)
+def J2_KF(a, b, c, d, component):
+    if b.contracted:
+        return sum(cb * J2_KF(pb, a, c, d, component) for (cb, pb) in b)
+    if d.contracted:
+        return sum(cd * J2_KF(a, b, pd, c, component) for (cd, pd) in d)
+    return a.norm * b.norm * c.norm * d.norm * spin_orbit_2_KF(a.exponent, list(a.powers), a.origin,
+                                                               b.exponent, list(b.powers), b.origin,
+                                                               c.exponent, list(c.powers), c.origin,
+                                                               d.exponent, list(d.powers), d.origin,
+                                                               component)
 
-# def makeJ2_KF(mol, bfs):
-#     nbfs = len(bfs)
-#     ints_X = np.zeros(shape=(nbfs, nbfs, nbfs, nbfs))
-#     ints_Y = np.zeros(shape=(nbfs, nbfs, nbfs, nbfs))
-#     ints_Z = np.zeros(shape=(nbfs, nbfs, nbfs, nbfs))
-#     for mu, a in enumerate(bfs):
-#         for nu, b in enumerate(bfs):
-#             for lm, c in enumerate(bfs):
-#                 for sg, d in enumerate(bfs):
-#                     ints_X[mu, nu, lm, sg] = J2_KF(a, b, c, d, 0)
-#                     ints_Y[mu, nu, lm, sg] = J2_KF(a, b, c, d, 1)
-#                     ints_Z[mu, nu, lm, sg] = J2_KF(a, b, c, d, 2)
-#     return ints_X, ints_Y, ints_Z
+def makeJ2_KF(bfs):
+    nbfs = len(bfs)
+    ints_X = np.zeros(shape=(nbfs, nbfs, nbfs, nbfs))
+    ints_Y = np.zeros(shape=(nbfs, nbfs, nbfs, nbfs))
+    ints_Z = np.zeros(shape=(nbfs, nbfs, nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            for lm, c in enumerate(bfs):
+                for sg, d in enumerate(bfs):
+                    ints_X[mu, nu, lm, sg] = J2_KF(a, b, c, d, 0)
+                    ints_Y[mu, nu, lm, sg] = J2_KF(a, b, c, d, 1)
+                    ints_Z[mu, nu, lm, sg] = J2_KF(a, b, c, d, 2)
+    return ints_X, ints_Y, ints_Z
 
-print('making J2_KF...')
-# J2X_pyints, J2Y_pyints, J2Z_pyints = makeJ2_KF(mol, bfs)
-
-# np.savetxt('pyints.J2X.txt', J1X_pyints)
-# np.savetxt('pyints.J2Y.txt', J1Y_pyints)
-# np.savetxt('pyints.J2Z.txt', J1Z_pyints)
+if args.J2_KF:
+    print('making J2_KF...')
+    J2X_pyints, J2Y_pyints, J2Z_pyints = makeJ2_KF(bfs)
+    np.save('pyints.J2X.npy', J2X_pyints)
+    np.save('pyints.J2Y.npy', J2Y_pyints)
+    np.save('pyints.J2Z.npy', J2Z_pyints)

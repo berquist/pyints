@@ -68,6 +68,10 @@ J1Z_pyints = np.loadtxt('pyints.J1Z.txt')
 
 ERI_pyints = np.load('pyints.ERI.npy')
 
+J2X_pyints = np.load('pyints.J2X.txt')
+J2Y_pyints = np.load('pyints.J2Y.txt')
+J2Z_pyints = np.load('pyints.J2Z.txt')
+
 npt.assert_allclose(S_pyints, S_pyquante2, rtol=1e-7, atol=1e-5)
 npt.assert_allclose(T_pyints, T_pyquante2, rtol=1e-7, atol=1e-5)
 # This fails, not sure why.
