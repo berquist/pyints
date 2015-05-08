@@ -31,7 +31,7 @@ def parse_matrix_dalton(outputfile):
         if chomp == []:
             pass
         elif chomp[0] == 'Column':
-            colindices = map(int, chomp[1::2])
+            colindices = list(map(int, chomp[1::2]))
         else:
             rowindex = int(chomp[0])
             if rowindex not in spmat:
@@ -60,7 +60,7 @@ def parse_spin_orbit_2el(outputfile_reversed, dim, nlines):
         line = next(outputfile_reversed)
     for _ in range(nlines):
         sline = line.split()
-        mu, nu, lm, sg = map(int, sline[1:5])
+        mu, nu, lm, sg = list(map(int, sline[1:5]))
         component = sline[5][1]
         element = float(sline[7].replace('D', 'E'))
         if component == 'X':
