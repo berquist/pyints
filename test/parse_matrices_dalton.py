@@ -51,6 +51,30 @@ def sparse_to_dense_matrix_dalton(spmat, dim):
     return densemat
 
 
+def parse_spin_orbit_2el(outputfile_reversed, dim, nlines):
+    x2spnorb = np.zeros(shape=(dim, dim, dim, dim))
+    y2spnorb = np.zeros(shape=(dim, dim, dim, dim))
+    z2spnorb = np.zeros(shape=(dim, dim, dim, dim))
+    line = ''
+    while '##' not in line:
+        line = next(outputfile_reversed)
+    for _ in range(nlines):
+        sline = line.split()
+        mu, nu, lm, sg = map(int, sline[1:5])
+        component = sline[5][1]
+        element = float(sline[7].replace('D', 'E'))
+        if component == 'X':
+            x2spnorb[mu-1, nu-1, lm-1, sg-1] = element
+        elif component == 'Y':
+            y2spnorb[mu-1, nu-1, lm-1, sg-1] = element
+        elif component == 'Z':
+            z2spnorb[mu-1, nu-1, lm-1, sg-1] = element
+        else:
+            raise ValueError
+        line = next(outputfile_reversed)
+    return x2spnorb, y2spnorb, z2spnorb
+
+
 def main(args):
 
     outputfilename = args.outputfilename
@@ -70,6 +94,13 @@ def main(args):
         'YYQUADRU',
         'YZQUADRU',
         'ZZQUADRU',
+        # .SECMOM
+        'XXSECMOM',
+        'XYSECMOM',
+        'XZSECMOM',
+        'YYSECMOM',
+        'YZSECMOM',
+        'ZZSECMOM',
         # .KINENE
         'KINENERG',
         # .DIPVEL
@@ -118,6 +149,19 @@ def main(args):
                     exec(save_matrix_string.format(matrix_name=matrix_headers_varnames[i],
                                                    file_name=matrix_headers_filenames[i]))
                     break
+
+    # if present, dump the two-electron spin-orbit integrals
+    with open(outputfilename) as outputfile:
+        outputfile_reversed = reversed(outputfile.readlines())
+    for line in outputfile_reversed:
+        if 'spin-orbit two-electron integrals and' in line:
+            nintegrals = int(line.split()[0])
+        if 'Number of written 2-el. spin-orbit integrals' in line:
+            x2spnorb, y2spnorb, z2spnorb = parse_spin_orbit_2el(outputfile_reversed, nbasis, nintegrals)
+            np.save('dalton.x2spnorb.npy', x2spnorb)
+            np.save('dalton.y2spnorb.npy', y2spnorb)
+            np.save('dalton.z2spnorb.npy', z2spnorb)
+            break
 
     # print all the parsed matrices to stdout if asked
     if args.print_stdout:
