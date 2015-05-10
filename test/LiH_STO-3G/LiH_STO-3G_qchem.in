@@ -8,6 +8,8 @@ $rem
  iprint = 1000
  symmetry = false
  sym_ignore = true
+ ! save_ao_integrals = 1
+ aoints_debug_print = 4
 $end
 
 $molecule

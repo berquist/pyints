@@ -56,7 +56,13 @@ def main(args):
         'Multipole Matrix (0,2,0)',
         'Multipole Matrix (1,0,1)',
         'Multipole Matrix (0,1,1)',
-        'Multipole Matrix (0,0,2)'
+        'Multipole Matrix (0,0,2)',
+        'Angular Momentum Matrix (X-component)',
+        'Angular Momentum Matrix (Y-component)',
+        'Angular Momentum Matrix (Z-component)',
+        'Spin-Orbit Interaction Matrix (X-component)',
+        'Spin-Orbit Interaction Matrix (Y-component)',
+        'Spin-Orbit Interaction Matrix (Z-component)'
     )
 
     # turn the matrix headers into reasonable variable and filenames
@@ -64,7 +70,7 @@ def main(args):
     matrix_headers_filenames = []
     for matrix_name in matrix_headers:
         newname = '_'.join(matrix_name.split())
-        newname = newname.replace(',', '').replace('(', '').replace(')', '').replace('.', '').lower()
+        newname = newname.replace(',', '').replace('(', '').replace(')', '').replace('.', '').replace('-', '_').lower()
         filename = '.'.join(['qchem', newname, 'txt'])
         matrix_headers_varnames.append(newname)
         matrix_headers_filenames.append(filename)
