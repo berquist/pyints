@@ -128,7 +128,7 @@
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Thu May  7 20:18:39 2015
+     Date and time (Linux)  : Sun May 10 16:41:08 2015
      Host name              : copper                                  
 
  * Work memory size             :    64000000 =  488.28 megabytes.
@@ -188,6 +188,7 @@ H  0.0000 0.0000 1.5949
 .QUADRU                                           
 .SECMOM                                           
 .SPIN-ORBIT                                       
+.NELFLD                                           
 .PRINT                                            
 6                                                 
 **END OF DALTON INPUT                             
@@ -353,6 +354,7 @@ H  0.0000 0.0000 1.5949
           - electronic kinetic energy
           - spatial spin-orbit integrals
           - electronic angular momentum around the origin
+          - Electric field at the nuclei
           - Potential energy Hamiltonian integrals
 
  Center of mass  (bohr):      0.000000000000      0.000000000000      0.378560880975
@@ -685,6 +687,7 @@ H  0.0000 0.0000 1.5949
 
     10 kinetic energy integrals written in   1 buffers.
  Percentage non-zero integrals:  45.45
+ >>>  Time used in ONEDRV     is   0.45 seconds
 
  Calculation of overlap and Huckel matrices.
 
@@ -3261,6 +3264,258 @@ H  0.0000 0.0000 1.5949
                Column   5     Column   6
     ==== End of matrix output ====
 
+Calculation of electric field strength at the nuclei
+
+
+ Integral type:   29  NEFIELD
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    6
+ Molecule label: NEF 001 
+ Symmetry:    0
+ Molecule label: NEF 002 
+ Symmetry:    0
+ Molecule label: NEF 003 
+ Symmetry:    0
+ Molecule label: NEF 004 
+ Symmetry:    0
+ Molecule label: NEF 005 
+ Symmetry:    0
+ Molecule label: NEF 006 
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      6
+ NELMNT    21
+ INTTYP    29
+ NOPTYP     6
+ ANTI       F
+ SQUARE     F
+ INTREP     0    0    0    0    0    0
+ LABINT  NEF 001  NEF 002  NEF 003  NEF 004  NEF 005  NEF 006 
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.3785608810
+ JMAXD      0
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  4 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: NEF 001 !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       3       0.24625264     0.12429053     0.00000000
+       6       0.00000000     0.00000000     0.02804532     0.00000000
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: NEF 002 !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.24625264     0.12429053     0.00000000     0.00000000
+       6       0.00000000     0.00000000     0.00000000     0.02804532
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: NEF 003 !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.24625264     0.12429053     0.00000000     0.00000000
+       6       0.03267526     0.04439445     0.00000000     0.00000000
+
+               Column   5     Column   6
+       6       0.07146469     0.10770218
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: NEF 004 !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       3       0.00537560     0.04062657     0.00000000
+       5       0.00000000     0.00000000     0.03264665     0.00000000
+       6       0.00000000     0.00000000     0.05205065     0.00000000
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: NEF 005 !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.00537560     0.04062657     0.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.03264665
+       6       0.00000000     0.00000000     0.00000000     0.05205065
+
+               Column   5     Column   6
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: NEF 006 !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1      -0.11008677
+       2      -0.02652093    -0.05836387
+       3       0.00000000     0.00000000    -0.04956323
+       4       0.00000000     0.00000000     0.00000000    -0.04956323
+       5      -0.01071200    -0.02910435     0.00000000     0.00000000
+       6      -0.01202721    -0.04153969     0.00000000     0.00000000
+
+               Column   5     Column   6
+       5      -0.07383122
+       6      -0.05513115     0.00000000
+    ==== End of matrix output ====
+
 
      ************************************************************************
      ************************** Output from TWOINT **************************
@@ -3417,12 +3672,13 @@ H  0.0000 0.0000 1.5949
   Number of primitive integrals (counting zeros) :       14706
 
 
-  Average time for non-zero (written) integrals:  120.5 microseconds
-  Average time for zero/non-zero integrals     :   43.3 microseconds
-  Average time for primitive integrals         :    0.7 microseconds
+  Average time for non-zero (written) integrals: 5702.8 microseconds
+  Average time for zero/non-zero integrals     : 2049.1 microseconds
+  Average time for primitive integrals         :   32.2 microseconds
 
   Average reduction of primitive ODC vectors:    4.17 %
   Average reduction of contracted ODC vectors:   0.00 %
+ >>>  Time used in TWOINT     is   0.47 seconds
 
 
                                 Output from PAOVEC
@@ -3569,9 +3825,9 @@ H  0.0000 0.0000 1.5949
   Number of primitive integrals (counting zeros) :       14706
 
 
-  Average time for non-zero (written) integrals:  241.0 microseconds
-  Average time for zero/non-zero integrals     :   86.6 microseconds
-  Average time for primitive integrals         :    1.4 microseconds
+  Average time for non-zero (written) integrals:  200.8 microseconds
+  Average time for zero/non-zero integrals     :   72.1 microseconds
+  Average time for primitive integrals         :    1.1 microseconds
 
   Average reduction of primitive ODC vectors:    4.17 %
   Average reduction of contracted ODC vectors:   0.00 %
@@ -3580,8 +3836,8 @@ H  0.0000 0.0000 1.5949
    =================================
    Spin-orbit 2-electron CPU  time      0. seconds
    Spin-orbit 2-electron wall time      0. seconds
- >>>> Total CPU  time used in HERMIT:   0.24 seconds
- >>>> Total wall time used in HERMIT:   0.03 seconds
+ >>>> Total CPU  time used in HERMIT:   1.48 seconds
+ >>>> Total wall time used in HERMIT:   0.25 seconds
 
 
                         .----------------------------------.
@@ -3614,7 +3870,7 @@ H  0.0000 0.0000 1.5949
  **********************************************************************
 
  
-     Date and time (Linux)  : Thu May  7 20:18:39 2015
+     Date and time (Linux)  : Sun May 10 16:41:09 2015
      Host name              : copper                                  
 
  Title lines from ".mol" input file:
@@ -3748,7 +4004,7 @@ H  0.0000 0.0000 1.5949
 
  >>> Writing SIRIFC interface file <<<
 
- >>>> CPU and wall time for SCF :       0.250       0.035
+ >>>> CPU and wall time for SCF :       0.077       0.013
 
 
                        .-----------------------------------.
@@ -3767,7 +4023,7 @@ H  0.0000 0.0000 1.5949
 @    Final gradient norm:           0.000001562660
 
  
-     Date and time (Linux)  : Thu May  7 20:18:39 2015
+     Date and time (Linux)  : Sun May 10 16:41:09 2015
      Host name              : copper                                  
 
  (Only coefficients >0.0100 are printed.)
@@ -3776,19 +4032,20 @@ H  0.0000 0.0000 1.5949
  ------------------------------------------------
 
     Orbital         1        2        3        4
-   1 Li  :1s     0.9912  -0.1674  -0.2100   0.0000
-   2 Li  :1s     0.0327   0.4548   0.7996  -0.0000
-   4 Li  :2py   -0.0000   0.0000   0.0000   1.0000
-   5 Li  :2pz   -0.0063   0.3462  -0.6121   0.0000
-   6 H   :1s     0.0045   0.5488  -0.1398  -0.0000
+   1 Li  :1s    -0.9912   0.1674   0.2100   0.0000
+   2 Li  :1s    -0.0327  -0.4548  -0.7996   0.0000
+   3 Li  :2px    0.0000  -0.0000  -0.0000   0.3358
+   4 Li  :2py    0.0000   0.0000   0.0000   0.9419
+   5 Li  :2pz    0.0063  -0.3462   0.6121   0.0000
+   6 H   :1s    -0.0045  -0.5488   0.1398  -0.0000
 
 
 
- >>>> Total CPU  time used in SIRIUS :      0.28 seconds
- >>>> Total wall time used in SIRIUS :      0.04 seconds
+ >>>> Total CPU  time used in SIRIUS :      1.23 seconds
+ >>>> Total wall time used in SIRIUS :      0.21 seconds
 
  
-     Date and time (Linux)  : Thu May  7 20:18:39 2015
+     Date and time (Linux)  : Sun May 10 16:41:09 2015
      Host name              : copper                                  
 
 
@@ -3796,9 +4053,9 @@ H  0.0000 0.0000 1.5949
                      | End of Wave Function Section (SIRIUS) |
                      `---------------------------------------'
 
- >>>> Total CPU  time used in DALTON:   0.60 seconds
- >>>> Total wall time used in DALTON:   0.09 seconds
+ >>>> Total CPU  time used in DALTON:   4.39 seconds
+ >>>> Total wall time used in DALTON:   0.90 seconds
 
  
-     Date and time (Linux)  : Thu May  7 20:18:39 2015
+     Date and time (Linux)  : Sun May 10 16:41:09 2015
      Host name              : copper                                  
