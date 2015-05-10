@@ -62,6 +62,14 @@ M101_pyints = np.loadtxt('pyints.M101.txt')
 M110_pyints = np.loadtxt('pyints.M110.txt')
 M200_pyints = np.loadtxt('pyints.M200.txt')
 
+LX_pyints = np.loadtxt('pyints.LX.txt')
+LY_pyints = np.loadtxt('pyints.LY.txt')
+LZ_pyints = np.loadtxt('pyints.LZ.txt')
+
+LX_M_pyints = np.loadtxt('pyints.LX_M.txt')
+LY_M_pyints = np.loadtxt('pyints.LY_M.txt')
+LZ_M_pyints = np.loadtxt('pyints.LZ_M.txt')
+
 J1X_pyints = np.loadtxt('pyints.J1X.txt')
 J1Y_pyints = np.loadtxt('pyints.J1Y.txt')
 J1Z_pyints = np.loadtxt('pyints.J1Z.txt')
@@ -118,6 +126,9 @@ J2Y_dalton = np.load('dalton.y2spnorb.npy')
 J2Z_dalton = np.load('dalton.z2spnorb.npy')
 
 # DALTON is returning symmetrized matrices. Antisymmetrize them.
+LX_dalton = antisymmetrize_L(LX_dalton)
+LY_dalton = antisymmetrize_L(LY_dalton)
+LZ_dalton = antisymmetrize_L(LZ_dalton)
 J1X_dalton = antisymmetrize_L(J1X_dalton)
 J1Y_dalton = antisymmetrize_L(J1Y_dalton)
 J1Z_dalton = antisymmetrize_L(J1Z_dalton)
@@ -145,6 +156,10 @@ npt.assert_allclose(M100_dalton, M100_pyints, rtol=1e-7, atol=1e-5)
 # npt.assert_allclose(M101_dalton, M101_pyints, rtol=1e-7, atol=1e-5)
 # npt.assert_allclose(M110_dalton, M110_pyints, rtol=1e-7, atol=1e-5)
 # npt.assert_allclose(M200_dalton, M200_pyints, rtol=1e-7, atol=1e-5)
+
+npt.assert_allclose(LX_dalton, LX_M_pyints, rtol=1e-7, atol=1e-5)
+npt.assert_allclose(LY_dalton, LY_M_pyints, rtol=1e-7, atol=1e-5)
+npt.assert_allclose(LZ_dalton, LZ_M_pyints, rtol=1e-7, atol=1e-5)
 
 npt.assert_allclose(J1X_dalton, J1X_pyints, rtol=1e-7, atol=1e-5)
 npt.assert_allclose(J1Y_dalton, J1Y_pyints, rtol=1e-7, atol=1e-5)

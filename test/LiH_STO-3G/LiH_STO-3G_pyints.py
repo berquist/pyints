@@ -18,6 +18,7 @@ parser.add_argument('--T', action='store_true')
 parser.add_argument('--V', action='store_true')
 parser.add_argument('--M', action='store_true')
 parser.add_argument('--L', action='store_true')
+parser.add_argument('--L_from_M', action='store_true')
 parser.add_argument('--E', action='store_true')
 parser.add_argument('--J', action='store_true')
 parser.add_argument('--J_KF', action='store_true')
@@ -58,7 +59,7 @@ def S(a, b):
     return a.norm * b.norm * overlap(a.exponent, list(a.powers), a.origin,
                                      b.exponent, list(b.powers), b.origin)
 
-def makeS(mol, bfs):
+def makeS(bfs):
     nbfs = len(bfs)
     ints = np.zeros(shape=(nbfs, nbfs))
     for mu, a in enumerate(bfs):
@@ -68,7 +69,7 @@ def makeS(mol, bfs):
 
 if args.S:
     print('making S...')
-    S_pyints = makeS(mol, bfs)
+    S_pyints = makeS(bfs)
     np.savetxt('pyints.S.txt', S_pyints)
 
 ## kinetic energy (T) integrals
@@ -85,7 +86,7 @@ def T(a, b):
     return a.norm * b.norm * kinetic(a.exponent, list(a.powers), a.origin,
                                      b.exponent, list(b.powers), b.origin)
 
-def makeT(mol, bfs):
+def makeT(bfs):
     nbfs = len(bfs)
     ints = np.zeros(shape=(nbfs, nbfs))
     for mu, a in enumerate(bfs):
@@ -95,7 +96,7 @@ def makeT(mol, bfs):
 
 if args.T:
     print('making T...')
-    T_pyints = makeT(mol, bfs)
+    T_pyints = makeT(bfs)
     np.savetxt('pyints.T.txt', T_pyints)
 
 ## nuclear attraction (V) integrals
@@ -141,7 +142,7 @@ def M(a, b, C, order):
                                               b.exponent, list(b.powers), b.origin,
                                               C, order)
 
-def makeM(mol, bfs, origin, order):
+def makeM(bfs, origin, order):
     nbfs = len(bfs)
     ints = np.zeros(shape=(nbfs, nbfs))
     for mu, a in enumerate(bfs):
@@ -151,15 +152,15 @@ def makeM(mol, bfs, origin, order):
 
 if args.M:
     print('making M...')
-    M001_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 0, 1])
-    M002_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 0, 2])
-    M010_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 1, 0])
-    M011_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 1, 1])
-    M020_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [0, 2, 0])
-    M100_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 0, 0])
-    M101_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 0, 1])
-    M110_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [1, 1, 0])
-    M200_pyints = makeM(mol, bfs, [0.0, 0.0, 0.0], [2, 0, 0])
+    M001_pyints = makeM(bfs, [0.0, 0.0, 0.0], [0, 0, 1])
+    M002_pyints = makeM(bfs, [0.0, 0.0, 0.0], [0, 0, 2])
+    M010_pyints = makeM(bfs, [0.0, 0.0, 0.0], [0, 1, 0])
+    M011_pyints = makeM(bfs, [0.0, 0.0, 0.0], [0, 1, 1])
+    M020_pyints = makeM(bfs, [0.0, 0.0, 0.0], [0, 2, 0])
+    M100_pyints = makeM(bfs, [0.0, 0.0, 0.0], [1, 0, 0])
+    M101_pyints = makeM(bfs, [0.0, 0.0, 0.0], [1, 0, 1])
+    M110_pyints = makeM(bfs, [0.0, 0.0, 0.0], [1, 1, 0])
+    M200_pyints = makeM(bfs, [0.0, 0.0, 0.0], [2, 0, 0])
     np.savetxt('pyints.M001.txt', M001_pyints)
     np.savetxt('pyints.M002.txt', M002_pyints)
     np.savetxt('pyints.M010.txt', M010_pyints)
@@ -197,28 +198,85 @@ if args.E:
 
 ## angular momentum (L) integrals
 
-def angular_momentum(alpha1, lmn1, A, alpha2, lmn2, B, C):
-    pass
+def angular_momentum(alpha1, lmn1, A, alpha2, lmn2, B, C, component):
+    za, zb, la, lb, ra, rb, rc = alpha1, alpha2, lmn1, lmn2, A, B, C
+    return os.get_angmom(za, zb, ra, rb, rc, la + lb, component)
 
-def L(a, b, C):
+def L(a, b, C, component):
     if b.contracted:
-        return sum(cb * L(pb, a, C) for (cb, pb) in b)
+        return sum(cb * L(pb, a, C, component) for (cb, pb) in b)
     elif a.contracted:
-        return sum(ca * L(b, pa, C) for (ca, pa) in a)
+        return sum(ca * L(b, pa, C, component) for (ca, pa) in a)
     return a.norm * b.norm * angular_momentum(a.exponent, list(a.powers), a.origin,
                                               b.exponent, list(b.powers), b.origin,
-                                              C)
+                                              C, component)
 
-def makeL(mol, bfs, origin):
+def makeL(bfs, origin, component):
     nbfs = len(bfs)
     ints = np.zeros(shape=(nbfs, nbfs))
     for mu, a in enumerate(bfs):
         for nu, b in enumerate(bfs):
-            ints[mu, nu] = L(a, b, origin)
+            ints[mu, nu] = L(a, b, origin, component)
     return ints
 
 if args.L:
     print('making L...')
+    LX_pyints = makeL(bfs, [0.0, 0.0, 0.0], 0)
+    LY_pyints = makeL(bfs, [0.0, 0.0, 0.0], 1)
+    LZ_pyints = makeL(bfs, [0.0, 0.0, 0.0], 2)
+    np.savetxt('pyints.LX.txt', LX_pyints)
+    np.savetxt('pyints.LY.txt', LY_pyints)
+    np.savetxt('pyints.LZ.txt', LZ_pyints)
+
+## angular momentum (L) integrals from first moment integrals
+
+def angular_momentum_from_M(alpha1, lmn1, A, alpha2, lmn2, B, C, component):
+    ai, aj, li, lj, ri, rj, rc = alpha1, alpha2, lmn1, lmn2, A, B, C
+    xi, yi, zi, xj, yj, zj = li[0], li[1], li[2], lj[0], lj[1], lj[2]
+    if component == 2:
+        # Lz = xpy - ypx
+        return ((yj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj-1, zj], [1, 0, 0]) \
+                 -2*aj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj+1, zj], [1, 0, 0])) \
+                -(xj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj-1, yj, zj], [0, 1, 0]) \
+                  -2*aj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj+1, yj, zj], [0, 1, 0])))
+    if component == 0:
+        # Lx = ypz - zpy
+        return ((zj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj, zj-1], [0, 1, 0]) \
+                 -2*aj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj, zj+1], [0, 1, 0])) \
+                -(yj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj-1, zj], [0, 0, 1]) \
+                  -2*aj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj+1, zj], [0, 0, 1])))
+    if component == 1:
+        # Ly = zpx - xpz
+        return ((xj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj-1, yj, zj], [0, 0, 1]) \
+                 -2*aj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj+1, yj, zj], [0, 0, 1])) \
+                -(zj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj, zj-1], [1, 0, 0]) \
+                  -2*aj*os.get_moment(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj, zj+1], [1, 0, 0])))
+
+def L_from_M(a, b, C, component):
+    if b.contracted:
+        return sum(cb * L_from_M(a, pb, C, component) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * L_from_M(pa, b, C, component) for (ca, pa) in a)
+    return a.norm * b.norm * angular_momentum_from_M(a.exponent, list(a.powers), a.origin,
+                                                     b.exponent, list(b.powers), b.origin,
+                                                     C, component)
+
+def makeL_from_M(bfs, origin, component):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = L_from_M(a, b, origin, component)
+    return ints
+
+if args.L_from_M:
+    print('making L_from_M...')
+    LX_M_pyints = makeL_from_M(bfs, [0.0, 0.0, 0.0], 0)
+    LY_M_pyints = makeL_from_M(bfs, [0.0, 0.0, 0.0], 1)
+    LZ_M_pyints = makeL_from_M(bfs, [0.0, 0.0, 0.0], 2)
+    np.savetxt('pyints.LX_M.txt', LX_M_pyints)
+    np.savetxt('pyints.LY_M.txt', LY_M_pyints)
+    np.savetxt('pyints.LZ_M.txt', LZ_M_pyints)
 
 ## spin-orbit interaction (J) integrals
 
