@@ -8,7 +8,6 @@ def getargs():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('outputfilename')
-    parser.add_argument('--print-stdout', action='store_true')
     args = parser.parse_args()
     return args
 
@@ -39,7 +38,6 @@ def parse_matrix_dalton(outputfile):
             for colindex, element in zip(colindices, chomp[1:]):
                 spmat[rowindex][colindex] = float(element)
         line = next(outputfile)
-
     return spmat
 
 
@@ -79,55 +77,29 @@ def main(args):
 
     outputfilename = args.outputfilename
 
-
-    matrix_headers = (
-        # default
-        'OVERLAP',
-        # .DIPLEN
-        'XDIPLEN',
-        'YDIPLEN',
-        'ZDIPLEN',
-        # .QUADRU
-        'XXQUADRU',
-        'XYQUADRU',
-        'XZQUADRU',
-        'YYQUADRU',
-        'YZQUADRU',
-        'ZZQUADRU',
-        # .SECMOM
-        'XXSECMOM',
-        'XYSECMOM',
-        'XZSECMOM',
-        'YYSECMOM',
-        'YZSECMOM',
-        'ZZSECMOM',
-        # .KINENE
-        'KINENERG',
-        # .DIPVEL
-        'XDIPVEL',
-        'YDIPVEL',
-        'ZDIPVEL',
-        # .1ELPOT
-        'POTENERG',
-        # .SPIN-ORBIT
-        'X1SPNORB',
-        'Y1SPNORB',
-        'Z1SPNORB',
-        # .ANGMOM
-        'XANGMOM',
-        'YANGMOM',
-        'ZANGMOM'
+    ignore_these_matrices = (
+        'HUCKOVLP',
+        'HUCKEL',
     )
 
-    # turn the matrix headers into reasonable variable and filenames
+    # find all the matrix headers in an output file and turn them into
+    # reasonable variable and filenames
+    matrix_headers_unmodified = []
     matrix_headers_varnames = []
     matrix_headers_filenames = []
-    for matrix_name in matrix_headers:
-        newname = '_'.join(matrix_name.split())
-        newname = newname.replace(',', '').replace('(', '').replace(')', '').replace('.', '').lower()
-        filename = '.'.join(['dalton', newname, 'txt'])
-        matrix_headers_varnames.append(newname)
-        matrix_headers_filenames.append(filename)
+    matchline = 'Integrals of operator: '
+    with open(outputfilename) as outputfile:
+        for line in outputfile:
+            if matchline in line:
+                if not any(ignore in line for ignore in ignore_these_matrices):
+                    # need to handle headers with spaces/multiple parts
+                    start = line.index(matchline) + len(matchline)
+                    matname = line[start:][:-2].strip()
+                    varname = ''.join(matname.split()).replace(',', '').replace('(', '').replace(')', '').replace('.', '').lower()
+                    filename = '.'.join(['dalton', varname, 'txt'])
+                    matrix_headers_unmodified.append(matname)
+                    matrix_headers_varnames.append(varname)
+                    matrix_headers_filenames.append(filename)
 
     nbasis_re_string = 'total:\s+([0-9]+)\s+([-+]?\d*[.]?\d+)\s+([0-9]+)\s+([0-9]+)'
 
@@ -141,13 +113,13 @@ def main(args):
     # parse the output file for each matrix
     parse_matrix_string = '{matrix_name} = sparse_to_dense_matrix_dalton(parse_matrix_dalton(outputfile), nbasis)'
     save_matrix_string = 'np.savetxt("{file_name}", {matrix_name})'
-    for i, matrix_name in enumerate(matrix_headers):
+    for i, matrix_name in enumerate(matrix_headers_unmodified):
         with open(outputfilename) as outputfile:
             for line in outputfile:
                 if 'Integrals of operator: {}'.format(matrix_name) in line:
-                    exec(parse_matrix_string.format(matrix_name=matrix_headers_varnames[i]))
+                    exec(parse_matrix_string.format(matrix_name=matrix_headers_varnames[i]), globals(), locals())
                     exec(save_matrix_string.format(matrix_name=matrix_headers_varnames[i],
-                                                   file_name=matrix_headers_filenames[i]))
+                                                   file_name=matrix_headers_filenames[i]), globals(), locals())
                     break
 
     # if present, dump the two-electron spin-orbit integrals
@@ -162,13 +134,6 @@ def main(args):
             np.save('dalton.y2spnorb.npy', y2spnorb)
             np.save('dalton.z2spnorb.npy', z2spnorb)
             break
-
-    # print all the parsed matrices to stdout if asked
-    if args.print_stdout:
-        for matrix_name in matrix_headers_varnames:
-            print_matrix_string = 'print({})'.format(matrix_name)
-            print(matrix_name)
-            exec(print_matrix_string)
 
     # Find the total energy and the nuclear repulsion energy
     with open(outputfilename) as outputfile:
