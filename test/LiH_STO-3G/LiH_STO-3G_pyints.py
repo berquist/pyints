@@ -20,6 +20,7 @@ parser.add_argument('--M', action='store_true')
 parser.add_argument('--L', action='store_true')
 parser.add_argument('--L_from_M', action='store_true')
 parser.add_argument('--E', action='store_true')
+parser.add_argument('--EF', action='store_true')
 parser.add_argument('--J', action='store_true')
 parser.add_argument('--J_KF', action='store_true')
 parser.add_argument('--ERI', action='store_true')
@@ -185,7 +186,7 @@ def E(a, b, C, order):
                                             b.exponent, list(b.powers), b.origin,
                                             C, order)
 
-def makeE(mol, bfs, origin, order):
+def makeE(bfs, origin, order):
     nbfs = len(bfs)
     ints = np.zeros(shape=(nbfs, nbfs))
     for mu, a in enumerate(bfs):
@@ -195,6 +196,58 @@ def makeE(mol, bfs, origin, order):
 
 if args.E:
     print('making E...')
+
+## electric field (EF) integrals from nuclear attraction integrals
+
+def electric_field_from_V(alpha1, lmn1, A, alpha2, lmn2, B, C, component):
+    ai, aj, li, lj, ri, rj, rc = alpha1, alpha2, lmn1, lmn2, A, B, C
+    xi, yi, zi, xj, yj, zj = li[0], li[1], li[2], lj[0], lj[1], lj[2]
+    if component == 0:
+        return (   xi*os.get_nuclear(ai, aj, ri, rj, rc, [xi-1, yi, zi, xj, yj, zj]) \
+                -2*ai*os.get_nuclear(ai, aj, ri, rj, rc, [xi+1, yi, zi, xj, yj, zj]) \
+                  +xj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi, xj-1, yj, zj]) \
+                -2*aj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi, xj+1, yj, zj]))
+    if component == 1:
+        return (   yi*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi-1, zi, xj, yj, zj]) \
+                -2*ai*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi+1, zi, xj, yj, zj]) \
+                  +yj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj-1, zj]) \
+                -2*aj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj+1, zj]))
+    if component == 2:
+        return (   zi*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi-1, xj, yj, zj]) \
+                -2*ai*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi+1, xj, yj, zj]) \
+                  +zj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj, zj-1]) \
+                -2*aj*os.get_nuclear(ai, aj, ri, rj, rc, [xi, yi, zi, xj, yj, zj+1]))
+
+def EF(a, b, C, component):
+    if b.contracted:
+        return sum(cb * EF(pb, a, C, component) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * EF(b, pa, C, component) for (ca, pa) in a)
+    return a.norm * b.norm * electric_field_from_V(a.exponent, list(a.powers), a.origin,
+                                                   b.exponent, list(b.powers), b.origin,
+                                                   C, component)
+
+def makeEF(bfs, origin, component):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = EF(a, b, origin, component)
+    return ints
+
+if args.EF:
+    print('making EF...')
+    counter = 1
+    for at in mol:
+        for component in range(3):
+            EF_pyints = makeEF(bfs, at.r, component)
+            np.savetxt('pyints.EF{}.txt'.format(counter), EF_pyints)
+            counter += 1
+
+## electric field gradient (EFG) integrals from electric field integrals
+
+def electric_field_gradient_from_EF(alpha1, lmn1, A, alpha2, lmn2, B, C, c1, c2):
+    pass
 
 ## angular momentum (L) integrals
 
