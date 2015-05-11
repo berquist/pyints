@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-from math import pi
+from itertools import combinations_with_replacement
 
 import numpy as np
 
@@ -21,6 +21,7 @@ parser.add_argument('--L', action='store_true')
 parser.add_argument('--L_from_M', action='store_true')
 parser.add_argument('--E', action='store_true')
 parser.add_argument('--EF', action='store_true')
+parser.add_argument('--EFG', action='store_true')
 parser.add_argument('--J', action='store_true')
 parser.add_argument('--J_KF', action='store_true')
 parser.add_argument('--ERI', action='store_true')
@@ -199,7 +200,8 @@ if args.E:
 
 ## electric field (EF) integrals from nuclear attraction integrals
 
-def electric_field_from_V(alpha1, lmn1, A, alpha2, lmn2, B, C, component):
+# def electric_field_from_V(alpha1, lmn1, A, alpha2, lmn2, B, C, component):
+def electric_field_from_V(alpha1, alpha2, lmn1, lmn2, A, B, C, component):
     ai, aj, li, lj, ri, rj, rc = alpha1, alpha2, lmn1, lmn2, A, B, C
     xi, yi, zi, xj, yj, zj = li[0], li[1], li[2], lj[0], lj[1], lj[2]
     if component == 0:
@@ -223,8 +225,9 @@ def EF(a, b, C, component):
         return sum(cb * EF(pb, a, C, component) for (cb, pb) in b)
     elif a.contracted:
         return sum(ca * EF(b, pa, C, component) for (ca, pa) in a)
-    return a.norm * b.norm * electric_field_from_V(a.exponent, list(a.powers), a.origin,
-                                                   b.exponent, list(b.powers), b.origin,
+    return a.norm * b.norm * electric_field_from_V(a.exponent, b.exponent,
+                                                   list(a.powers), list(b.powers),
+                                                   a.origin, b.origin,
                                                    C, component)
 
 def makeEF(bfs, origin, component):
@@ -246,8 +249,55 @@ if args.EF:
 
 ## electric field gradient (EFG) integrals from electric field integrals
 
-def electric_field_gradient_from_EF(alpha1, lmn1, A, alpha2, lmn2, B, C, c1, c2):
-    pass
+def electric_field_gradient_from_EF(alpha1, lmn1, A, alpha2, lmn2, B, C, component1, component2):
+    ai, aj, li, lj, ri, rj, rc = alpha1, alpha2, lmn1, lmn2, A, B, C
+    xi, yi, zi, xj, yj, zj = li[0], li[1], li[2], lj[0], lj[1], lj[2]
+    if component2 == 0:
+        return (   xi*electric_field_from_V(ai, aj, [xi-1, yi, zi], [xj, yj, zj], ri, rj, rc, component1) \
+                -2*ai*electric_field_from_V(ai, aj, [xi+1, yi, zi], [xj, yj, zj], ri, rj, rc, component1) \
+                  +xj*electric_field_from_V(ai, aj, [xi, yi, zi], [xj-1, yj, zj], ri, rj, rc, component1) \
+                -2*aj*electric_field_from_V(ai, aj, [xi, yi, zi], [xj+1, yj, zj], ri, rj, rc, component1))
+    if component2 == 1:
+        return (   yi*electric_field_from_V(ai, aj, [xi, yi-1, zi], [xj, yj, zj], ri, rj, rc, component1) \
+                -2*ai*electric_field_from_V(ai, aj, [xi, yi+1, zi], [xj, yj, zj], ri, rj, rc, component1) \
+                  +yj*electric_field_from_V(ai, aj, [xi, yi, zi], [xj, yj-1, zj], ri, rj, rc, component1) \
+                -2*aj*electric_field_from_V(ai, aj, [xi, yi, zi], [xj, yj+1, zj], ri, rj, rc, component1))
+    if component2 == 2:
+        return (   zi*electric_field_from_V(ai, aj, [xi, yi, zi-1], [xj, yj, zj], ri, rj, rc, component1) \
+                -2*ai*electric_field_from_V(ai, aj, [xi, yi, zi+1], [xj, yj, zj], ri, rj, rc, component1) \
+                  +zj*electric_field_from_V(ai, aj, [xi, yi, zi], [xj, yj, zj-1], ri, rj, rc, component1) \
+                -2*aj*electric_field_from_V(ai, aj, [xi, yi, zi], [xj, yj, zj+1], ri, rj, rc, component1))
+
+
+def EFG(a, b, C, component1, component2):
+    if b.contracted:
+        return sum(cb * EFG(pb, a, C, component1, component2) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * EFG(b, pa, C, component1, component2) for (ca, pa) in a)
+    return a.norm * b.norm * electric_field_gradient_from_EF(a.exponent, list(a.powers), a.origin,
+                                                             b.exponent, list(b.powers), b.origin,
+                                                             C, component1, component2)
+
+def makeEFG(bfs, origin, component1, component2):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = EFG(a, b, origin, component1, component2)
+    return ints
+
+component_map = {
+    'X': 0,
+    'Y': 1,
+    'Z': 2,
+}
+
+if args.EFG:
+    print('making EFG...')
+    for iat, at in enumerate(mol, 1):
+        for (c1, c2) in combinations_with_replacement(('X', 'Y', 'Z'), 2):
+                EFG_pyints = makeEFG(bfs, at.r, component_map[c1], component_map[c2])
+                np.savetxt('pyints.EFG{}{}{}.txt'.format(iat, c1, c2), EFG_pyints)
 
 ## angular momentum (L) integrals
 
@@ -495,10 +545,14 @@ def spin_orbit_2_KF(za, la, ra, zb, lb, rb, zc, lc, rc, zd, ld, rd, component):
                 -4*ai*aj*os.get_coulomb(za, zb, zc, zd, ra, rb, rc, rd, [xi+1, yi, zi, xj, yj, zj+1, xk, yk, zk, xl, yl, zl]))
 
 def J2_KF(a, b, c, d, component):
+    if a.contracted:
+        return sum(ca * J2_KF(pa, b, c, d, component) for (ca, pa) in a)
     if b.contracted:
-        return sum(cb * J2_KF(pb, a, c, d, component) for (cb, pb) in b)
+        return sum(cb * J2_KF(a, pb, c, d, component) for (cb, pb) in b)
+    if c.contracted:
+        return sum(cc * J2_KF(a, b, pc, d, component) for (cc, pc) in c)
     if d.contracted:
-        return sum(cd * J2_KF(a, b, pd, c, component) for (cd, pd) in d)
+        return sum(cd * J2_KF(a, b, c, pd, component) for (cd, pd) in d)
     return a.norm * b.norm * c.norm * d.norm * spin_orbit_2_KF(a.exponent, list(a.powers), a.origin,
                                                                b.exponent, list(b.powers), b.origin,
                                                                c.exponent, list(c.powers), c.origin,
