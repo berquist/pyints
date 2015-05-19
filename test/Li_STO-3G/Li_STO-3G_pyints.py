@@ -6,14 +6,14 @@ from pyints import getargs
 from pyints.test import make_test_integrals_pyints
 
 
-with open('LiH.xyz') as molfile:
+with open('Li.xyz') as molfile:
     mollines = molfile.readlines()[2:]
 
 mol = pyquante2.geo.molecule.read_xyz_lines(mollines,
                                             units='Angstrom',
                                             charge=0,
-                                            multiplicity=1,
-                                            name='LiH')
+                                            multiplicity=2,
+                                            name='Li')
 
 del mollines
 

@@ -1,0 +1,4743 @@
+
+
+     ************************************************************************
+     *************** Dalton - An Electronic Structure Program ***************
+     ************************************************************************
+
+    This is output from DALTON 2015.0
+   ----------------------------------------------------------------------------
+    NOTE:
+     
+    Dalton is an experimental code for the evaluation of molecular
+    properties using (MC)SCF, DFT, CI, and CC wave functions.
+    The authors accept no responsibility for the performance of
+    the code or for the correctness of the results.
+     
+    The code (in whole or part) is provided under a licence and
+    is not to be reproduced for further distribution without
+    the written permission of the authors or their representatives.
+     
+    See the home page "http://daltonprogram.org" for further information.
+     
+    If results obtained with this code are published,
+    the appropriate citations would be both of:
+     
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
+       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
+       J. Cukras, P. Dahle, E. K. Dalskov, U. Ekstroem,
+       T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
+       L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
+       C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
+       H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
+       M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
+       P. Joergensen, M. Kaminski, J. Kauczor, S. Kirpekar,
+       T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
+       J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
+       O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
+       C. Neiss, C. B. Nielsen, P. Norman, J. Olsen,
+       J. M. H. Olsen, A. Osted, M. J. Packer, F. Pawlowski,
+       T. B. Pedersen, P. F. Provasi, S. Reine, Z. Rinkevicius,
+       T. A. Ruden, K. Ruud, V. Rybkin, P. Salek, C. C. M. Samson,
+       A. Sanchez de Meras, T. Saue, S. P. A. Sauer,
+       B. Schimmelpfennig, K. Sneskov, A. H. Steindal,
+       K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
+       E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
+       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
+       and H. Agren,
+       "The Dalton quantum chemistry program system",
+       WIREs Comput. Mol. Sci. 2013. (doi: 10.1002/wcms.1172)
+    
+    and
+    
+       Dalton, a Molecular Electronic Structure Program,
+       Release DALTON2014.0 (2015), see http://daltonprogram.org
+   ----------------------------------------------------------------------------
+
+    Authors in alphabetical order (major contribution(s) in parenthesis):
+
+  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
+  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
+  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,             KTH Stockholm,                Sweden      (DALTON installation and execution frameworks)
+  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
+  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
+  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
+  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
+  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
+  Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
+  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
+  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
+  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
+  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
+  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
+  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
+  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
+  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
+  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
+  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
+  Kasper Hald,              Aarhus University,            Denmark     (CC module)
+  Asger Halkier,            Aarhus University,            Denmark     (CC module)
+  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
+  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
+  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
+  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
+  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
+  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
+  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
+  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
+  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
+  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
+  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
+  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
+  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
+  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
+  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex response in RESPONS)
+  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
+  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
+  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
+  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
+  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
+  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
+  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
+  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
+  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
+  Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
+  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
+  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
+  David P. Tew,             University of Bristol,        England     (CCSD(R12))
+  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
+  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+ --------------------------------------------------------------------------------
+
+     Date and time (Linux)  : Mon May 11 12:02:52 2015
+     Host name              : copper                                  
+
+ * Work memory size             :    64000000 =  488.28 megabytes.
+
+ * Directories for basis set searches:
+   1) /home/eric/development/pyints/test/Li_STO-3G
+   2) /home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis
+
+
+Compilation information
+-----------------------
+
+ Who compiled             | eric
+ Host                     | copper
+ System                   | Linux-3.13.0-46-generic
+ CMake generator          | Unix Makefiles
+ Processor                | x86_64
+ 64-bit integers          | OFF
+ MPI                      | OFF
+ Fortran compiler         | /home/eric/opt/apps/intel/2013_sp1_update1/compose
+                          | r_xe_2013_sp1.1.106/bin/intel64/ifort
+ Fortran compiler version | ifort (IFORT) 14.0.1 20131008
+ C compiler               | /home/eric/opt/apps/intel/2013_sp1_update1/compose
+                          | r_xe_2013_sp1.1.106/bin/intel64/icc
+ C compiler version       | icc (ICC) 14.0.1 20131008
+ C++ compiler             | /home/eric/opt/apps/intel/2013_sp1_update1/compose
+                          | r_xe_2013_sp1.1.106/bin/intel64/icpc
+ C++ compiler version     | icpc (ICC) 14.0.1 20131008
+ Static linking           | OFF
+ Last Git revision        | d34efb170c481236ad60c789dea90a4c857c6bab
+ Configuration time       | 2015-03-16 13:50:41.378554
+
+
+   Content of the .dal input file
+ ----------------------------------
+
+BASIS                                             
+STO-3G                                            
+---                                               
+---                                               
+Atomtypes=1 Angstrom Nosymmetry                   
+Charge=3.0 Atoms=1                                
+Li 0.0000 0.0000 0.0000                           
+                                                  
+**DALTON INPUT                                    
+.RUN WAVE FUNCTION                                
+**WAVE FUNCTIONS                                  
+.HF                                               
+**INTEGRAL                                        
+.KINENE                                           
+.1ELPOT                                           
+.DIPLEN                                           
+.DIPVEL                                           
+.QUADRU                                           
+.SECMOM                                           
+.NELFLD                                           
+.EFGCAR                                           
+.ANGMOM                                           
+.SPIN-ORBIT                                       
+.PRINT                                            
+6                                                 
+# .PROPRI                                         
+**END OF DALTON INPUT                             
+
+
+       *******************************************************************
+       *********** Output from DALTON general input processing ***********
+       *******************************************************************
+
+ --------------------------------------------------------------------------------
+   Overall default print level:    0
+   Print level for DALTON.STAT:    1
+
+    HERMIT 1- and 2-electron integral sections will be executed
+    "Old" integral transformation used (limited to max 255 basis functions)
+    Wave function sections will be executed (SIRIUS module)
+ --------------------------------------------------------------------------------
+
+
+   ****************************************************************************
+   *************** Output of molecule and basis set information ***************
+   ****************************************************************************
+
+
+    The two title cards from your ".mol" input:
+    ------------------------------------------------------------------------
+ 1: ---                                                                     
+ 2: ---                                                                     
+    ------------------------------------------------------------------------
+
+  Coordinates are entered in Angstrom and converted to atomic units.
+          - Conversion factor : 1 bohr = 0.52917721 A
+
+  Atomic type no.    1
+  --------------------
+  Nuclear charge:   3.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   3 :
+     "/home/eric/opt/apps/dalton/2015-i2013.sp1.1-mkl-omp/dalton/basis/STO-3G"
+
+
+                         SYMGRP: Point group information
+                         -------------------------------
+
+@    Point group: C1 
+
+
+                                 Isotopic Masses
+                                 ---------------
+
+                           Li          7.016005
+
+                       Total mass:     7.016005 amu
+                       Natural abundance:  92.500 %
+
+ Center-of-mass coordinates (a.u.):    0.000000    0.000000    0.000000
+
+
+  Atoms and basis sets
+  --------------------
+
+  Number of atom types :    1
+  Total number of atoms:    1
+
+  Basis set used is "STO-3G" from the basis set library.
+
+  label    atoms   charge   prim   cont     basis
+  ----------------------------------------------------------------------
+  Li          1    3.0000    15     5      [6s3p|2s1p]                                        
+  ----------------------------------------------------------------------
+  total:      1    3.0000    15     5
+  ----------------------------------------------------------------------
+
+  Threshold for neglecting AO integrals:  1.00D-12
+
+
+  Cartesian Coordinates (a.u.)
+  ----------------------------
+
+  Total number of coordinates:    3
+  Li      :     1  x   0.0000000000    2  y   0.0000000000    3  z   0.0000000000
+
+
+@ This is an atomic calculation.
+
+
+                     .---------------------------------------.
+                     | Starting in Integral Section (HERMIT) |
+                     `---------------------------------------'
+
+
+
+ ***************************************************************************************
+ ****************** Output from **INTEGRALS input processing (HERMIT) ******************
+ ***************************************************************************************
+
+
+
+    *************************************************************************
+    ****************** Output from HERMIT input processing ******************
+    *************************************************************************
+
+
+ Default print level:        6
+
+ * Nuclear model: Point charge
+
+ Calculation of one- and two-electron Hamiltonian integrals.
+
+ The following one-electron property integrals are calculated as requested:
+          - overlap integrals
+          - dipole length integrals
+          - dipole velocity integrals
+          - quadrupole moment integrals
+          - second moment integrals
+          - electronic kinetic energy
+          - spatial spin-orbit integrals
+          - electronic angular momentum around the origin
+          - Electric field at the nuclei
+          - Cartesien electric field gradient integrals
+          - Potential energy Hamiltonian integrals
+
+ Center of mass  (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
+
+
+     ************************************************************************
+     ************************** Output from HERONE **************************
+     ************************************************************************
+
+
+
+                            **************************
+                            *** Output from ONEDR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONESO1 ***
+                            **************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                            **************************
+                            *** Output from ONEPR1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from WRTUND ***
+                            **************************
+
+
+ Overlap matrix
+
+
+ ICOUNT, NBUF      6    1 NNBAST, NNBASX      15      15
+     1    1    1           0.100000000000D+01
+     2    2    1           0.241136651184D+00
+     3    2    2           0.100000000000D+01
+     6    3    3           0.100000000000D+01
+    10    4    4           0.100000000000D+01
+    15    5    5           0.100000000000D+01
+
+     6 atomic overlap integrals written in   1 buffers.
+ Percentage non-zero integrals:  37.50
+
+ One-el. Ham. matrix
+
+
+ ICOUNT, NBUF      6    1 NNBAST, NNBASX      15      15
+     1    1    1          -0.440609495515D+01
+     2    2    1          -0.984580544135D+00
+     3    2    2          -0.110475933586D+01
+     6    3    3          -0.877579141429D+00
+    10    4    4          -0.877579141429D+00
+    15    5    5          -0.877579141429D+00
+
+     6 one-el. Hamil. integrals written in   1 buffers.
+ Percentage non-zero integrals:  37.50
+
+ Kin. energy matrix
+
+
+ ICOUNT, NBUF      6    1 NNBAST, NNBASX      15      15
+     1    1    1           0.357678642449D+01
+     2    2    1          -0.202373805613D-01
+     3    2    2           0.102163366117D+00
+     6    3    3           0.319681669225D+00
+    10    4    4           0.319681669225D+00
+    15    5    5           0.319681669225D+00
+
+     6 kinetic energy integrals written in   1 buffers.
+ Percentage non-zero integrals:  37.50
+
+ Calculation of overlap and Huckel matrices.
+
+
+ Integral type:   -1  HUCKEL 
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    2
+ Molecule label: HUCKOVLP
+ Symmetry:    0
+ Molecule label: HUCKEL  
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST     10
+ NELMNT    55
+ INTTYP    -1
+ NOPTYP     2
+ ANTI       F
+ SQUARE     F
+ INTREP     0    0
+ LABINT  HUCKOVLP HUCKEL  
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      0
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  4 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  5,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  5,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  5,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  5,  4 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  5,  5 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  6,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  6,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  6,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  6,  4 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  6,  5 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  6,  6 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: HUCKOVLP !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2       0.24113665     1.00000000
+       3       0.00000000     0.00000000     1.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000
+       6       0.99916351     0.26711663     0.00000000     0.00000000
+       7      -0.02226873     0.94090660     0.00000000     0.00000000
+       8       0.00000000     0.00000000     0.91244515     0.00000000
+       9       0.00000000     0.00000000     0.00000000     0.91244515
+
+               Column   5     Column   6     Column   7     Column   8
+       5       1.00000000
+       6       0.00000000     1.00000000
+       7       0.00000000    -0.00000006     1.00000000
+       8       0.00000000     0.00000000     0.00000000     1.00000000
+      10       0.91244515     0.00000000     0.00000000     0.00000000
+
+               Column   9     Column  10
+       9       1.00000000
+      10       0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+                         +-------------------------------+
+                         ! Integrals of operator: HUCKEL !
+                         +-------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2       0.24113665     1.00000000
+       3       0.00000000     0.00000000     1.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000
+       6       0.99916351     0.26711663     0.00000000     0.00000000
+       7      -0.02226873     0.94090660     0.00000000     0.00000000
+       8       0.00000000     0.00000000     0.91244515     0.00000000
+       9       0.00000000     0.00000000     0.00000000     0.91244515
+
+               Column   5     Column   6     Column   7     Column   8
+       5       1.00000000
+       6       0.00000000    -2.47770000
+       7       0.00000000     0.00000000    -0.19630000
+       8       0.00000000     0.00000000     0.00000000    -0.13000000
+      10       0.91244515     0.00000000     0.00000000     0.00000000
+
+               Column   9     Column  10
+       9      -0.13000000
+      10       0.00000000    -0.13000000
+    ==== End of matrix output ====
+
+ Calculation of overlap integrals.
+
+
+ Integral type:    1  OVERLAP
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    1
+ Molecule label: OVERLAP 
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    15
+ INTTYP     1
+ NOPTYP     1
+ ANTI       F
+ SQUARE     F
+ INTREP     0
+ LABINT  OVERLAP 
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      0
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: OVERLAP !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       1.00000000
+       2       0.24113665     1.00000000
+       3       0.00000000     0.00000000     1.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000
+
+               Column   5
+       5       1.00000000
+    ==== End of matrix output ====
+
+ Calculation of modified overlap integrals for pop. anal.
+
+
+ Integral type: 1001  POPOVLP
+ TRASPH:    F
+ SQUARE:    T
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    1
+ Molecule label: HJPOPOVL
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    25
+ INTTYP  1001
+ NOPTYP     1
+ ANTI       F
+ SQUARE     T
+ INTREP     0
+ LABINT  HJPOPOVL
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      0
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: HJPOPOVL !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4     Column   5
+       1       1.00000000     0.24113665     0.00000000     0.00000000     0.00000000
+       2       0.24113665     1.00000000     0.00000000     0.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       5       0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+ Calculation of dipole moment (length) integrals.
+
+
+ Integral type:    2  DIPLEN 
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    3
+ Molecule label: XDIPLEN 
+ Symmetry:    0
+ Molecule label: YDIPLEN 
+ Symmetry:    0
+ Molecule label: ZDIPLEN 
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    15
+ INTTYP     2
+ NOPTYP     3
+ ANTI       F
+ SQUARE     F
+ INTREP     0    0    0
+ LABINT  XDIPLEN  YDIPLEN  ZDIPLEN 
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      0
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: XDIPLEN !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       3       0.14723998     1.80329832     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: YDIPLEN !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.14723998     1.80329832     0.00000000     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: ZDIPLEN !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.14723998     1.80329832     0.00000000     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+ Calculation of quadrupole moment integrals.
+
+
+ Integral type:    4  QUADRUP
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    6
+ Molecule label: XXQUADRU
+ Symmetry:    0
+ Molecule label: XYQUADRU
+ Symmetry:    0
+ Molecule label: XZQUADRU
+ Symmetry:    0
+ Molecule label: YYQUADRU
+ Symmetry:    0
+ Molecule label: YZQUADRU
+ Symmetry:    0
+ Molecule label: ZZQUADRU
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    15
+ INTTYP     4
+ NOPTYP     6
+ ANTI       F
+ SQUARE     F
+ INTREP     0    0    0    0    0    0
+ LABINT  XXQUADRU XYQUADRU XZQUADRU YYQUADRU YZQUADRU ZZQUADRU
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      0
+ JMAXM      2
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XXQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.06900875
+       2       0.05710301     1.94457020
+       3       0.00000000     0.00000000     1.17501638
+       4       0.00000000     0.00000000     0.00000000     2.35003276
+
+               Column   5
+       5       2.35003276
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XYQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.00000000     0.00000000    -0.58750819     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XZQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000    -0.58750819     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: YYQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.06900875
+       2       0.05710301     1.94457020
+       3       0.00000000     0.00000000     2.35003276
+       4       0.00000000     0.00000000     0.00000000     1.17501638
+
+               Column   5
+       5       2.35003276
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: YZQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000     0.00000000    -0.58750819
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: ZZQUADRU !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.06900875
+       2       0.05710301     1.94457020
+       3       0.00000000     0.00000000     2.35003276
+       4       0.00000000     0.00000000     0.00000000     2.35003276
+
+               Column   5
+       5       1.17501638
+    ==== End of matrix output ====
+
+ Calculation of electronic kinetic energy
+
+
+ Integral type:   21  KINENER
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    1
+ Molecule label: KINENERG
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    15
+ INTTYP    21
+ NOPTYP     1
+ ANTI       F
+ SQUARE     F
+ INTREP     0
+ LABINT  KINENERG
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      2
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: KINENERG !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       3.57678642
+       2      -0.02023738     0.10216337
+       3       0.00000000     0.00000000     0.31968167
+       4       0.00000000     0.00000000     0.00000000     0.31968167
+
+               Column   5
+       5       0.31968167
+    ==== End of matrix output ====
+
+ Calculation of dipole velocity integrals.
+
+
+ Integral type:    3  DIPVEL 
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    3
+ Molecule label: XDIPVEL 
+ Symmetry:    0
+ Molecule label: YDIPVEL 
+ Symmetry:    0
+ Molecule label: ZDIPVEL 
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    15
+ INTTYP     3
+ NOPTYP     3
+ ANTI       T
+ SQUARE     F
+ INTREP     0    0    0
+ LABINT  XDIPVEL  YDIPVEL  ZDIPVEL 
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      1
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: XDIPVEL !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       3      -0.35912885    -0.23195889     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: YDIPVEL !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4      -0.35912885    -0.23195889     0.00000000     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: ZDIPVEL !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5      -0.35912885    -0.23195889     0.00000000     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+ Calculation of second moments integrals.
+
+
+ Integral type:    6  SECMOM 
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    6
+ Molecule label: XXSECMOM
+ Symmetry:    0
+ Molecule label: XYSECMOM
+ Symmetry:    0
+ Molecule label: XZSECMOM
+ Symmetry:    0
+ Molecule label: YYSECMOM
+ Symmetry:    0
+ Molecule label: YZSECMOM
+ Symmetry:    0
+ Molecule label: ZZSECMOM
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    15
+ INTTYP     6
+ NOPTYP     6
+ ANTI       F
+ SQUARE     F
+ INTREP     0    0    0    0    0    0
+ LABINT  XXSECMOM XYSECMOM XZSECMOM YYSECMOM YZSECMOM ZZSECMOM
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      0
+ JMAXM      2
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XXSECMOM !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.13801750
+       2       0.11420602     3.88914040
+       3       0.00000000     0.00000000     7.05009829
+       4       0.00000000     0.00000000     0.00000000     2.35003276
+
+               Column   5
+       5       2.35003276
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XYSECMOM !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.00000000     0.00000000     2.35003276     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XZSECMOM !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000     2.35003276     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: YYSECMOM !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.13801750
+       2       0.11420602     3.88914040
+       3       0.00000000     0.00000000     2.35003276
+       4       0.00000000     0.00000000     0.00000000     7.05009829
+
+               Column   5
+       5       2.35003276
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: YZSECMOM !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000     0.00000000     2.35003276
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: ZZSECMOM !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.13801750
+       2       0.11420602     3.88914040
+       3       0.00000000     0.00000000     2.35003276
+       4       0.00000000     0.00000000     0.00000000     2.35003276
+
+               Column   5
+       5       7.05009829
+    ==== End of matrix output ====
+
+ Calculation of electronic one-electron potential energy
+
+
+ Integral type:   64  POTENER
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    1
+ Molecule label: POTENERG
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    15
+ INTTYP    64
+ NOPTYP     1
+ ANTI       F
+ SQUARE     F
+ INTREP     0
+ LABINT  POTENERG
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      0
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: POTENERG !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       7.98288138
+       2       0.96434316     1.20692270
+       3       0.00000000     0.00000000     1.19726081
+       4       0.00000000     0.00000000     0.00000000     1.19726081
+
+               Column   5
+       5       1.19726081
+    ==== End of matrix output ====
+
+ Calculation of spatial one-electron spin-orbit integrals.
+
+
+ Integral type:    5  SPNORB 
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    3
+ Molecule label: X1SPNORB
+ Symmetry:    0
+ Molecule label: Y1SPNORB
+ Symmetry:    0
+ Molecule label: Z1SPNORB
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    15
+ INTTYP     5
+ NOPTYP     3
+ ANTI       T
+ SQUARE     F
+ INTREP     0    0    0
+ LABINT  X1SPNORB Y1SPNORB Z1SPNORB
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      1
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: X1SPNORB !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000     0.00000000    -0.47712241
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: Y1SPNORB !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000     0.47712241     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: Z1SPNORB !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.00000000     0.00000000    -0.47712241     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+ Calculation of angular momentum around the gauge origin
+
+
+ Integral type:   18  ANGMOM 
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    3
+ Molecule label: XANGMOM 
+ Symmetry:    0
+ Molecule label: YANGMOM 
+ Symmetry:    0
+ Molecule label: ZANGMOM 
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    15
+ INTTYP    18
+ NOPTYP     3
+ ANTI       T
+ SQUARE     F
+ INTREP     0    0    0
+ LABINT  XANGMOM  YANGMOM  ZANGMOM 
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      1
+ JMAXM      1
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: XANGMOM !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000     0.00000000     1.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: YANGMOM !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000    -1.00000000     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: ZANGMOM !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.00000000     0.00000000     1.00000000     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+Calculation of electric field strength at the nuclei
+
+
+ Integral type:   29  NEFIELD
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    3
+ Molecule label: NEF 001 
+ Symmetry:    0
+ Molecule label: NEF 002 
+ Symmetry:    0
+ Molecule label: NEF 003 
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    15
+ INTTYP    29
+ NOPTYP     3
+ ANTI       F
+ SQUARE     F
+ INTREP     0    0    0
+ LABINT  NEF 001  NEF 002  NEF 003 
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      0
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: NEF 001 !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       3       0.24625264     0.12429053     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: NEF 002 !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.24625264     0.12429053     0.00000000     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                         +--------------------------------+
+                         ! Integrals of operator: NEF 003 !
+                         +--------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.24625264     0.12429053     0.00000000     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+ Calculation of electric field gradients (cartesian)
+
+
+ Integral type:   30  ELFGRDC
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    6
+ Molecule label: XXEFG011
+ Symmetry:    0
+ Molecule label: XYEFG011
+ Symmetry:    0
+ Molecule label: XZEFG011
+ Symmetry:    0
+ Molecule label: YYEFG011
+ Symmetry:    0
+ Molecule label: YZEFG011
+ Symmetry:    0
+ Molecule label: ZZEFG011
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      5
+ NELMNT    15
+ INTTYP    30
+ NOPTYP     6
+ ANTI       F
+ SQUARE     F
+ INTREP     0    0    0    0    0    0
+ LABINT  XXEFG011 XYEFG011 XZEFG011 YYEFG011 YZEFG011 ZZEFG011
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.0000000000
+ JMAXD      0
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XXEFG011 !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       3       0.00000000     0.00000000    -0.12723264
+       4       0.00000000     0.00000000     0.00000000     0.06361632
+
+               Column   5
+       5       0.06361632
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XYEFG011 !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       4       0.00000000     0.00000000    -0.09542448     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: XZEFG011 !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000    -0.09542448     0.00000000
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: YYEFG011 !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       3       0.00000000     0.00000000     0.06361632
+       4       0.00000000     0.00000000     0.00000000    -0.12723264
+
+               Column   5
+       5       0.06361632
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: YZEFG011 !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       5       0.00000000     0.00000000     0.00000000    -0.09542448
+
+               Column   5
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: ZZEFG011 !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       3       0.00000000     0.00000000     0.06361632
+       4       0.00000000     0.00000000     0.00000000     0.06361632
+
+               Column   5
+       5      -0.12723264
+    ==== End of matrix output ====
+
+
+     ************************************************************************
+     ************************** Output from TWOINT **************************
+     ************************************************************************
+
+
+
+                                Output from PAOVEC
+                                ------------------
+
+  BIGVEC     F
+  MAXSHL     2
+  NHKTSH     1    2
+  KHKTSH     1    3
+  SPHRSH     F    F
+  KCKTSH     1    3
+  NUCOSH     6    3
+  NORBSH     2    1
+  IORBSB     0    1    2    3    4
+    0
+ JSTRSH (gen. con.) for ISHELL =    1
+     0    0
+ JSTRSH (seg. con.) for ISHELL =    1
+     0    3
+ JSTRSH (gen. con.) for ISHELL =    2
+     6
+ JSTRSH (seg. con.) for ISHELL =    2
+     6
+ NPRIMS (gen. con.) for ISHELL =    1
+     6    0
+ NPRIMS (seg. con.) for ISHELL =    1
+     3    3
+ NPRIMS (gen. con.) for ISHELL =    2
+     3
+ NPRIMS (seg. con.) for ISHELL =    2
+     3
+ NCONTS (gen. con.) for ISHELL =    1
+     2    0
+ NCONTS (seg. con.) for ISHELL =    1
+    -1   -2
+ NCONTS (gen. con.) for ISHELL =    2
+     1
+ NCONTS (seg. con.) for ISHELL =    2
+    -1
+ CENTSH for ISHELL =    1
+         0.0000000000        0.0000000000        0.0000000000
+ CENTSH for ISHELL =    2
+         0.0000000000        0.0000000000        0.0000000000
+ IORBSH for ISHELL =    1
+     0    1
+ IORBSH for ISHELL =    2
+     2
+
+
+                            **************************
+                            *** Output from TWOINT ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from WHTREP ***
+                            **************************
+
+
+  Number of perturbation representations: 1
+  Perturbation representations:           0
+ ITYPE      0
+ MAXDER     0
+ IATOM      0
+ MULTE      1
+ UNDIFF     T
+ PERTUR     F
+ EXPECT     F
+ DDFOCK     F
+ DIRFCK     F
+ SOFOCK     F
+ SPNORB     F
+ DIA2SO     F
+ ZFS2EL     F
+ LONDON     F
+ SUSCEP     F
+ DISTRI     F
+ ADISTR     F
+ SQ12EL     F
+
+
+                            **************************
+                            *** Output from TWOCAL ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOLOP ***
+                            **************************
+
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:          33 ( 27.5% )
+ HERMIT - Megabytes written:                              0.007
+
+
+
+  Maximum work space allocations in TWOINT
+  ----------------------------------------
+
+  Total allocation:                           9496
+  Expansion coefficients (electron 1):         324
+  Expansion coefficients (electron 2):         324
+  Two-electron densities:                        0
+  SO integrals:                                 36
+  AO integrals:                                 36
+  Hermite integrals:                          3240
+  Hermite integral pointer:                      0
+  Hermite-Cartesian integrals:                 540
+  Gamma functions:                             972
+  Work space for Hermite integrals:           3240
+  Allocations in C1DRIV:                      1620
+  Allocations in C2DRIV:                         7
+  Allocations in C2HINT:                        91
+  Allocations in C2EINT:                         0
+
+  Allocations in INTEXP:                         0
+  Allocations in PPRIM :                         0
+  Allocations in DRSYM2:                         0
+
+
+
+  Performance of TWOINT
+  ---------------------
+
+  Number of contracted functions:    5
+  Number of primitive  functions:   15
+
+  Number of integrals written                    :          33
+  Number of contracted integrals (counting zeros):         120
+  Number of primitive integrals (counting zeros) :        7260
+
+
+  Average time for non-zero (written) integrals:    0.0 microseconds
+  Average time for zero/non-zero integrals     :    0.0 microseconds
+  Average time for primitive integrals         :    0.0 microseconds
+
+  Average reduction of primitive ODC vectors:    8.33 %
+  Average reduction of contracted ODC vectors:   0.00 %
+
+
+                                Output from PAOVEC
+                                ------------------
+
+  BIGVEC     F
+  MAXSHL     2
+  NHKTSH     1    2
+  KHKTSH     1    3
+  SPHRSH     F    F
+  KCKTSH     1    3
+  NUCOSH     6    3
+  NORBSH     2    1
+  IORBSB     0    1    2    3    4
+    0
+ JSTRSH (gen. con.) for ISHELL =    1
+     0    0
+ JSTRSH (seg. con.) for ISHELL =    1
+     0    3
+ JSTRSH (gen. con.) for ISHELL =    2
+     6
+ JSTRSH (seg. con.) for ISHELL =    2
+     6
+ NPRIMS (gen. con.) for ISHELL =    1
+     6    0
+ NPRIMS (seg. con.) for ISHELL =    1
+     3    3
+ NPRIMS (gen. con.) for ISHELL =    2
+     3
+ NPRIMS (seg. con.) for ISHELL =    2
+     3
+ NCONTS (gen. con.) for ISHELL =    1
+     2    0
+ NCONTS (seg. con.) for ISHELL =    1
+    -1   -2
+ NCONTS (gen. con.) for ISHELL =    2
+     1
+ NCONTS (seg. con.) for ISHELL =    2
+    -1
+ CENTSH for ISHELL =    1
+         0.0000000000        0.0000000000        0.0000000000
+ CENTSH for ISHELL =    2
+         0.0000000000        0.0000000000        0.0000000000
+ IORBSH for ISHELL =    1
+     0    1
+ IORBSH for ISHELL =    2
+     2
+
+
+                            **************************
+                            *** Output from TWOINT ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from WHTREP ***
+                            **************************
+
+
+  Number of perturbation representations: 1
+  Perturbation representations:           0
+ ITYPE     -2
+ MAXDER     1
+ IATOM      0
+ MULTE      1
+ UNDIFF     F
+ PERTUR     F
+ EXPECT     F
+ DDFOCK     F
+ DIRFCK     F
+ SOFOCK     F
+ SPNORB     T
+ DIA2SO     F
+ ZFS2EL     F
+ LONDON     F
+ SUSCEP     F
+ DISTRI     F
+ ADISTR     F
+ SQ12EL     T
+
+
+                            **************************
+                            *** Output from TWOCAL ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOLOP ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOODS ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from GETLMN ***
+                            **************************
+
+
+
+  Cartesian components for orbital A
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital B
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital C
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital D
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+                            **************************
+                            *** Output from NINTSO ***
+                            **************************
+
+   NINTS      3
+   NINTSR     1
+   NINTMX     1
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+
+                            **************************
+                            *** Output from CPRLOP ***
+                            **************************
+
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+
+
+                            **************************
+                            *** Output from INTDER ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from INTDR1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from CCDRIV ***
+                            **************************
+
+ NOCNT for C1DRIV: F
+
+
+                            **************************
+                            *** Output from C1DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C10INT ***
+                            **************************
+
+ NOCNT for C2DRIV: F
+
+
+                            **************************
+                            *** Output from C2DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EINT ***
+                            **************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOODS ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from GETLMN ***
+                            **************************
+
+
+
+  Cartesian components for orbital A
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital B
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital C
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital D
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+                            **************************
+                            *** Output from NINTSO ***
+                            **************************
+
+   NINTS      9
+   NINTSR     3
+   NINTMX     3
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+
+                            **************************
+                            *** Output from CPRLOP ***
+                            **************************
+
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+
+
+                            **************************
+                            *** Output from INTDER ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from INTDR1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from CCDRIV ***
+                            **************************
+
+ NOCNT for C1DRIV: F
+
+
+                            **************************
+                            *** Output from C1DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C10INT ***
+                            **************************
+
+ NOCNT for C2DRIV: F
+
+
+                            **************************
+                            *** Output from C2DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EINT ***
+                            **************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOODS ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from GETLMN ***
+                            **************************
+
+
+
+  Cartesian components for orbital A
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital B
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital C
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital D
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+                            **************************
+                            *** Output from NINTSO ***
+                            **************************
+
+   NINTS     18
+   NINTSR     6
+   NINTMX     6
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+
+                            **************************
+                            *** Output from CPRLOP ***
+                            **************************
+
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+
+
+                            **************************
+                            *** Output from INTDER ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from INTDR1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from CCDRIV ***
+                            **************************
+
+ NOCNT for C1DRIV: F
+
+
+                            **************************
+                            *** Output from C1DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C10INT ***
+                            **************************
+
+ NOCNT for C2DRIV: F
+
+
+                            **************************
+                            *** Output from C2DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EINT ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EIN1 ***
+                            **************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOODS ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from GETLMN ***
+                            **************************
+
+
+
+  Cartesian components for orbital A
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital B
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital C
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital D
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+                            **************************
+                            *** Output from NINTSO ***
+                            **************************
+
+   NINTS      9
+   NINTSR     3
+   NINTMX     3
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+
+                            **************************
+                            *** Output from CPRLOP ***
+                            **************************
+
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+
+
+                            **************************
+                            *** Output from INTDER ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from INTDR1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from CCDRIV ***
+                            **************************
+
+ NOCNT for C1DRIV: F
+
+
+                            **************************
+                            *** Output from C1DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C10INT ***
+                            **************************
+
+ NOCNT for C2DRIV: F
+
+
+                            **************************
+                            *** Output from C2DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EINT ***
+                            **************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOODS ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from GETLMN ***
+                            **************************
+
+
+
+  Cartesian components for orbital A
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital B
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital C
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital D
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+                            **************************
+                            *** Output from NINTSO ***
+                            **************************
+
+   NINTS     27
+   NINTSR     9
+   NINTMX     9
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+
+                            **************************
+                            *** Output from CPRLOP ***
+                            **************************
+
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+
+
+                            **************************
+                            *** Output from INTDER ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from INTDR1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from CCDRIV ***
+                            **************************
+
+ NOCNT for C1DRIV: F
+
+
+                            **************************
+                            *** Output from C1DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C10INT ***
+                            **************************
+
+ NOCNT for C2DRIV: F
+
+
+                            **************************
+                            *** Output from C2DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EINT ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EIN1 ***
+                            **************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOODS ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from GETLMN ***
+                            **************************
+
+
+
+  Cartesian components for orbital A
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital B
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital C
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital D
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+                            **************************
+                            *** Output from NINTSO ***
+                            **************************
+
+   NINTS     54
+   NINTSR    18
+   NINTMX    18
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+
+                            **************************
+                            *** Output from CPRLOP ***
+                            **************************
+
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+
+
+                            **************************
+                            *** Output from INTDER ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from INTDR1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from CCDRIV ***
+                            **************************
+
+ NOCNT for C1DRIV: F
+
+
+                            **************************
+                            *** Output from C1DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C10INT ***
+                            **************************
+
+ NOCNT for C2DRIV: F
+
+
+                            **************************
+                            *** Output from C2DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EINT ***
+                            **************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOODS ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from GETLMN ***
+                            **************************
+
+
+
+  Cartesian components for orbital A
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital B
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital C
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+  Cartesian components for orbital D
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+                            **************************
+                            *** Output from NINTSO ***
+                            **************************
+
+   NINTS     18
+   NINTSR     6
+   NINTMX     6
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+
+                            **************************
+                            *** Output from CPRLOP ***
+                            **************************
+
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+
+
+                            **************************
+                            *** Output from INTDER ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from INTDR1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from CCDRIV ***
+                            **************************
+
+ NOCNT for C1DRIV: F
+
+
+                            **************************
+                            *** Output from C1DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C10INT ***
+                            **************************
+
+ NOCNT for C2DRIV: F
+
+
+                            **************************
+                            *** Output from C2DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EINT ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EIN1 ***
+                            **************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOODS ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from GETLMN ***
+                            **************************
+
+
+
+  Cartesian components for orbital A
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital B
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital C
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital D
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         0    0    0         0
+
+ Odd for spherical integrals:
+
+    0
+
+
+                            **************************
+                            *** Output from NINTSO ***
+                            **************************
+
+   NINTS     54
+   NINTSR    18
+   NINTMX    18
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+
+                            **************************
+                            *** Output from CPRLOP ***
+                            **************************
+
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+
+
+                            **************************
+                            *** Output from INTDER ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from INTDR1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from CCDRIV ***
+                            **************************
+
+ NOCNT for C1DRIV: F
+
+
+                            **************************
+                            *** Output from C1DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C10INT ***
+                            **************************
+
+ NOCNT for C2DRIV: F
+
+
+                            **************************
+                            *** Output from C2DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EINT ***
+                            **************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+ SYMLOP: processing differentiated integrals
+
+
+                            **************************
+                            *** Output from TWOODS ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from TWOOD1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from GETLMN ***
+                            **************************
+
+
+
+  Cartesian components for orbital A
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital B
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital C
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+  Cartesian components for orbital D
+  ----------------------------------
+
+        cmp        x    y    z        odd 
+
+         1         1    0    0         1
+         2         0    1    0         2
+         3         0    0    1         4
+
+ Odd for spherical integrals:
+
+    1    2    4
+
+
+                            **************************
+                            *** Output from NINTSO ***
+                            **************************
+
+   NINTS    108
+   NINTSR    36
+   NINTMX    36
+
+
+                            **************************
+                            *** Output from SYMLOP ***
+                            **************************
+
+ EXPECT, MAXDER = F           1
+
+
+                            **************************
+                            *** Output from CPRLOP ***
+                            **************************
+
+
+  Symmetry operations:    0    0    0
+
+  ISYMTS     0
+  ICENTA-D     1    1    1    1
+  NCENTA-D     1    1    1    1
+
+
+                            **************************
+                            *** Output from INTDER ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from INTDR1 ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from CCDRIV ***
+                            **************************
+
+ NOCNT for C1DRIV: F
+
+
+                            **************************
+                            *** Output from C1DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C10INT ***
+                            **************************
+
+ NOCNT for C2DRIV: F
+
+
+                            **************************
+                            *** Output from C2DRIV ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EINT ***
+                            **************************
+
+
+
+                            **************************
+                            *** Output from C2EIN1 ***
+                            **************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+
+
+                             ************************
+                             *** Output from SYM2 ***
+                             ************************
+
+ SYMLOP: processing differentiated integrals
+
+Emptying final buffer   75
+  Integral buffer #    1 has been written.
+
+           ##      1   1   5   4      0X 0       1.29231561D-01
+           ##      2   1   5   4      0X 0       2.17144360D-02
+           ##      2   2   5   4      0X 0       1.85853849D-02
+           ##      1   1   5   3      0Y 0      -1.29231561D-01
+           ##      2   1   5   3      0Y 0      -2.17144360D-02
+           ##      2   2   5   3      0Y 0      -1.85853849D-02
+           ##      1   1   4   3      0Z 0       1.29231561D-01
+           ##      2   1   4   3      0Z 0       2.17144360D-02
+           ##      2   2   4   3      0Z 0       1.85853849D-02
+           ##      4   1   5   1      0X 0      -2.92297369D-02
+           ##      4   1   5   2      0X 0      -9.27607971D-04
+           ##      4   2   5   1      0X 0      -3.59654883D-02
+           ##      4   2   5   2      0X 0      -7.68722021D-03
+           ##      5   1   4   1      0X 0       2.92297369D-02
+           ##      5   1   4   2      0X 0       9.27607971D-04
+           ##      5   2   4   1      0X 0       3.59654883D-02
+           ##      5   2   4   2      0X 0       7.68722021D-03
+           ##      3   1   5   1      0Y 0       2.92297369D-02
+           ##      3   1   5   2      0Y 0       9.27607971D-04
+           ##      3   2   5   1      0Y 0       3.59654883D-02
+           ##      3   2   5   2      0Y 0       7.68722021D-03
+           ##      5   1   3   1      0Y 0      -2.92297369D-02
+           ##      5   1   3   2      0Y 0      -9.27607971D-04
+           ##      5   2   3   1      0Y 0      -3.59654883D-02
+           ##      5   2   3   2      0Y 0      -7.68722021D-03
+           ##      3   1   4   1      0Z 0      -2.92297369D-02
+           ##      3   1   4   2      0Z 0      -9.27607971D-04
+           ##      3   2   4   1      0Z 0      -3.59654883D-02
+           ##      3   2   4   2      0Z 0      -7.68722021D-03
+           ##      4   1   3   1      0Z 0       2.92297369D-02
+           ##      4   1   3   2      0Z 0       9.27607971D-04
+           ##      4   2   3   1      0Z 0       3.59654883D-02
+           ##      4   2   3   2      0Z 0       7.68722021D-03
+           ##      3   3   5   4      0X 0       2.60869998D-02
+           ##      4   3   5   3      0X 0      -5.59007139D-03
+           ##      4   4   5   4      0X 0       1.49068570D-02
+           ##      5   3   4   3      0X 0       5.59007139D-03
+           ##      5   5   5   4      0X 0       1.49068570D-02
+           ##      3   3   5   3      0Y 0      -1.49068570D-02
+           ##      4   3   5   4      0Y 0       5.59007139D-03
+           ##      4   4   5   3      0Y 0      -2.60869998D-02
+           ##      5   4   4   3      0Y 0       5.59007139D-03
+           ##      5   5   5   3      0Y 0      -1.49068570D-02
+           ##      3   3   4   3      0Z 0       1.49068570D-02
+           ##      4   4   4   3      0Z 0       1.49068570D-02
+           ##      5   3   5   4      0Z 0       5.59007139D-03
+           ##      5   4   5   3      0Z 0      -5.59007139D-03
+           ##      5   5   4   3      0Z 0       2.60869998D-02
+
+
+                  +----------------------------------------------+
+                  ! Number of written 2-el. spin-orbit integrals !
+                  +----------------------------------------------+
+
+
+
+  Symmetry           x         y         z
+  ----------------------------------------
+
+      1             16        16        16
+
+         48 spin-orbit two-electron integrals and 
+         27 flags have been written on disk.
+
+
+
+
+  Maximum work space allocations in TWOINT
+  ----------------------------------------
+
+  Total allocation:                          23823
+  Expansion coefficients (electron 1):        3888
+  Expansion coefficients (electron 2):        3888
+  Two-electron densities:                        0
+  SO integrals:                                108
+  AO integrals:                                108
+  Hermite integrals:                          6480
+  Hermite integral pointer:                      0
+  Hermite-Cartesian integrals:                1080
+  Gamma functions:                            1458
+  Work space for Hermite integrals:           6480
+  Allocations in C1DRIV:                      3564
+  Allocations in C2DRIV:                        55
+  Allocations in C2HINT:                         0
+  Allocations in C2EINT:                       103
+
+  Allocations in INTEXP:                         0
+  Allocations in PPRIM :                         0
+  Allocations in DRSYM2:                         0
+
+
+
+  Performance of TWOINT
+  ---------------------
+
+  Number of contracted functions:    5
+  Number of primitive  functions:   15
+
+  Number of integrals written                    :          33
+  Number of contracted integrals (counting zeros):         120
+  Number of primitive integrals (counting zeros) :        7260
+
+
+  Average time for non-zero (written) integrals:  202.0 microseconds
+  Average time for zero/non-zero integrals     :   55.6 microseconds
+  Average time for primitive integrals         :    0.9 microseconds
+
+  Average reduction of primitive ODC vectors:    8.33 %
+  Average reduction of contracted ODC vectors:   0.00 %
+
+   Two-electron spin-orbit integrals
+   =================================
+   Spin-orbit 2-electron CPU  time      0. seconds
+   Spin-orbit 2-electron wall time      0. seconds
+ >>>> Total CPU  time used in HERMIT:   0.02 seconds
+ >>>> Total wall time used in HERMIT:   0.02 seconds
+
+
+                        .----------------------------------.
+                        | End of Integral Section (HERMIT) |
+                        `----------------------------------'
+
+
+
+                   .--------------------------------------------.
+                   | Starting in Wave Function Section (SIRIUS) |
+                   `--------------------------------------------'
+
+
+ *** Output from Huckel module :
+
+     Using EWMO model:          T
+     Using EHT  model:          F
+     Number of Huckel orbitals each symmetry:    5
+
+ EWMO - Energy Weighted Maximum Overlap - is a Huckel type method,
+        which normally is better than Extended Huckel Theory.
+ Reference: Linderberg and Ohrn, Propagators in Quantum Chemistry (Wiley, 1973)
+
+ Huckel EWMO eigenvalues for symmetry :  1
+           -2.477700      -0.196300      -0.130000      -0.130000      -0.130000
+
+ **********************************************************************
+ *SIRIUS* a direct, restricted step, second order MCSCF program       *
+ **********************************************************************
+
+ 
+     Date and time (Linux)  : Mon May 11 12:02:52 2015
+     Host name              : copper                                  
+
+ Title lines from ".mol" input file:
+     ---                                                                     
+     ---                                                                     
+
+ Print level on unit LUPRI =   2 is   0
+ Print level on unit LUW4  =   2 is   5
+
+@    Restricted, one open shell Hartree-Fock calculation.
+
+ Initial molecular orbitals are obtained according to
+ ".MOSTART EWMO  " input option
+
+     Wave function specification
+     ============================
+@    Wave function type        >>> HF <<<
+@    Number of closed shell electrons           2
+@    Number of electrons in active shells       1
+@    Total charge of the molecule               0
+
+@    Spin multiplicity and 2 M_S                2         1
+@    Total number of symmetries                 1 (point group: C1 )
+@    Reference state symmetry                   1 (irrep name : A  )
+
+     Orbital specifications
+     ======================
+@    Abelian symmetry species          All |    1
+@                                          |  A  
+                                       --- |  ---
+@    Occupied SCF orbitals               1 |    1
+@    Open shell SCF orbitals             1 |    1
+@    Secondary orbitals                  3 |    3
+@    Total number of orbitals            5 |    5
+@    Number of basis functions           5 |    5
+
+     Optimization information
+     ========================
+@    Number of configurations                 1
+@    Number of orbital rotations              7
+     ------------------------------------------
+@    Total number of variables                8
+
+     Maximum number of Fock   iterations      0
+     Maximum number of DIIS   iterations     60
+     Maximum number of QC-SCF iterations     60
+     Threshold for SCF convergence     1.00D-05
+
+
+ ***********************************************
+ ***** DIIS acceleration of SCF iterations *****
+ ***********************************************
+
+ C1-DIIS algorithm; max error vectors =    7
+
+ Iter      Total energy        Error norm    Delta(E)  DIIS dim.
+ -----------------------------------------------------------------------------
+@  1    -7.31544770093        2.54638D-02   -7.32D+00    1
+      Virial theorem: -V/T =      1.983023
+@      MULPOP Li     -0.00; 
+ -----------------------------------------------------------------------------
+@  2    -7.31552511957        2.67169D-03   -7.74D-05    2
+      Virial theorem: -V/T =      1.984496
+@      MULPOP Li      0.00; 
+ -----------------------------------------------------------------------------
+@  3    -7.31552598128        1.07516D-06   -8.62D-07    3
+
+@ *** DIIS converged in   3 iterations !
+@     Converged SCF energy, gradient:     -7.315525981281    1.08D-06
+    - total time used in SIRFCK :              0.00 seconds
+
+
+ *** SCF orbital energy analysis ***
+
+ Orbital energy analysis for an open-shell system.
+ Orbital energies are not well-defined for open-shell systems
+   here is used block diagonalization of the FD=FC+FV Fock matrix.
+ NOTE that Koopmans' theorem is not fulfilled for this case.
+
+ Number of electrons :    2
+ Orbital occupations :    1
+
+ Sym       Hartree-Fock orbital energies
+
+1 A      -2.35349060    -0.03895976     0.16052129     0.16052129     0.16052129
+
+
+    E(LUMO) :     0.16052129 au (symmetry 1)
+  - E(HOMO) :    -2.35349060 au (symmetry 1)
+  ------------------------------------------
+    gap     :     2.51401189 au
+
+and E(SOMO) :    -0.03895976 au (symmetry 1)
+
+ >>> Writing SIRIFC interface file
+
+
+     ***********************************************************************
+     ************************* Output from FORMSUP *************************
+     ***********************************************************************
+
+    Precalculated two-electron integrals are transformed to P-supermatrix elements.
+    Threshold for discarding integrals            :  1.00D-12
+    Include integrals for general density matrices:         F
+
+  Symmetry                             1
+  Basis functions per symmetry         5
+
+ NBATCH:    1 LDA22: 5120 LSORT:  63982095 NSTEP:    1
+ BATCHES PER PASS:    1
+
+
+          NUMBER OF INTEGRALS READ          33
+          NUMBER OF INTEGRALS SORTED        33
+          NUMBER OF BUFFERS ON LUDASP        1
+
+
+          NUMBER OF RECORDS IN EACH CHAIN
+             1
+
+          NUMBER OF INTEGRALS IN EACH CHAIN
+            33
+
+    TIME IN SUP_SORT :     0.00 SEC.
+
+    TIME IN SUP1  :     0.00 SEC.
+
+    TOTAL TIME    :     0.00 SEC.
+
+ >>>> CPU and wall time for SCF :       0.123       0.018
+
+
+                       .-----------------------------------.
+                       | >>> Final results from SIRIUS <<< |
+                       `-----------------------------------'
+
+
+@    Spin multiplicity:           2
+@    Spatial symmetry:            1 ( irrep  A   in C1  )
+@    Total charge of molecule:    0
+
+@    Final HF energy:              -7.315525981281                 
+@    Nuclear repulsion:             0.000000000000
+@    Electronic energy:            -7.315525981281
+
+@    Final gradient norm:           0.000001075161
+
+ 
+     Date and time (Linux)  : Mon May 11 12:02:52 2015
+     Host name              : copper                                  
+
+File label for MO orbitals:  11May15   FOCKDIIS
+
+ (Only coefficients >0.0100 are printed.)
+
+ Molecular orbitals for symmetry species 1  (A  )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5
+   1 Li  :1s     0.9912  -0.2815   0.0000   0.0000   0.0000
+   2 Li  :1s     0.0341   1.0298   0.0000   0.0000   0.0000
+   3 Li  :2px    0.0000   0.0000   1.0000   0.0000   0.0000
+   4 Li  :2py    0.0000   0.0000   0.0000   1.0000   0.0000
+   5 Li  :2pz    0.0000   0.0000   0.0000   0.0000   1.0000
+
+
+
+ >>>> Total CPU  time used in SIRIUS :      0.17 seconds
+ >>>> Total wall time used in SIRIUS :      0.03 seconds
+
+ 
+     Date and time (Linux)  : Mon May 11 12:02:52 2015
+     Host name              : copper                                  
+
+
+                     .---------------------------------------.
+                     | End of Wave Function Section (SIRIUS) |
+                     `---------------------------------------'
+
+ >>>> Total CPU  time used in DALTON:   0.20 seconds
+ >>>> Total wall time used in DALTON:   0.06 seconds
+
+ 
+     Date and time (Linux)  : Mon May 11 12:02:52 2015
+     Host name              : copper                                  
