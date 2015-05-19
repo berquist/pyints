@@ -40,7 +40,7 @@ def makeERI(bfs):
 ### two-electron spin-orbit integrals (J2) from King and Furlani's
 ### formulation.
 
-def spin_orbit_2_KF(za, la, ra, zb, lb, rb, zc, lc, rc, zd, ld, rd, component):
+def spin_orbit_2_KF(za, zb, zc, zd, ra, rb, rc, rd, la, lb, lc, ld, component):
     ai, aj = za, zb
     # ak, al = zc, zd
     xi, yi, zi = la[0], la[1], la[2]
@@ -85,11 +85,11 @@ def J2_KF(a, b, c, d, component):
         return sum(cc * J2_KF(a, b, pc, d, component) for (cc, pc) in c)
     if d.contracted:
         return sum(cd * J2_KF(a, b, c, pd, component) for (cd, pd) in d)
-    return a.norm * b.norm * c.norm * d.norm * spin_orbit_2_KF(a.exponent, list(a.powers), a.origin,
-                                                               b.exponent, list(b.powers), b.origin,
-                                                               c.exponent, list(c.powers), c.origin,
-                                                               d.exponent, list(d.powers), d.origin,
-                                                               component)
+    return a.norm * b.norm * c.norm * d.norm * \
+        spin_orbit_2_KF(a.exponent, b.exponent, c.exponent, d.exponent,
+                        a.origin, b.origin, c.origin, d.origin,
+                        list(a.powers), list(b.powers), list(c.powers), list(d.powers),
+                        component)
 
 
 def makeJ2_KF(bfs):
