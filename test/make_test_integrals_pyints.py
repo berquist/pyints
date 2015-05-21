@@ -19,6 +19,13 @@ def make_test_integrals_pyints(args, mol, mol_basis):
         S_pyints = makeS(bfs)
         np.savetxt('pyints.S.txt', S_pyints)
 
+    if args.FC:
+        from pyints.one import makeFC
+        print('making FC...')
+        for iat, at in enumerate(mol, 1):
+            FC_pyints = makeFC(bfs, at.r)
+            np.savetxt('pyints.FC{}.txt'.format(iat), FC_pyints)
+
     if args.T:
         from pyints.one import makeT
         print('making T...')

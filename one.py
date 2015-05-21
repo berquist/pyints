@@ -30,6 +30,31 @@ def makeS(bfs):
     return ints
 
 
+### Fermi contact (FC) integrals
+
+def fermi_contact(alpha1, lmn1, A, alpha2, lmn2, B):
+    return os.get_fermi(alpha1, alpha2, A, B, lmn1 + lmn2, C)
+
+
+def FC(a, b, C):
+    if b.contracted:
+        return sum(cb * FC(pb, a, C) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * FC(b, pa, C) for (ca, pa) in a)
+    return a.norm * b.norm * fermi_contact(a.exponent, list(a.powers), a.origin,
+                                           b.exponent, list(b.powers), b.origin,
+                                           C)
+
+
+def makeFC(bfs, origin):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = FC(a, b, origin)
+    return ints
+
+
 ### kinetic energy (T) integrals
 
 def kinetic(alpha1, lmn1, A, alpha2, lmn2, B):

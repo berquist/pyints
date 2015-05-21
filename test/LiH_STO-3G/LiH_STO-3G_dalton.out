@@ -136,7 +136,7 @@
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Mon May 11 10:48:56 2015
+     Date and time (Linux)  : Tue May 19 23:58:48 2015
      Host name              : copper                                  
 
  * Work memory size             :    64000000 =  488.28 megabytes.
@@ -188,6 +188,7 @@ H  0.0000 0.0000 1.5949
 **WAVE FUNCTIONS                                  
 .HF                                               
 **INTEGRAL                                        
+.FC                                               
 .KINENE                                           
 .1ELPOT                                           
 .DIPLEN                                           
@@ -369,6 +370,8 @@ H  0.0000 0.0000 1.5949
           - second moment integrals
           - electronic kinetic energy
           - spatial spin-orbit integrals
+          - Fermi contact integrals
+            (Dirac delta function integrals)
           - electronic angular momentum around the origin
           - Electric field at the nuclei
           - Cartesien electric field gradient integrals
@@ -378,6 +381,8 @@ H  0.0000 0.0000 1.5949
  Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
  Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
  Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
+
+ Integrals for all indirect spin-spin coupling and/or shielding tensors are calculated.
 
 
      ************************************************************************
@@ -3084,6 +3089,190 @@ H  0.0000 0.0000 1.5949
        4       0.00000000     0.00000000    -0.50439911     0.00000000
 
                Column   5     Column   6
+    ==== End of matrix output ====
+
+ Calculation of one-electron Fermi contact integrals.
+
+ Integral type:    9  FERMI C
+ TRASPH:    F
+ SQUARE:    F
+ SOLVNT:    F
+ PCM   :    F
+ Number of operator components:    2
+ Molecule label: FC Li 01
+ Symmetry:    0
+ Molecule label: FC H  02
+ Symmetry:    0
+
+ <<<<<<<<<< OUTPUT FROM PR1DRV >>>>>>>>>> 
+
+ NBAST      6
+ NELMNT    21
+ INTTYP     9
+ NOPTYP     2
+ ANTI       F
+ SQUARE     F
+ INTREP     0    0
+ LABINT  FC Li 01 FC H  02
+ ORIGIN         0.0000000000        0.0000000000        0.0000000000
+ GAUGE          0.0000000000        0.0000000000        0.0000000000
+ DIPOLE         0.0000000000        0.0000000000        0.0000000000
+ CAVITY         0.0000000000        0.0000000000        0.3785608810
+ JMAXD      0
+ JMAXM      0
+
+
+  ***************************************
+  ********** ISHELA/B =  1,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  2,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  3,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  1 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  2 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  3 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+  ***************************************
+  ********** ISHELA/B =  4,  4 **********
+  ***************************************
+
+
+
+  ***************************************
+  ******** Symmetry operation  0 ********
+  ***************************************
+
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: FC Li 01 !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1      33.79670975
+       2       1.15119388     0.03921232
+       6       0.31873910     0.01085699     0.00000000     0.00000000
+
+               Column   5     Column   6
+       6       0.00000000     0.00300605
+    ==== End of matrix output ====
+
+
+                        +---------------------------------+
+                        ! Integrals of operator: FC H  02 !
+                        +---------------------------------+
+
+ Symmetry of operator:  A  ( 1)
+
+               Column   1     Column   2     Column   3     Column   4
+       1       0.00000032
+       2       0.00008308     0.02153482
+       5       0.00014455     0.03746606     0.00000000     0.00000000
+       6       0.00103012     0.26700040     0.00000000     0.00000000
+
+               Column   5     Column   6
+       5       0.06518307
+       6       0.46452461     3.31041630
     ==== End of matrix output ====
 
  Calculation of angular momentum around the gauge origin
@@ -10259,9 +10448,9 @@ Emptying final buffer  252
   Number of primitive integrals (counting zeros) :       14706
 
 
-  Average time for non-zero (written) integrals:  200.8 microseconds
-  Average time for zero/non-zero integrals     :   72.1 microseconds
-  Average time for primitive integrals         :    1.1 microseconds
+  Average time for non-zero (written) integrals:  522.1 microseconds
+  Average time for zero/non-zero integrals     :  187.6 microseconds
+  Average time for primitive integrals         :    2.9 microseconds
 
   Average reduction of primitive ODC vectors:    4.17 %
   Average reduction of contracted ODC vectors:   0.00 %
@@ -10270,8 +10459,8 @@ Emptying final buffer  252
    =================================
    Spin-orbit 2-electron CPU  time      0. seconds
    Spin-orbit 2-electron wall time      0. seconds
- >>>> Total CPU  time used in HERMIT:   0.03 seconds
- >>>> Total wall time used in HERMIT:   0.04 seconds
+ >>>> Total CPU  time used in HERMIT:   0.08 seconds
+ >>>> Total wall time used in HERMIT:   0.28 seconds
 
 
                         .----------------------------------.
@@ -10304,7 +10493,7 @@ Emptying final buffer  252
  **********************************************************************
 
  
-     Date and time (Linux)  : Mon May 11 10:48:56 2015
+     Date and time (Linux)  : Tue May 19 23:58:48 2015
      Host name              : copper                                  
 
  Title lines from ".mol" input file:
@@ -10389,11 +10578,11 @@ Emptying final buffer  252
           NUMBER OF INTEGRALS IN EACH CHAIN
             83
 
-    TIME IN SUP_SORT :     0.00 SEC.
+    TIME IN SUP_SORT :     0.01 SEC.
 
     TIME IN SUP1  :     0.00 SEC.
 
-    TOTAL TIME    :     0.00 SEC.
+    TOTAL TIME    :     0.01 SEC.
 @  1    -7.80828089195        5.56444D-01   -7.81D+00    1
       Virial theorem: -V/T =      1.948046
 @      MULPOP Li      0.47; H      -0.47; 
@@ -10438,7 +10627,7 @@ Emptying final buffer  252
 
  >>> Writing SIRIFC interface file
 
- >>>> CPU and wall time for SCF :       0.793       0.134
+ >>>> CPU and wall time for SCF :       0.090       0.013
 
 
                        .-----------------------------------.
@@ -10457,10 +10646,10 @@ Emptying final buffer  252
 @    Final gradient norm:           0.000002557408
 
  
-     Date and time (Linux)  : Mon May 11 10:48:56 2015
+     Date and time (Linux)  : Tue May 19 23:58:48 2015
      Host name              : copper                                  
 
-File label for MO orbitals:  11May15   FOCKDIIS
+File label for MO orbitals:  19May15   FOCKDIIS
 
  (Only coefficients >0.0100 are printed.)
 
@@ -10477,11 +10666,11 @@ File label for MO orbitals:  11May15   FOCKDIIS
 
 
 
- >>>> Total CPU  time used in SIRIUS :      1.20 seconds
- >>>> Total wall time used in SIRIUS :      0.20 seconds
+ >>>> Total CPU  time used in SIRIUS :      0.81 seconds
+ >>>> Total wall time used in SIRIUS :      0.16 seconds
 
  
-     Date and time (Linux)  : Mon May 11 10:48:56 2015
+     Date and time (Linux)  : Tue May 19 23:58:48 2015
      Host name              : copper                                  
 
 
@@ -10489,9 +10678,9 @@ File label for MO orbitals:  11May15   FOCKDIIS
                      | End of Wave Function Section (SIRIUS) |
                      `---------------------------------------'
 
- >>>> Total CPU  time used in DALTON:   1.23 seconds
- >>>> Total wall time used in DALTON:   0.25 seconds
+ >>>> Total CPU  time used in DALTON:   0.90 seconds
+ >>>> Total wall time used in DALTON:   0.76 seconds
 
  
-     Date and time (Linux)  : Mon May 11 10:48:56 2015
+     Date and time (Linux)  : Tue May 19 23:58:48 2015
      Host name              : copper                                  

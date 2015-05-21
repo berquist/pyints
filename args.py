@@ -9,6 +9,9 @@ def getargs():
     parser.add_argument('--S',
                         action='store_true',
                         help="""Calculate overlap integrals.""")
+    parser.add_argument('--FC',
+                        action='store_true',
+                        help="""Calculate Fermi contact integrals.""")
     parser.add_argument('--T',
                         action='store_true',
                         help="""Calculate kinetic energy integrals.""")
