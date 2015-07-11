@@ -3,7 +3,7 @@ from __future__ import print_function
 import pyquante2
 
 from pyints import getargs
-from pyints.test import make_test_integrals_pyquante2
+from pyints.test import make_test_integrals_pyquante
 
 
 with open('LiH.xyz') as molfile:
@@ -20,4 +20,4 @@ del mollines
 mol_basis = pyquante2.basisset(mol, 'STO-3G')
 
 args = getargs()
-make_test_integrals_pyquante2(args, mol, mol_basis)
+make_test_integrals_pyquante(args, mol, mol_basis)
