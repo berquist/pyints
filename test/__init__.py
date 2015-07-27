@@ -1,2 +1,3 @@
+from make_test_integrals_cints import make_test_integrals_cints
 from make_test_integrals_pyints import make_test_integrals_pyints
 from make_test_integrals_pyquante import make_test_integrals_pyquante

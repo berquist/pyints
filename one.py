@@ -2,8 +2,6 @@ import numpy as np
 
 import obarasaika.obara_saika as os
 
-from pyints.utils import fact2
-
 
 ### overlap (S) integrals
 
