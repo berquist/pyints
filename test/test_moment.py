@@ -5,7 +5,7 @@
 
 from __future__ import print_function
 
-import obarasaika.obara_saika as os
+import obarasaika.obarasaika.obara_saika as os
 import math
 fact = math.factorial
 

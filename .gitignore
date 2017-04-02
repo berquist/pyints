@@ -1,5 +1,8 @@
+*.html
+
 # Python
 *.py[co]
+.cache
 
 # Q-Chem
 pathtable
