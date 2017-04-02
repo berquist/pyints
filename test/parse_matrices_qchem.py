@@ -1,3 +1,7 @@
+"""parse_matrices_qchem.py: Parse matrices from Q-Chem output files
+and save them to disk either as plain text or NumPy binary files.
+"""
+
 from __future__ import print_function
 
 import re
@@ -5,15 +9,29 @@ import numpy as np
 
 
 def getargs():
+    """Get and parse command-line arguments."""
+
     import argparse
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('outputfilename')
-    parser.add_argument('--print-stdout', action='store_true')
+
+    parser.add_argument('outputfilename',
+                        help="""Name of the Q-Chem output file to parse for matrices.""")
+    parser.add_argument('--print-stdout',
+                        action='store_true',
+                        help="""Should all the parsed matrices be printed to stdout (usually the
+screen)?""")
+
     args = parser.parse_args()
+
     return args
 
 
 def qchem_parse_matrix(outputfile, matrix):
+    """Parse a matrix from a Q-Chem output file. `outputfile` is the file
+    object being read from. `matrix` is the NumPy array that we modify
+    in-place.
+    """
     # the shape of the matrix is the same as the dimension of the basis
     dim = matrix.shape[0]
     # The first line will always tell us the maximum number of columns wide
@@ -36,9 +54,13 @@ def qchem_parse_matrix(outputfile, matrix):
 
 def main(args):
 
-    outputfilename = args.outputfilename
+    import os.path
 
-    # These are the default matrices printed when calling OneEMtrx().dump()
+    outputfilename = args.outputfilename
+    stub = os.path.splitext(outputfilename)[0]
+
+    # These are the default matrices printed when calling
+    # `OneEMtrx().dump()`, plus a few I added in...:)
     matrix_headers = (
 #        'Final Alpha MO Coefficients',
         'Final Alpha density matrix.',
@@ -65,32 +87,32 @@ def main(args):
         'Spin-Orbit Interaction Matrix (Z-component)'
     )
 
-    # turn the matrix headers into reasonable variable and filenames
+    # Turn the matrix headers into reasonable variable and filenames.
     matrix_headers_varnames = []
     matrix_headers_filenames = []
     for matrix_name in matrix_headers:
         newname = '_'.join(matrix_name.split())
         newname = newname.replace(',', '').replace('(', '').replace(')', '').replace('.', '').replace('-', '_').lower()
-        filename = '.'.join(['qchem', newname, 'txt'])
+        filename = '.'.join([stub, newname, 'txt'])
         matrix_headers_varnames.append(newname)
         matrix_headers_filenames.append(filename)
 
     nbasis_re_string = 'There are(\s+[0-9]+) shells and(\s+[0-9]+) basis functions'
 
-    # determine the size of the basis
+    # Determine the size of the basis. Assume N_AO == N_MO!
     with open(outputfilename) as outputfile:
         for line in outputfile:
             match = re.findall(nbasis_re_string, line)
             if match:
                 nbasis = int(match[0][1].strip())
 
-    # preallocate the appropriate matrices
+    # Preallocate the appropriate matrices.
     for matrix_name in matrix_headers_varnames:
         exec_string = '{matrix_name} = np.ones(shape=({nbasis}, {nbasis})) * -99'
         exec(exec_string.format(matrix_name=matrix_name, nbasis=nbasis))
 
 
-    # parse the output file for each matrix
+    # Parse the output file for each matrix.
     parse_matrix_string = '{matrix_name} = qchem_parse_matrix(outputfile, {matrix_name})'
     save_matrix_string = 'np.savetxt("{file_name}", {matrix_name})'
     for i, matrix_name in enumerate(matrix_headers):
@@ -102,14 +124,14 @@ def main(args):
                                                    file_name=matrix_headers_filenames[i]))
                     break
 
-    # print all the parsed matrices to stdout if asked
+    # Print all the parsed matrices to stdout if asked.
     if args.print_stdout:
         for matrix_name in matrix_headers_varnames:
             print_matrix_string = 'print({})'.format(matrix_name)
             print(matrix_name)
             exec(print_matrix_string)
 
-    # Find the total energy and the nuclear repulsion energy
+    # Find the total energy and the nuclear repulsion energy.
     with open(outputfilename) as outputfile:
         for line in outputfile:
             if 'Nuclear Repulsion Energy' in line:
