@@ -2,8 +2,6 @@ import numpy as np
 
 import obarasaika.obarasaika.obara_saika as os
 
-from pyints.utils import fact2
-
 
 ### overlap (S) integrals
 
@@ -32,7 +30,7 @@ def makeS(bfs):
 
 ### Fermi contact (FC) integrals
 
-def fermi_contact(alpha1, lmn1, A, alpha2, lmn2, B):
+def fermi_contact(alpha1, lmn1, A, alpha2, lmn2, B, C):
     return os.get_fermi(alpha1, alpha2, A, B, lmn1 + lmn2, C)
 
 

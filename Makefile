@@ -1,5 +1,5 @@
 nosetest:
-	nosetests --verbosity=2 --with-doctest .
+	nosetests2 --verbosity=2 --with-doctest test
 
 pytest:
-	pytest -v --doctest-modules .
+	pytest2 -v --doctest-modules test

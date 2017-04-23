@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+
 """parse_matrices_dalton.py: Parse matrices from DALTON output files
 and save them to disk either as plain text or NumPy binary files.
 """
 
 from __future__ import print_function
+from __future__ import division
 
 import re
 import numpy as np
@@ -25,6 +28,24 @@ screen)?""")
     args = parser.parse_args()
 
     return args
+
+
+re_element = re.compile('(([1-9][0-9]*\.?[0-9]*)|(\.[0-9]+))([EeDd]?[+-]?[0-9]+)?')
+re_expt = re.compile('[+-]?\d*$')
+
+
+def parse_element_dalton(element):
+    """Given a number that might appear in a DALTON output, especially one
+    printed in a matrix, convert it to a float.
+
+    The 'expt' regex specifically captures the exponent for when a 'D'
+    isn't present in the number.
+    """
+
+    res = re_element.findall(element)[0][0]
+    expt = re_expt.findall(element)[0][0]
+
+    return float(res + 'e' + expt)
 
 
 def parse_matrix_dalton(outputfile):
@@ -56,7 +77,7 @@ def parse_matrix_dalton(outputfile):
             if rowindex not in spmat:
                 spmat[rowindex] = dict()
             for colindex, element in zip(colindices, chomp[1:]):
-                spmat[rowindex][colindex] = float(element)
+                spmat[rowindex][colindex] = parse_element_dalton(element)
         line = next(outputfile)
     return spmat
 
@@ -80,7 +101,7 @@ def parse_spin_orbit_2el(outputfile_reversed, dim, nlines):
         sline = line.split()
         mu, nu, lm, sg = list(map(int, sline[1:5]))
         component = sline[5][1]
-        element = float(sline[7].replace('D', 'E'))
+        element = parse_element_dalton(sline[7])
         if component == 'X':
             x2spnorb[mu-1, nu-1, lm-1, sg-1] = element
         elif component == 'Y':
@@ -93,9 +114,11 @@ def parse_spin_orbit_2el(outputfile_reversed, dim, nlines):
     return x2spnorb, y2spnorb, z2spnorb
 
 
-def main(args):
+def main():
 
     import os.path
+
+    args = getargs()
 
     outputfilename = args.outputfilename
     stub = os.path.splitext(outputfilename)[0]
@@ -171,9 +194,9 @@ def main(args):
     with open(outputfilename) as outputfile:
         for line in outputfile:
             if '@    Nuclear repulsion:' in line:
-                V_nn = float(line.split()[3])
+                V_nn = parse_element_dalton(line.split()[3])
             if '@     Converged SCF energy' in line:
-                E_total = float(line.split()[-2])
+                E_total = parse_element_dalton(line.split()[-2])
 
     np.savetxt('.'.join([stub, 'nuclear_repulsion_energy.txt']), np.array([V_nn]))
     np.savetxt('.'.join([stub, 'total_energy.txt']), np.array([E_total]))
@@ -182,5 +205,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    args = getargs()
-    main_locals = main(args)
+    main()

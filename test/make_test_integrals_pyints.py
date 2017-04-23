@@ -126,12 +126,12 @@ def make_test_integrals_pyints(args, mol, mol_basis):
         from pyints.two import makeERI
         print('making ERI...')
         ERI_pyints = makeERI(bfs)
-        np.save('pyints.ERI.npy', ERI_pyints)
+        np.savez_compressed('pyints.ERI.npz', ERI_pyints)
 
     if args.J2_KF:
         from pyints.two import makeJ2_KF
         print('making J2_KF...')
         J2X_pyints, J2Y_pyints, J2Z_pyints = makeJ2_KF(bfs)
-        np.save('pyints.J2X.npy', J2X_pyints)
-        np.save('pyints.J2Y.npy', J2Y_pyints)
-        np.save('pyints.J2Z.npy', J2Z_pyints)
+        np.savez_compressed('pyints.J2X.npz', J2X_pyints)
+        np.savez_compressed('pyints.J2Y.npz', J2Y_pyints)
+        np.savez_compressed('pyints.J2Z.npz', J2Z_pyints)

@@ -7,7 +7,6 @@ import pyquante2
 
 
 def pyquante_2_to_1_molecule(old_molecule):
-    """"""
 
     from PyQuante.Atom import Atom
     from PyQuante import Molecule
@@ -42,7 +41,6 @@ def pyquante_2_to_1_molecule(old_molecule):
 
 
 def pyquante_2_to_1_basis(old_basis):
-    """"""
 
     from PyQuante import CGBF
 

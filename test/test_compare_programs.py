@@ -81,7 +81,7 @@ def compare_programs_runner(test_case_dirname):
     S_pyquante2 = loadtxt(os.path.join(test_case_dirname, 'pyquante2.S.txt'))
     T_pyquante2 = loadtxt(os.path.join(test_case_dirname, 'pyquante2.T.txt'))
     V_pyquante2 = loadtxt(os.path.join(test_case_dirname, 'pyquante2.V.txt'))
-    ERI_pyquante2 = load(os.path.join(test_case_dirname, 'pyquante2.ERI.npy'))
+    ERI_pyquante2 = load(os.path.join(test_case_dirname, 'pyquante2.ERI.npz'))
 
     ### Load all the variables from pyints.
 
@@ -115,19 +115,19 @@ def compare_programs_runner(test_case_dirname):
     EFG2XY_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.EFG2XY.txt'))
     EFG2XZ_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.EFG2XZ.txt'))
     EFG2YZ_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.EFG2YZ.txt'))
-    LX_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.LX.txt'))
-    LY_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.LY.txt'))
-    LZ_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.LZ.txt'))
+    # LX_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.LX.txt'))
+    # LY_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.LY.txt'))
+    # LZ_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.LZ.txt'))
     LX_M_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.LX_M.txt'))
     LY_M_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.LY_M.txt'))
     LZ_M_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.LZ_M.txt'))
     J1X_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.J1X.txt'))
     J1Y_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.J1Y.txt'))
     J1Z_pyints = loadtxt(os.path.join(test_case_dirname, 'pyints.J1Z.txt'))
-    ERI_pyints = load(os.path.join(test_case_dirname, 'pyints.ERI.npy'))
-    J2X_pyints = load(os.path.join(test_case_dirname, 'pyints.J2X.npy'))
-    J2Y_pyints = load(os.path.join(test_case_dirname, 'pyints.J2Y.npy'))
-    J2Z_pyints = load(os.path.join(test_case_dirname, 'pyints.J2Z.npy'))
+    ERI_pyints = load(os.path.join(test_case_dirname, 'pyints.ERI.npz'))
+    J2X_pyints = load(os.path.join(test_case_dirname, 'pyints.J2X.npz'))
+    J2Y_pyints = load(os.path.join(test_case_dirname, 'pyints.J2Y.npz'))
+    J2Z_pyints = load(os.path.join(test_case_dirname, 'pyints.J2Z.npz'))
 
     ### Load all the variables from DALTON.
 
@@ -174,9 +174,9 @@ def compare_programs_runner(test_case_dirname):
     J1Y_dalton = loadtxt(os.path.join(test_case_dirname, 'dalton.y1spnorb.txt'))
     J1Z_dalton = loadtxt(os.path.join(test_case_dirname, 'dalton.z1spnorb.txt'))
     # ERI_dalton = load()
-    J2X_dalton = load(os.path.join(test_case_dirname, 'dalton.x2spnorb.npy'))
-    J2Y_dalton = load(os.path.join(test_case_dirname, 'dalton.y2spnorb.npy'))
-    J2Z_dalton = load(os.path.join(test_case_dirname, 'dalton.z2spnorb.npy'))
+    J2X_dalton = load(os.path.join(test_case_dirname, 'dalton.x2spnorb.npz'))
+    J2Y_dalton = load(os.path.join(test_case_dirname, 'dalton.y2spnorb.npz'))
+    J2Z_dalton = load(os.path.join(test_case_dirname, 'dalton.z2spnorb.npz'))
 
     # DALTON is returning symmetrized matrices. Antisymmetrize them.
     # LX_dalton = antisymmetrize_L(LX_dalton)
@@ -355,9 +355,13 @@ def compare_programs_runner(test_case_dirname):
     # assert_allclose(abs(J2Z_dalton), abs(J2Z_pyints))
 
 
-def test_compare_programs_lih_sto3g():
-    compare_programs_runner('LiH_STO-3G')
+# def test_compare_programs_lih_sto3g():
+#     dirname = os.path.dirname(os.path.abspath(__file__))
+#     compare_programs_runner(os.path.join(dirname, 'LiH_STO-3G'))
 
 
 # def test_compare_programs_li_sto3g():
 #     compare_programs_runner('Li_STO-3G')
+
+if __name__ == '__main__':
+    pass

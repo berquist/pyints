@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+
 """parse_matrices_qchem.py: Parse matrices from Q-Chem output files
 and save them to disk either as plain text or NumPy binary files.
 """
 
 from __future__ import print_function
+from __future__ import division
 
 import re
 import numpy as np
@@ -52,9 +55,11 @@ def qchem_parse_matrix(outputfile, matrix):
     return matrix
 
 
-def main(args):
+def main():
 
     import os.path
+
+    args = getargs()
 
     outputfilename = args.outputfilename
     stub = os.path.splitext(outputfilename)[0]
@@ -144,5 +149,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    args = getargs()
-    main(args)
+    main()

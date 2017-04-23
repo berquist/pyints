@@ -43,20 +43,25 @@ def cartesian_moment_pyquante(alpha1, lmn1, A, alpha2, lmn2, B, C, order):
                 total += binomial(kx, ix) * binomial(ky, iy) * binomial(kz, iz) * (A[0]**(kx-ix)) * (A[1]**(ky-iy)) * (A[2]**(kz-iz)) * overlap(alpha1, [lmn1[0]+ix, lmn1[1]+iy, lmn1[2]+iz], A, alpha2, lmn2, B)
     return total
 
-def test_moment(lmn1=[0, 0, 0], lmn2=[0, 0, 0], order=[0, 0, 0], thresh=1.0e-5):
-    pyints = cartesian_moment_pyints(alpha1, lmn1, A, alpha2, lmn2, B, C, order)
-    pyquante = cartesian_moment_pyquante(alpha1, lmn1, A, alpha2, lmn2, B, C, order)
-    diff = abs(pyints - pyquante)
-    print(lmn1, lmn2, order, diff)
-    assert diff < thresh
-    return
+# def test_moment(lmn1=[0, 0, 0], lmn2=[0, 0, 0], order=[0, 0, 0], thresh=1.0e-5):
+#     pyints = cartesian_moment_pyints(alpha1, lmn1, A, alpha2, lmn2, B, C, order)
+#     pyquante = cartesian_moment_pyquante(alpha1, lmn1, A, alpha2, lmn2, B, C, order)
+#     diff = abs(pyints - pyquante)
+#     print(lmn1, lmn2, order, diff)
+#     assert diff < thresh
+#     return
+
+
+# def test_moment_example():
+#     import itertools as i
+
+#     for lmn1 in i.product(range(3), range(3), range(3)):
+#         for lmn2 in i.product(range(3), range(3), range(3)):
+#             for order in i.product(range(3), range(3), range(3)):
+#                 test_moment(list(lmn1), list(lmn2), list(order))
+
+#     return
 
 
 if __name__ == '__main__':
-
-    import itertools as i
-
-    for lmn1 in i.product(range(3), range(3), range(3)):
-        for lmn2 in i.product(range(3), range(3), range(3)):
-            for order in i.product(range(3), range(3), range(3)):
-                test_moment(list(lmn1), list(lmn2), list(order))
+    pass
