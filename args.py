@@ -35,6 +35,14 @@ def getargs():
                         help="""Calculate angular momentum integrals, not from \
                         a recursion scheme, but from differentiating first \
                         moment integrals.""")
+    parser.add_argument('--N_from_S',
+                        action='store_true',
+                        help="""Calculate dipole velocity/linear momentum/nabla integrals as
+                        derivatives of overlap integrals.""")
+    parser.add_argument('--N_numerical',
+                        action='store_true',
+                        help="""Calculate dipole velocity/linear momentum/nabla \
+                        integrals, not from a recursion scheme, but numerically.""")
     parser.add_argument('--E',
                         action='store_true',
                         help="""Calculate electric field integrals.""")

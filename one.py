@@ -2,6 +2,8 @@ import numpy as np
 
 import obarasaika.obarasaika.obara_saika as os
 
+# from .numerical import linear_momentum
+
 
 ### overlap (S) integrals
 
@@ -307,6 +309,60 @@ def makeL_from_M(bfs, origin, component):
         for nu, b in enumerate(bfs):
             ints[mu, nu] = L_from_M(a, b, origin, component)
     return ints
+
+
+### dipole velocity / linear momentum / nabla (N) integrals
+
+
+def linear_momentum_from_S(alpha1, lmn1, A, alpha2, lmn2, B, component):
+    xi, yi, zi, xj, yj, zj = lmn1[0], lmn1[1], lmn1[2], lmn2[0], lmn2[1], lmn2[2]
+    if component == 0:
+        return (-2.0 * alpha2 * os.get_overlap(alpha1, alpha2, A, B, [xi, yi, zi, xj+1, yj, zj])) \
+            + (xj * os.get_overlap(alpha1, alpha2, A, B, [xi, yi, zi, xj-1, yj, zj]))
+    if component == 1:
+        return (-2.0 * alpha2 * os.get_overlap(alpha1, alpha2, A, B, [xi, yi, zi, xj, yj+1, zj])) \
+            + (yj * os.get_overlap(alpha1, alpha2, A, B, [xi, yi, zi, xj, yj-1, zj]))
+    if component == 2:
+        return (-2.0 * alpha2 * os.get_overlap(alpha1, alpha2, A, B, [xi, yi, zi, xj, yj, zj+1])) \
+            + (zj * os.get_overlap(alpha1, alpha2, A, B, [xi, yi, zi, xj, yj, zj-1]))
+
+
+def N_from_S(a, b, component):
+    if b.contracted:
+        return sum(cb * N_from_S(pb, a, component) for (cb, pb) in b)
+    elif a.contracted:
+        return sum(ca * N_from_S(b, pa, component) for (ca, pa) in a)
+    return a.norm * b.norm * linear_momentum_from_S(a.exponent, list(a.powers), a.origin,
+                                                    b.exponent, list(b.powers), b.origin,
+                                                    component)
+
+
+def makeN_from_S(bfs, component):
+    nbfs = len(bfs)
+    ints = np.zeros(shape=(nbfs, nbfs))
+    for mu, a in enumerate(bfs):
+        for nu, b in enumerate(bfs):
+            ints[mu, nu] = N_from_S(a, b, component)
+    return ints
+
+
+# def N_numerical(a, b, component):
+#     if b.contracted:
+#         return sum(cb * N_numerical(pb, a, component) for (cb, pb) in b)
+#     elif a.contracted:
+#         return sum(ca * N_numerical(b, pa, component) for (ca, pa) in a)
+#     return a.norm * b.norm * linear_momentum(a.exponent, list(a.powers), a.origin,
+#                                              b.exponent, list(b.powers), b.origin,
+#                                              component)
+
+
+# def makeN_numerical(bfs, component):
+#     nbfs = len(bfs)
+#     ints = np.zeros(shape=(nbfs, nbfs))
+#     for mu, a in enumerate(bfs):
+#         for nu, b in enumerate(bfs):
+#             ints[mu, nu] = N_numerical(a, b, component)
+#     return ints
 
 
 ### spin-orbit interaction (J) integrals

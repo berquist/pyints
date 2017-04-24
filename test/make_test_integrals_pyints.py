@@ -108,6 +108,32 @@ def make_test_integrals_pyints(args, mol, mol_basis):
         np.savetxt('pyints.LY_M.txt', LY_M_pyints)
         np.savetxt('pyints.LZ_M.txt', LZ_M_pyints)
 
+    if args.N_from_S:
+        from pyints.one import makeN_from_S
+        print('making N_from_S...')
+        print('X')
+        NX_from_S_pyints = makeN_from_S(bfs, 0)
+        print('Y')
+        NY_from_S_pyints = makeN_from_S(bfs, 1)
+        print('Z')
+        NZ_from_S_pyints = makeN_from_S(bfs, 2)
+        np.savetxt('pyints.NX_from_S.txt', NX_from_S_pyints)
+        np.savetxt('pyints.NY_from_S.txt', NY_from_S_pyints)
+        np.savetxt('pyints.NZ_from_S.txt', NZ_from_S_pyints)
+
+    if args.N_numerical:
+        from pyints.one import makeN_numerical
+        print('making N_numerical...')
+        print('X')
+        NX_numerical_pyints = makeN_numerical(bfs, 0)
+        print('Y')
+        NY_numerical_pyints = makeN_numerical(bfs, 1)
+        print('Z')
+        NZ_numerical_pyints = makeN_numerical(bfs, 2)
+        np.savetxt('pyints.NX_numerical.txt', NX_numerical_pyints)
+        np.savetxt('pyints.NY_numerical.txt', NY_numerical_pyints)
+        np.savetxt('pyints.NZ_numerical.txt', NZ_numerical_pyints)
+
     if args.J:
         from pyints.one import makeJ
         print('making J...')
