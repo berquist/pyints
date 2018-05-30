@@ -1,5 +1,7 @@
 *.html
 
+.ipynb_checkpoints
+
 # Python
 *.py[co]
 .cache
