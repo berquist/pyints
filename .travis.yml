@@ -7,8 +7,8 @@ cache:
   pip: true
 install:
   - pip install -r requirements.txt
+  - cd "$HOME"
   - git clone https://github.com/berquist/obarasaika.git
-before_script:
-  - export PYTHONPATH="$PYTHONPATH:$(pwd)"
+  - export PYTHONPATH="$PYTHONPATH:$HOME"
 script:
   - make test
