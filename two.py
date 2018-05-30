@@ -1,6 +1,6 @@
 import numpy as np
 
-import obarasaika.obarasaika.obara_saika as os
+import obarasaika.obara_saika as os
 
 from pyints.utils import iterator4
 

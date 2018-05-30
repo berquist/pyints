@@ -1,8 +1,10 @@
 *.html
 
-# Python
-*.py[co]
+__pycache__/
+*.py[cod]
 .cache
+.coverage
+.pytest_cache
 
 # Q-Chem
 pathtable
