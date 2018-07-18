@@ -5,7 +5,7 @@ import os.path
 import pyquante2
 
 from pyints.args import getargs
-from pyints.test.make_test_integrals_pyints import make_test_integrals_pyints
+from pyints.make_test_integrals_pyints import make_test_integrals_pyints
 
 
 def main():
