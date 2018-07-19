@@ -1,0 +1,52 @@
+\documentclass[12pt]{article}
+
+\usepackage{booktabs}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{microtype}
+\usepackage{tabulary}
+
+\title{Integral types and classes}
+\author{Eric Berquist}
+\date{\today}
+
+\begin{document}
+\maketitle
+\section{\texttt{Integral1e2c}}
+
+\begin{tabulary}{1.00\linewidth}{lL}
+  \toprule
+  class name & requires \\
+  \midrule
+  \texttt{Overlap} & basis function (bf) centers/positions, bf exponents, bf contraction coefficients \\
+  \texttt{Kinetic} \\
+  \texttt{Potential} \\
+  \texttt{FermiContact/FC} \\
+  \texttt{SpinDipole/SD} \\
+  \texttt{ElectricField/EF} \\
+  \texttt{ElectricFieldGradient/EFG} \\
+  \texttt{SpinOrbit} \\
+  \texttt{Dipole/DipoleLength} \\
+  \texttt{SecondMoment} \\
+  \texttt{Quadrupole} \\
+  \texttt{TracelessQuadrupole} \\
+  \texttt{Multipole} \\
+  \texttt{Nabla/DipoleVelocity} \\
+  \texttt{AngularMomentum} \\
+  \texttt{OverlapDer1} \\
+  \texttt{KineticDer1} \\
+  \texttt{PotentialDer1} \\
+  \bottomrule
+\end{tabulary}
+
+\section{\texttt{Integral2e4c}}
+
+\begin{tabulary}{1.00\linewidth}{lL}
+  \toprule
+  class name & requires \\
+  \midrule
+  \texttt{Repulsion} \\
+  \texttt{SpinOrbitExact} \\
+  \bottomrule
+\end{tabulary}
+
+\end{document}
