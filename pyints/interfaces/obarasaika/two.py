@@ -2,7 +2,7 @@ import numpy as np
 
 import obarasaika.obara_saika as os
 
-from pyints.utils import iterator4
+from ...utils import iterator4
 
 
 ### two-electron repulsion integrals (ERI)

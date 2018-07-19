@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import itertools as i
 
-from pyints.two import spin_orbit_2_KF
+from pyints.interfaces.obarasaika.two import spin_orbit_2_KF
 
 
 # def test_spin_orbit_2_KF():

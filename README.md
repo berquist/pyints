@@ -2,9 +2,6 @@
 
 ## Requirements
 
-* Python
-    * `numpy`
-
 ### Requirements for testing
 
 * [PyQuante](https://github.com/berquist/pyquante)

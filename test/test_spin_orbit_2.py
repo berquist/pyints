@@ -1,7 +1,7 @@
 from __future__ import print_function
 
-from pyints.one import spin_orbit_KF
-from pyints.two import spin_orbit_2_KF
+from pyints.interfaces.obarasaika.one import spin_orbit_KF
+from pyints.interfaces.obarasaika.two import spin_orbit_2_KF
 
 from collections import namedtuple
 

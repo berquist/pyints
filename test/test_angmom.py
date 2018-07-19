@@ -3,8 +3,8 @@ from __future__ import print_function
 
 import pyquante2
 
-from pyints.one import makeL
-from pyints.one import makeL_from_M
+from pyints.interfaces.obarasaika.one import makeL
+from pyints.interfaces.obarasaika.one import makeL_from_M
 
 
 def print_L(bfs, origin):
