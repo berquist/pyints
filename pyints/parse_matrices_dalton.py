@@ -17,21 +17,23 @@ def getargs():
     import argparse
 
     parser = argparse.ArgumentParser()
+    arg = parser.add_argument
 
-    parser.add_argument('outputfilename',
-                        help="""Name of the DALTON output file to parse for matrices.""")
-    parser.add_argument('--print-stdout',
-                        action='store_true',
-                        help="""Should all the parsed matrices be printed to stdout (usually the
-screen)?""")
+    arg("outputfilename",
+        help="""Name of the DALTON output file to parse for matrices.""")
+    arg("--print-stdout",
+        action="store_true",
+        help="""Should all the parsed matrices be printed to stdout (usually
+        the screen)?""")
 
     args = parser.parse_args()
 
     return args
 
 
-re_element = re.compile('(([1-9][0-9]*\.?[0-9]*)|(\.[0-9]+))([EeDd]?[+-]?[0-9]+)?')
-re_expt = re.compile('[+-]?\d*$')
+RE_ELEMENT = re.compile(r'(([1-9][0-9]*\.?[0-9]*)|(\.[0-9]+))([EeDd]?[+-]?[0-9]+)?')
+RE_EXPT = re.compile(r'[+-]?\d*$')
+NBASIS_RE_STRING = r'total:\s+([0-9]+)\s+([-+]?\d*[.]?\d+)\s+([0-9]+)\s+([0-9]+)'
 
 
 def parse_element_dalton(element):
@@ -40,10 +42,18 @@ def parse_element_dalton(element):
 
     The 'expt' regex specifically captures the exponent for when a 'D'
     isn't present in the number.
+
+    Parameters
+    ----------
+    element : str
+
+    Returns
+    -------
+    float
     """
 
-    res = re_element.findall(element)[0][0]
-    expt = re_expt.findall(element)[0][0]
+    res = RE_ELEMENT.findall(element)[0][0]
+    expt = RE_EXPT.findall(element)[0][0]
 
     return float(res + 'e' + expt)
 
@@ -59,6 +69,17 @@ def parse_matrix_dalton(outputfile):
     sparse representation to dense array format.
 
     ...which is why there's no matrix passed as an argument.
+
+    Parameters
+    ----------
+    outputfile : file handle
+        The file handle should be at a position near the desired matrix.
+
+    Returns
+    -------
+    dict
+        A sparse matrix of floats packed into a 2D dictionary, where each
+        keys are single indices into non-zero matrix elements.
     """
 
     spmat = dict()
@@ -83,14 +104,47 @@ def parse_matrix_dalton(outputfile):
 
 
 def sparse_to_dense_matrix_dalton(spmat, dim):
+    """Convert a "sparse" DALTON matrix to its full representation.
+
+    TODO FIXME this almost certainly doesn't work properly for
+    antisymmetric matrices or matrices without symmetry.
+
+    Parameters
+    ----------
+    spmat : dictionary of dictionaries of floats
+    dim : int
+
+    Returns
+    -------
+    np.ndarray
+    """
     densemat = np.zeros(shape=(dim, dim))
     for ridx in spmat:
         for cidx in spmat[ridx]:
-            densemat[ridx-1][cidx-1] = densemat[cidx-1][ridx-1] = spmat[ridx][cidx]
+            densemat[ridx-1][cidx-1] \
+                = densemat[cidx-1][ridx-1] \
+                = spmat[ridx][cidx]
     return densemat
 
 
+# pylint: disable=invalid-name
 def parse_spin_orbit_2el(outputfile_reversed, dim, nlines):
+    """Read two-electron spin-orbit integrals from a DALTON output file.
+
+    Parameters
+    ----------
+    outputfile_reverse : file handle
+        The output file is iterative over in reverse order for ease of
+        terminating parsing.
+    dim : int
+    nlines : int
+        TODO
+
+    Returns
+    -------
+    tuple of 3 4-dimensional np.ndarrays, one for each Cartesian
+    component
+    """
     x2spnorb = np.zeros(shape=(dim, dim, dim, dim))
     y2spnorb = np.zeros(shape=(dim, dim, dim, dim))
     z2spnorb = np.zeros(shape=(dim, dim, dim, dim))
@@ -115,6 +169,9 @@ def parse_spin_orbit_2el(outputfile_reversed, dim, nlines):
 
 
 def main():
+    """The main routine. Finds all possible integral matrices in a DALTON
+    outputfile automatically and parses them.
+    """
 
     import os.path
 
@@ -149,12 +206,10 @@ def main():
                     matrix_headers_varnames.append(varname)
                     matrix_headers_filenames.append(filename)
 
-    nbasis_re_string = 'total:\s+([0-9]+)\s+([-+]?\d*[.]?\d+)\s+([0-9]+)\s+([0-9]+)'
-
     # Determine the size of the basis. Assume N_AO == N_MO!
     with open(outputfilename) as outputfile:
         for line in outputfile:
-            match = re.search(nbasis_re_string, line)
+            match = re.search(NBASIS_RE_STRING, line)
             if match:
                 nbasis = int(match.groups()[-1])
 
