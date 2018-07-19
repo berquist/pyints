@@ -136,17 +136,15 @@ def sparse_to_dense_matrix_dalton(spmat, dim):
 
 
 # pylint: disable=invalid-name
-def parse_spin_orbit_2el(outputfile_reversed, dim, nlines):
+def parse_spin_orbit_2el(outputfile_reversed, dim):
     """Read two-electron spin-orbit integrals from a DALTON output file.
 
     Parameters
     ----------
-    outputfile_reverse : file handle
+    outputfile_reversed : file handle
         The output file is iterative over in reverse order for ease of
         terminating parsing.
     dim : int
-    nlines : int
-        TODO
 
     Returns
     -------
@@ -159,11 +157,11 @@ def parse_spin_orbit_2el(outputfile_reversed, dim, nlines):
     line = ''
     while '##' not in line:
         line = next(outputfile_reversed)
-    for _ in range(nlines):
-        sline = line.split()
-        mu, nu, lm, sg = list(map(int, sline[1:5]))
-        component = sline[5][1]
-        element = parse_element_dalton(sline[7])
+    while '##' in line:
+        tokens = line.split()
+        mu, nu, lm, sg = list(map(int, tokens[1:5]))
+        component = tokens[5][1]
+        element = parse_element_dalton(tokens[7])
         if component == 'X':
             x2spnorb[mu-1, nu-1, lm-1, sg-1] = element
         elif component == 'Y':
