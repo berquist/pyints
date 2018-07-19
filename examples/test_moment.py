@@ -26,13 +26,16 @@ result_pyquante = 306.245173977
 def binomial(a, b):
     return fact(a) / fact(b) / fact(a - b)
 
+
 def overlap(alpha1, lmn1, A, alpha2, lmn2, B):
     za, zb, la, lb, ra, rb = alpha1, alpha2, lmn1, lmn2, A, B
     return os.get_overlap(za, zb, ra, rb, la + lb)
 
+
 def cartesian_moment_pyints(alpha1, lmn1, A, alpha2, lmn2, B, C, order):
     za, zb, la, lb, ra, rb, rc = alpha1, alpha2, lmn1, lmn2, A, B, C
     return os.get_moment(za, zb, ra, rb, rc, la + lb, order)
+
 
 def cartesian_moment_pyquante(alpha1, lmn1, A, alpha2, lmn2, B, C, order):
     kx, ky, kz = order
@@ -40,7 +43,8 @@ def cartesian_moment_pyquante(alpha1, lmn1, A, alpha2, lmn2, B, C, order):
     for ix in range(kx+1):
         for iy in range(ky+1):
             for iz in range(kz+1):
-                total += binomial(kx, ix) * binomial(ky, iy) * binomial(kz, iz) * (A[0]**(kx-ix)) * (A[1]**(ky-iy)) * (A[2]**(kz-iz)) * overlap(alpha1, [lmn1[0]+ix, lmn1[1]+iy, lmn1[2]+iz], A, alpha2, lmn2, B)
+                total += binomial(kx, ix) * binomial(ky, iy) * binomial(kz, iz) * (A[0]**(kx-ix)) * (A[1]**(ky-iy)) * (
+                    A[2]**(kz-iz)) * overlap(alpha1, [lmn1[0]+ix, lmn1[1]+iy, lmn1[2]+iz], A, alpha2, lmn2, B)
     return total
 
 # def test_moment(lmn1=[0, 0, 0], lmn2=[0, 0, 0], order=[0, 0, 0], thresh=1.0e-5):

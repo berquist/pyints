@@ -1,7 +1,7 @@
 test: pytest-cov
 
-nosetest:
-	nosetests --verbosity=2 --with-doctest test
+pylint:
+	find . -name "*.py" -exec pylint '{}' +
 
 pytest:
 	pytest -v --doctest-modules test

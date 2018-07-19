@@ -24,4 +24,3 @@ if __name__ == '__main__':
     mol.build()
     derovl = mol.intor('cint1e_ipovlp_sph', comp=3)
     print(derovl)
-

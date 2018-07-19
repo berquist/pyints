@@ -19,8 +19,10 @@ def _disabled():
     component = 2
 
     # for mu, nu, lm, sg in i.permu
-    print(spin_orbit_KF(bf_a.z, bf_a.l, bf_a.r, bf_b.z, bf_b.l, bf_b.r, [0.0, 0.0, 0.0], component))
-    print(spin_orbit_KF(bf_b.z, bf_b.l, bf_b.r, bf_a.z, bf_a.l, bf_a.r, [0.0, 0.0, 0.0], component))
+    print(spin_orbit_KF(bf_a.z, bf_a.l, bf_a.r, bf_b.z,
+                        bf_b.l, bf_b.r, [0.0, 0.0, 0.0], component))
+    print(spin_orbit_KF(bf_b.z, bf_b.l, bf_b.r, bf_a.z,
+                        bf_a.l, bf_a.r, [0.0, 0.0, 0.0], component))
 
     return
 

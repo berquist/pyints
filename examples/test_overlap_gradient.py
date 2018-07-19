@@ -7,7 +7,9 @@ from PyQuante.PGBF import PGBF
 from PyQuante.CGBF import CGBF
 
 # from PyQuante.AnalyticDerivatives import der_overlap_element
-def der_overlap_element(a,bfi, bfj):
+
+
+def der_overlap_element(a, bfi, bfj):
     """
     finds the derivative of the overlap integral with respect to the 
     atomic coordinate of atom "a".  Note there are four possible cases
@@ -24,98 +26,102 @@ def der_overlap_element(a,bfi, bfj):
     this function will return a 3 element list with the derivatives of the overlap
     integrals with respect to the atomic coordinates Xa,Ya,Za.
     """
-    dSij_dXa,dSij_dYa,dSij_dZa = 0.0,0.0,0.0
-    
-    #we use atom ids on the CGBFs to evaluate which of the 4 above case we have
-    if bfi.atid==a: #bfi is centered on atom a
+    dSij_dXa, dSij_dYa, dSij_dZa = 0.0, 0.0, 0.0
+
+    # we use atom ids on the CGBFs to evaluate which of the 4 above case we have
+    if bfi.atid == a:  # bfi is centered on atom a
         for upbf in bfj.prims:
             for vpbf in bfi.prims:
                 alpha = vpbf.exp
-                l,m,n = vpbf.powers
+                l, m, n = vpbf.powers
                 origin = vpbf.origin
-                coefs  = upbf.coef*vpbf.coef
-                                
-                #x component
-                v = PGBF(alpha,origin,(l+1,m,n))
-                
+                coefs = upbf.coef*vpbf.coef
+
+                # x component
+                v = PGBF(alpha, origin, (l+1, m, n))
+
                 terma = sqrt(alpha*(2.0*l+1.0))*coefs*v.overlap(upbf)
-                
-                if l>0:
-                    v = PGBF(alpha,origin,(l-1,m,n))
+
+                if l > 0:
+                    v = PGBF(alpha, origin, (l-1, m, n))
                     termb = -2*l*sqrt(alpha/(2.0*l-1.0))*coefs*v.overlap(upbf)
-                else: termb = 0.0
-                
+                else:
+                    termb = 0.0
+
                 dSij_dXa += terma + termb
-                
-                
-                #y component
-                v = PGBF(alpha,origin,(l,m+1,n))
+
+                # y component
+                v = PGBF(alpha, origin, (l, m+1, n))
                 terma = sqrt(alpha*(2.0*m+1.0))*coefs*v.overlap(upbf)
-                
-                if m>0:
-                    v = PGBF(alpha,origin,(l,m-1,n))
+
+                if m > 0:
+                    v = PGBF(alpha, origin, (l, m-1, n))
                     termb = -2*m*sqrt(alpha/(2.0*m-1.0))*coefs*v.overlap(upbf)
-                else: termb = 0.0
-                
+                else:
+                    termb = 0.0
+
                 dSij_dYa += terma + termb
-                
-                #z component
-                v = PGBF(alpha,origin,(l,m,n+1))
+
+                # z component
+                v = PGBF(alpha, origin, (l, m, n+1))
                 terma = sqrt(alpha*(2.0*n+1.0))*coefs*v.overlap(upbf)
-                
-                if n>0:
-                    v = PGBF(alpha,origin,(l,m,n-1))
+
+                if n > 0:
+                    v = PGBF(alpha, origin, (l, m, n-1))
                     termb = -2*n*sqrt(alpha/(2.0*n-1.0))*coefs*v.overlap(upbf)
-                else: termb = 0.0
-                
+                else:
+                    termb = 0.0
+
                 dSij_dZa += terma + termb
 
-                
-    #bfj is centered on atom a
-    if bfj.atid==a:
+    # bfj is centered on atom a
+    if bfj.atid == a:
         for upbf in bfi.prims:
             for vpbf in bfj.prims:
                 alpha = vpbf.exp
-                l,m,n = vpbf.powers
+                l, m, n = vpbf.powers
                 origin = vpbf.origin
                 coefs = upbf.coef*vpbf.coef
-                
-                #x component 
-                v = PGBF(alpha,origin,(l+1,m,n))
-                
-                terma = sqrt(alpha*(2.0*l+1.0))*coefs*v.overlap(upbf)
-                
-                if l>0:
-                    v = PGBF(alpha,origin,(l-1,m,n))
-                    termb = -2*l*sqrt(alpha/(2.0*l-1.0))*coefs*v.overlap(upbf)
-                else: termb = 0.0
-                
-                dSij_dXa += terma + termb
-                
 
-                #y component
-                v = PGBF(alpha,origin,(l,m+1,n))
+                # x component
+                v = PGBF(alpha, origin, (l+1, m, n))
+
+                terma = sqrt(alpha*(2.0*l+1.0))*coefs*v.overlap(upbf)
+
+                if l > 0:
+                    v = PGBF(alpha, origin, (l-1, m, n))
+                    termb = -2*l*sqrt(alpha/(2.0*l-1.0))*coefs*v.overlap(upbf)
+                else:
+                    termb = 0.0
+
+                dSij_dXa += terma + termb
+
+                # y component
+                v = PGBF(alpha, origin, (l, m+1, n))
                 terma = sqrt(alpha*(2.0*m+1.0))*coefs*v.overlap(upbf)
-                
-                if m>0:
-                    v = PGBF(alpha,origin,(l,m-1,n))
+
+                if m > 0:
+                    v = PGBF(alpha, origin, (l, m-1, n))
                     termb = -2*m*sqrt(alpha/(2.0*m-1.0))*coefs*v.overlap(upbf)
-                else: termb = 0.0
-                
+                else:
+                    termb = 0.0
+
                 dSij_dYa += terma + termb
-                
-                #z component
-                v = PGBF(alpha,origin,(l,m,n+1))
+
+                # z component
+                v = PGBF(alpha, origin, (l, m, n+1))
                 terma = sqrt(alpha*(2.0*n+1.0))*coefs*v.overlap(upbf)
-                
-                if n>0:
-                    v = PGBF(alpha,origin,(l,m,n-1))
+
+                if n > 0:
+                    v = PGBF(alpha, origin, (l, m, n-1))
                     termb = -2*n*sqrt(alpha/(2.0*n-1.0))*coefs*v.overlap(upbf)
-                else: termb = 0.0
-                
+                else:
+                    termb = 0.0
+
                 dSij_dZa += terma + termb
 
-    return dSij_dXa,dSij_dYa,dSij_dZa
+    return dSij_dXa, dSij_dYa, dSij_dZa
+
 
 if __name__ == '__main__':
 
