@@ -31,8 +31,9 @@ def getargs():
     return args
 
 
-RE_ELEMENT = re.compile(r'(([1-9][0-9]*\.?[0-9]*)|(\.[0-9]+))([EeDd]?[+-]?[0-9]+)?')
-RE_EXPT = re.compile(r'[+-]?\d*$')
+# RE_ELEMENT = re.compile(r'(([1-9][0-9]*\.?[0-9]*)|(\.[0-9]+))([EeDd]?[+-]?[0-9]+)?')
+# RE_EXPT = re.compile(r'[+-]?\d*$')
+RE_ELEMENT = re.compile(r'([+-]?[0-9]*\.?[0-9]*|[+-]?\.[0-9]+)[EeDd]?([+-]?[0-9]+)?')
 NBASIS_RE_STRING = r'total:\s+([0-9]+)\s+([-+]?\d*[.]?\d+)\s+([0-9]+)\s+([0-9]+)'
 
 
@@ -52,10 +53,17 @@ def parse_element_dalton(element):
     float
     """
 
-    res = RE_ELEMENT.findall(element)[0][0]
-    expt = RE_EXPT.findall(element)[0][0]
+    # res = RE_ELEMENT.findall(element)[0][0]
+    # expt = RE_EXPT.findall(element)[0][0]
 
-    return float(res + 'e' + expt)
+    # return float(res + 'e' + expt)
+
+    if any(x in element for x in ['e', 'E', 'd', 'D']):
+        match = [(p, q) for (p, q) in RE_ELEMENT.findall(element)
+                 if p is not '' if q is not ''][0]
+        return float('e'.join(match))
+    else:
+        return float(element)
 
 
 def parse_matrix_dalton(outputfile):
@@ -260,4 +268,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    _locals = main()
