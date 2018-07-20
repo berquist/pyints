@@ -53,6 +53,24 @@ def test_parse_matrix_dalton():
     assert res_spmat == ref_spmat
 
 
+def test_sparse_to_dense_matrix_dalton():
+    """Test converting a sparse (dictionary of dictionary of floats)
+    matrix to a dense (NumPy) matrix.
+    """
+    testcase = 'LiH_STO-3G'
+    stub_source = 'dalton_matrix'
+    stub_ref = 'dalton_matrix'
+    sourcefilename = os.path.join(refdir, testcase, '{stub}.pickle'.format(stub=stub_source))
+    reffilename = os.path.join(refdir, testcase, '{stub}.npy'.format(stub=stub_ref))
+    with open(sourcefilename, 'rb') as sourcefile:
+        spmat = pickle.load(sourcefile)
+    # TODO this is an assumption
+    dim = max(spmat.keys())
+    res_mat = parse_matrices_dalton.sparse_to_dense_matrix_dalton(spmat, dim)
+    ref_mat = np.load(reffilename)
+    np.testing.assert_allclose(res_mat, ref_mat, rtol=0, atol=1.0e-14)
+
+
 def test_parse_spin_orbit_2el():
     testcase = 'LiH_STO-3G'
     stub_matfile = 'dalton_spin_orbit_2el_reversed'
@@ -86,4 +104,5 @@ def test_parse_spin_orbit_2el():
 if __name__ == '__main__':
     test_parse_element_dalton()
     test_parse_matrix_dalton()
+    test_sparse_to_dense_matrix_dalton()
     test_parse_spin_orbit_2el()
