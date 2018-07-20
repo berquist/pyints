@@ -8,8 +8,9 @@ def setup_pyints():
         version="0.0.1alpha",
         packages=setuptools.find_packages(exclude=["*test*"]),
 
-        # install_requires=[
-        # ],
+        install_requires=[
+            "basis_set_exchange", "cclib",
+        ],
 
         # metadata
         author="Eric Berquist",

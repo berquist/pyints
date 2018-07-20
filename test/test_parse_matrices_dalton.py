@@ -1,8 +1,6 @@
 """Test the parsing of integral matrices from DALTON text output and binary files."""
 
-# import json
 import os.path
-import pickle
 import yaml
 
 import numpy as np
@@ -34,22 +32,14 @@ def test_parse_matrix_dalton():
     # outputfilename = os.path.join(refdir, 'LiH_STO-3G', 'LiH_STO-3G_dalton.out')
     testcase = 'LiH_STO-3G'
     stub = 'dalton_matrix'
-    matfilename = os.path.join(refdir, testcase, '{stub}.dat'.format(stub=stub))
-    # jsonfilename = os.path.join(refdir, testcase, '{stub}.json'.format(stub=stub))
-    picklefilename = os.path.join(refdir, testcase, '{stub}.pickle'.format(stub=stub))
-    assert os.path.exists(matfilename)
-    with open(matfilename) as matfile:
-        res_spmat = parse_matrices_dalton.parse_matrix_dalton(matfile)
-    ## TODO JSON would be better than a pickle, but won't work out of
-    ## the box, because all keys are converted to strings on
-    ## serialization, so a custom deserializer/JSONDecoder must be
-    ## written.
-    # assert os.path.exists(jsonfilename)
-    # with open(jsonfilename) as jsonfile:
-    #     ref_spmat = json.load(jsonfile)
-    assert os.path.exists(picklefilename)
-    with open(picklefilename, 'rb') as picklefile:
-        ref_spmat = pickle.load(picklefile)
+    sourcefilename = os.path.join(refdir, testcase, '{stub}.dat'.format(stub=stub))
+    reffilename = os.path.join(refdir, testcase, '{stub}.yaml'.format(stub=stub))
+    assert os.path.exists(sourcefilename)
+    with open(sourcefilename) as sourcefile:
+        res_spmat = parse_matrices_dalton.parse_matrix_dalton(sourcefile)
+    assert os.path.exists(reffilename)
+    with open(reffilename) as reffile:
+        ref_spmat = yaml.load(reffile)
     assert res_spmat == ref_spmat
 
 
@@ -60,36 +50,40 @@ def test_sparse_to_dense_matrix_dalton():
     testcase = 'LiH_STO-3G'
     stub_source = 'dalton_matrix'
     stub_ref = 'dalton_matrix'
-    sourcefilename = os.path.join(refdir, testcase, '{stub}.pickle'.format(stub=stub_source))
+    sourcefilename = os.path.join(refdir, testcase, '{stub}.yaml'.format(stub=stub_source))
     reffilename = os.path.join(refdir, testcase, '{stub}.npy'.format(stub=stub_ref))
-    with open(sourcefilename, 'rb') as sourcefile:
-        spmat = pickle.load(sourcefile)
+    assert os.path.exists(sourcefilename)
+    with open(sourcefilename) as sourcefile:
+        spmat = yaml.load(sourcefile)
     # TODO this is an assumption
     dim = max(spmat.keys())
     res_mat = parse_matrices_dalton.sparse_to_dense_matrix_dalton(spmat, dim)
+    assert os.path.exists(reffilename)
     ref_mat = np.load(reffilename)
     np.testing.assert_allclose(res_mat, ref_mat, rtol=0, atol=1.0e-14)
 
 
 def test_parse_spin_orbit_2el():
     testcase = 'LiH_STO-3G'
-    stub_matfile = 'dalton_spin_orbit_2el_reversed'
-    stub_yamlfile = 'dalton_spin_orbit_2el'
-    matfilename = os.path.join(refdir, testcase, '{stub}.dat'.format(stub=stub_matfile))
-    yamlfilename = os.path.join(refdir, testcase, '{stub}.yaml'.format(stub=stub_yamlfile))
-    with open(matfilename) as matfile:
-        for line in matfile:
+    stub_sourcefile = 'dalton_spin_orbit_2el_reversed'
+    stub_reffile = 'dalton_spin_orbit_2el'
+    sourcefilename = os.path.join(refdir, testcase, '{stub}.dat'.format(stub=stub_sourcefile))
+    reffilename = os.path.join(refdir, testcase, '{stub}.yaml'.format(stub=stub_reffile))
+    with open(sourcefilename) as sourcefile:
+        for line in sourcefile:
             if 'spin-orbit two-electron integrals and' in line:
                 # nlines = int(line.split()[0])
                 while '##' not in line:
-                    line = next(matfile)
+                    line = next(sourcefile)
                 # Assume that the largest index printed is the
                 # dimension/number of AOs.
                 dim = max([int(x) for x in line.split()[1:4]])
-    with open(matfilename) as matfile:
-        res_so2el = parse_matrices_dalton.parse_spin_orbit_2el(matfile, dim)
-    with open(yamlfilename) as yamlfile:
-        ref_so2el = yaml.load(yamlfile)
+    assert os.path.exists(sourcefilename)
+    with open(sourcefilename) as sourcefile:
+        res_so2el = parse_matrices_dalton.parse_spin_orbit_2el(sourcefile, dim)
+    assert os.path.exists(reffilename)
+    with open(reffilename) as reffile:
+        ref_so2el = yaml.load(reffile)
     for indices, coord, val in ref_so2el:
         indices = tuple(np.array(indices, dtype=int) - 1)
         assert res_so2el[coord][indices] == val
