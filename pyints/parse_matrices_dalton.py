@@ -174,24 +174,21 @@ def parse_spin_orbit_2el(outputfile_reversed, dim):
     return x2spnorb, y2spnorb, z2spnorb
 
 
-def main():
+# We could parse these, but it's pointless since we don't have
+# anything to compare them to from any other program package.
+IGNORE_THESE_MATRICES = (
+    'HUCKOVLP',
+    'HUCKEL',
+)
+
+def parse_matrices_dalton(outputfilename, ignore_headers=IGNORE_THESE_MATRICES):
     """The main routine. Finds all possible integral matrices in a DALTON
     outputfile automatically and parses them.
     """
 
     import os.path
 
-    args = getargs()
-
-    outputfilename = args.outputfilename
     stub = os.path.splitext(outputfilename)[0]
-
-    # We could parse these, but it's pointless since we don't have
-    # anything to compare them to from any other program package.
-    ignore_these_matrices = (
-        'HUCKOVLP',
-        'HUCKEL',
-    )
 
     # Find all the matrix headers in an output file and turn them into
     # reasonable variable and filenames.
@@ -202,7 +199,7 @@ def main():
     with open(outputfilename) as outputfile:
         for line in outputfile:
             if matchline in line:
-                if not any(ignore in line for ignore in ignore_these_matrices):
+                if not any(ignore in line for ignore in ignore_headers):
                     # need to handle headers with spaces/multiple parts
                     start = line.index(matchline) + len(matchline)
                     matname = line[start:][:-2].strip()
@@ -235,10 +232,8 @@ def main():
     with open(outputfilename) as outputfile:
         outputfile_reversed = reversed(outputfile.readlines())
     for line in outputfile_reversed:
-        if 'spin-orbit two-electron integrals and' in line:
-            nintegrals = int(line.split()[0])
         if 'Number of written 2-el. spin-orbit integrals' in line:
-            x2spnorb, y2spnorb, z2spnorb = parse_spin_orbit_2el(outputfile_reversed, nbasis, nintegrals)
+            x2spnorb, y2spnorb, z2spnorb = parse_spin_orbit_2el(outputfile_reversed, nbasis)
             np.save('.'.join([stub, 'integrals_AO_x2spnorb.npy']), x2spnorb)
             np.save('.'.join([stub, 'integrals_AO_y2spnorb.npy']), y2spnorb)
             np.save('.'.join([stub, 'integrals_AO_z2spnorb.npy']), z2spnorb)
@@ -266,4 +261,5 @@ def main():
 
 
 if __name__ == '__main__':
-    _locals = main()
+    args = getargs()
+    _locals = parse_matrices_dalton(args.outputfilename)
