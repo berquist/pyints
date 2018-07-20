@@ -181,7 +181,7 @@ IGNORE_THESE_MATRICES = (
     'HUCKEL',
 )
 
-def parse_matrices_dalton(outputfilename, ignore_headers=IGNORE_THESE_MATRICES):
+def parse_matrices_dalton(outputfilename, dump=False, ignore_headers=IGNORE_THESE_MATRICES):
     """The main routine. Finds all possible integral matrices in a DALTON
     outputfile automatically and parses them.
     """
@@ -219,13 +219,14 @@ def parse_matrices_dalton(outputfilename, ignore_headers=IGNORE_THESE_MATRICES):
     # Parse the output file for each matrix.
     parse_matrix_string = '{matrix_name} = sparse_to_dense_matrix_dalton(parse_matrix_dalton(outputfile), nbasis)'
     save_matrix_string = 'np.savetxt("{file_name}", {matrix_name})'
+    matrices = dict()
     for i, matrix_name in enumerate(matrix_headers_unmodified):
         with open(outputfilename) as outputfile:
             for line in outputfile:
                 if 'Integrals of operator: {}'.format(matrix_name) in line:
-                    exec(parse_matrix_string.format(matrix_name=matrix_headers_varnames[i]), globals(), locals())
-                    exec(save_matrix_string.format(matrix_name=matrix_headers_varnames[i],
-                                                   file_name=matrix_headers_filenames[i]), globals(), locals())
+                    matrices[matrix_headers_varnames[i]] = sparse_to_dense_matrix_dalton(parse_matrix_dalton(outputfile), nbasis)
+                    if dump:
+                        np.savetxt(matrix_headers_filenames[i], matrices[matrix_headers_varnames[i]])
                     break
 
     # If present, dump the two-electron spin-orbit integrals.
@@ -234,17 +235,17 @@ def parse_matrices_dalton(outputfilename, ignore_headers=IGNORE_THESE_MATRICES):
     for line in outputfile_reversed:
         if 'Number of written 2-el. spin-orbit integrals' in line:
             x2spnorb, y2spnorb, z2spnorb = parse_spin_orbit_2el(outputfile_reversed, nbasis)
-            np.save('.'.join([stub, 'integrals_AO_x2spnorb.npy']), x2spnorb)
-            np.save('.'.join([stub, 'integrals_AO_y2spnorb.npy']), y2spnorb)
-            np.save('.'.join([stub, 'integrals_AO_z2spnorb.npy']), z2spnorb)
+            if dump:
+                np.save('.'.join([stub, 'integrals_AO_x2spnorb.npy']), x2spnorb)
+                np.save('.'.join([stub, 'integrals_AO_y2spnorb.npy']), y2spnorb)
+                np.save('.'.join([stub, 'integrals_AO_z2spnorb.npy']), z2spnorb)
             break
 
     # Print all the parsed matrices to stdout if asked.
     if args.print_stdout:
         for matrix_name in matrix_headers_varnames:
-            print_matrix_string = 'print({})'.format(matrix_name)
             print(matrix_name)
-            exec(print_matrix_string)
+            print(matrices[matrix_name])
 
     # Find the total energy and the nuclear repulsion energy.
     with open(outputfilename) as outputfile:
@@ -254,12 +255,13 @@ def parse_matrices_dalton(outputfilename, ignore_headers=IGNORE_THESE_MATRICES):
             if '@     Converged SCF energy' in line:
                 E_total = parse_element_dalton(line.split()[-2])
 
-    np.savetxt('.'.join([stub, 'nuclear_repulsion_energy.txt']), np.array([V_nn]))
-    np.savetxt('.'.join([stub, 'total_energy.txt']), np.array([E_total]))
+    if dump:
+        np.savetxt('.'.join([stub, 'nuclear_repulsion_energy.txt']), np.array([V_nn]))
+        np.savetxt('.'.join([stub, 'total_energy.txt']), np.array([E_total]))
 
     return locals()
 
 
 if __name__ == '__main__':
     args = getargs()
-    _locals = parse_matrices_dalton(args.outputfilename)
+    _locals = parse_matrices_dalton(args.outputfilename, dump=True)
