@@ -3,6 +3,7 @@
 # import json
 import os.path
 import pickle
+import yaml
 
 import numpy as np
 
@@ -54,8 +55,10 @@ def test_parse_matrix_dalton():
 
 def test_parse_spin_orbit_2el():
     testcase = 'LiH_STO-3G'
-    stub = 'dalton_spin_orbit_2el_reversed'
-    matfilename = os.path.join(refdir, testcase, '{stub}.dat'.format(stub=stub))
+    stub_matfile = 'dalton_spin_orbit_2el_reversed'
+    stub_yamlfile = 'dalton_spin_orbit_2el'
+    matfilename = os.path.join(refdir, testcase, '{stub}.dat'.format(stub=stub_matfile))
+    yamlfilename = os.path.join(refdir, testcase, '{stub}.yaml'.format(stub=stub_yamlfile))
     with open(matfilename) as matfile:
         for line in matfile:
             if 'spin-orbit two-electron integrals and' in line:
@@ -67,21 +70,9 @@ def test_parse_spin_orbit_2el():
                 dim = max([int(x) for x in line.split()[1:4]])
     with open(matfilename) as matfile:
         res_so2el = parse_matrices_dalton.parse_spin_orbit_2el(matfile, dim)
-    vals = [
-        ([6,   6,   4,   3],      2,  2.37761402e-02),
-        ([6,   6,   5,   3],      1, -2.32823058e-03),
-        ([6,   6,   5,   4],      0,  2.32823058e-03),
-        ([6,   6,   3,   2],      1, -1.37399170e-02),
-        ([6,   6,   3,   1],      1, -3.77181469e-02),
-        ([6,   6,   4,   2],      0,  1.37399170e-02),
-        ([6,   6,   4,   1],      0,  3.77181469e-02),
-        ([6,   4,   6,   3],      2, -3.66475392e-03),
-        ([6,   3,   6,   4],      2,  3.66475392e-03),
-        ([6,   5,   6,   3],      1, -2.59300982e-03),
-        ([6,   3,   6,   5],      1,  2.98238285e-03),
-        ([6,   5,   6,   4],      0,  2.59300982e-03),
-    ]
-    for indices, coord, val in vals:
+    with open(yamlfilename) as yamlfile:
+        ref_so2el = yaml.load(yamlfile)
+    for indices, coord, val in ref_so2el:
         indices = tuple(np.array(indices, dtype=int) - 1)
         assert res_so2el[coord][indices] == val
     # Make sure the elements above are the only ones that are nonzero.
@@ -89,7 +80,7 @@ def test_parse_spin_orbit_2el():
     l = x[np.abs(x) > 0].tolist() \
         + y[np.abs(y) > 0].tolist() \
         + z[np.abs(z) > 0].tolist()
-    assert len(l) == len(vals)
+    assert len(l) == len(ref_so2el)
 
 
 if __name__ == '__main__':
