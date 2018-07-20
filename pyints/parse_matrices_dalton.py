@@ -179,9 +179,10 @@ def parse_spin_orbit_2el(outputfile_reversed, dim):
 IGNORE_THESE_MATRICES = (
     'HUCKOVLP',
     'HUCKEL',
+    'HJPOPOVL',
 )
 
-def parse_matrices_dalton(outputfilename, dump=False, ignore_headers=IGNORE_THESE_MATRICES):
+def parse_matrices_dalton(outputfilename, dump=False, print_stdout=False, ignore_headers=IGNORE_THESE_MATRICES):
     """The main routine. Finds all possible integral matrices in a DALTON
     outputfile automatically and parses them.
     """
@@ -229,6 +230,9 @@ def parse_matrices_dalton(outputfilename, dump=False, ignore_headers=IGNORE_THES
     with open(outputfilename) as outputfile:
         for line in outputfile:
             x2spnorb, y2spnorb, z2spnorb = parse_spin_orbit_2el(outputfile, nbasis)
+            matrices['x2spnorb'] = x2spnorb
+            matrices['y2spnorb'] = y2spnorb
+            matrices['z2spnorb'] = z2spnorb
             if dump:
                 np.save('.'.join([stub, 'integrals_AO_x2spnorb.npy']), x2spnorb)
                 np.save('.'.join([stub, 'integrals_AO_y2spnorb.npy']), y2spnorb)
@@ -236,7 +240,7 @@ def parse_matrices_dalton(outputfilename, dump=False, ignore_headers=IGNORE_THES
             break
 
     # Print all the parsed matrices to stdout if asked.
-    if args.print_stdout:
+    if print_stdout:
         for matrix_name in matrix_headers:
             print(matrix_name)
             print(matrices[matrix_name])
@@ -253,9 +257,9 @@ def parse_matrices_dalton(outputfilename, dump=False, ignore_headers=IGNORE_THES
         np.savetxt('.'.join([stub, 'nuclear_repulsion_energy.txt']), np.array([V_nn]))
         np.savetxt('.'.join([stub, 'total_energy.txt']), np.array([E_total]))
 
-    return locals()
+    return matrix_headers, matrix_filenames, matrices
 
 
 if __name__ == '__main__':
     args = getargs()
-    _locals = parse_matrices_dalton(args.outputfilename, dump=True)
+    matrix_headers, matrix_filenames, matrices = parse_matrices_dalton(args.outputfilename, dump=True, print_stdout=args.print_stdout)
