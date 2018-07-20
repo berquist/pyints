@@ -192,9 +192,8 @@ def parse_matrices_dalton(outputfilename, dump=False, ignore_headers=IGNORE_THES
 
     # Find all the matrix headers in an output file and turn them into
     # reasonable variable and filenames.
-    matrix_headers_unmodified = []
-    matrix_headers_varnames = []
-    matrix_headers_filenames = []
+    matrix_headers = dict()
+    matrix_filenames = dict()
     matchline = 'Integrals of operator: '
     with open(outputfilename) as outputfile:
         for line in outputfile:
@@ -205,9 +204,8 @@ def parse_matrices_dalton(outputfilename, dump=False, ignore_headers=IGNORE_THES
                     matname = line[start:][:-2].strip()
                     varname = ''.join(matname.split()).replace(',', '_').replace('(', '_').replace(')', '_').replace('.', '_').replace('-', '_').lower()
                     filename = '.'.join([stub, 'integrals_AO_' + varname, 'txt'])
-                    matrix_headers_unmodified.append(matname)
-                    matrix_headers_varnames.append(varname)
-                    matrix_headers_filenames.append(filename)
+                    matrix_headers[varname] = matname
+                    matrix_filenames[varname] = filename
 
     # Determine the size of the basis. Assume N_AO == N_MO!
     with open(outputfilename) as outputfile:
@@ -217,16 +215,14 @@ def parse_matrices_dalton(outputfilename, dump=False, ignore_headers=IGNORE_THES
                 nbasis = int(match.groups()[-1])
 
     # Parse the output file for each matrix.
-    parse_matrix_string = '{matrix_name} = sparse_to_dense_matrix_dalton(parse_matrix_dalton(outputfile), nbasis)'
-    save_matrix_string = 'np.savetxt("{file_name}", {matrix_name})'
     matrices = dict()
-    for i, matrix_name in enumerate(matrix_headers_unmodified):
+    for matrix_name in matrix_headers:
         with open(outputfilename) as outputfile:
             for line in outputfile:
-                if 'Integrals of operator: {}'.format(matrix_name) in line:
-                    matrices[matrix_headers_varnames[i]] = sparse_to_dense_matrix_dalton(parse_matrix_dalton(outputfile), nbasis)
+                if 'Integrals of operator: {}'.format(matrix_headers[matrix_name]) in line:
+                    matrices[matrix_name] = sparse_to_dense_matrix_dalton(parse_matrix_dalton(outputfile), nbasis)
                     if dump:
-                        np.savetxt(matrix_headers_filenames[i], matrices[matrix_headers_varnames[i]])
+                        np.savetxt(matrix_filenames[matrix_name], matrices[matrix_name])
                     break
 
     # If present, dump the two-electron spin-orbit integrals.
@@ -243,7 +239,7 @@ def parse_matrices_dalton(outputfilename, dump=False, ignore_headers=IGNORE_THES
 
     # Print all the parsed matrices to stdout if asked.
     if args.print_stdout:
-        for matrix_name in matrix_headers_varnames:
+        for matrix_name in matrix_headers:
             print(matrix_name)
             print(matrices[matrix_name])
 
