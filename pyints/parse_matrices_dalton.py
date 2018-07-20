@@ -227,10 +227,8 @@ def parse_matrices_dalton(outputfilename, dump=False, ignore_headers=IGNORE_THES
 
     # If present, dump the two-electron spin-orbit integrals.
     with open(outputfilename) as outputfile:
-        outputfile_reversed = reversed(outputfile.readlines())
-    for line in outputfile_reversed:
-        if 'Number of written 2-el. spin-orbit integrals' in line:
-            x2spnorb, y2spnorb, z2spnorb = parse_spin_orbit_2el(outputfile_reversed, nbasis)
+        for line in outputfile:
+            x2spnorb, y2spnorb, z2spnorb = parse_spin_orbit_2el(outputfile, nbasis)
             if dump:
                 np.save('.'.join([stub, 'integrals_AO_x2spnorb.npy']), x2spnorb)
                 np.save('.'.join([stub, 'integrals_AO_y2spnorb.npy']), y2spnorb)
