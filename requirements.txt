@@ -3,6 +3,7 @@ cclib
 # numpy
 # pytest
 # coverage
-# pytest-cov
+pytest-cov
+PyYAML
 # https://sourceforge.net/projects/pyquante/files/PyQuante-1.6/PyQuante-1.6.5/PyQuante-1.6.5.tar.gz  ; python_version <= '2.7'
 # git+https://github.com/rpmuller/pyquante2.git
