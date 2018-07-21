@@ -7,8 +7,12 @@ and save them to disk either as plain text or NumPy binary files.
 from __future__ import print_function
 from __future__ import division
 
+import os
 import re
+
 import numpy as np
+
+from .utils import print_matrices, dump_matrices
 
 
 # RE_ELEMENT = re.compile(r'(([1-9][0-9]*\.?[0-9]*)|(\.[0-9]+))([EeDd]?[+-]?[0-9]+)?')
@@ -42,8 +46,7 @@ def parse_element_dalton(element):
         match = [(p, q) for (p, q) in RE_ELEMENT.findall(element)
                  if p is not '' if q is not ''][0]
         return float('e'.join(match))
-    else:
-        return float(element)
+    return float(element)
 
 
 def parse_matrix_dalton(outputfile):
@@ -154,6 +157,16 @@ def parse_spin_orbit_2el(outputfile_reversed, dim):
     return x2spnorb, y2spnorb, z2spnorb
 
 
+def _varnameify(matname):
+    """Turn a DALTON matrix header into an appropriate variable name."""
+    return ''.join(matname.split()).replace(',', '_').replace('(', '_').replace(')', '_').replace('.', '_').replace('-', '_').lower()
+
+
+def _filenameify(stub, varname):
+    """Turn a DALTON matrix variable name into an appropriate filename."""
+    return '.'.join([stub, 'integrals_AO_' + varname, 'txt'])
+
+
 # We could parse these, but it's pointless since we don't have
 # anything to compare them to from any other program package.
 IGNORE_THESE_MATRICES = (
@@ -167,9 +180,7 @@ def parse_matrices_dalton(outputfilename, ignore_headers=IGNORE_THESE_MATRICES):
     outputfile automatically and parses them.
     """
 
-    import os.path
-
-    stub = os.path.splitext(outputfilename)[0]
+    stub = os.path.splitext(os.path.basename(outputfilename))[0]
 
     # Find all the matrix headers in an output file and turn them into
     # reasonable variable and filenames.
@@ -183,8 +194,8 @@ def parse_matrices_dalton(outputfilename, ignore_headers=IGNORE_THESE_MATRICES):
                     # need to handle headers with spaces/multiple parts
                     start = line.index(matchline) + len(matchline)
                     matname = line[start:][:-2].strip()
-                    varname = ''.join(matname.split()).replace(',', '_').replace('(', '_').replace(')', '_').replace('.', '_').replace('-', '_').lower()
-                    filename = '.'.join([stub, 'integrals_AO_' + varname, 'txt'])
+                    varname = _varnameify(matname)
+                    filename = _filenameify(stub, varname)
                     matrix_headers[varname] = matname
                     matrix_filenames[varname] = filename
 
@@ -228,22 +239,6 @@ def parse_matrices_dalton(outputfilename, ignore_headers=IGNORE_THESE_MATRICES):
     return matrix_headers, matrix_filenames, matrices
 
 
-def print_matrices(matrix_headers, matrices): # pragma: no cover
-    """Print all the parsed matrices to stdout."""
-    for matrix_name in matrix_headers:
-        print(matrix_name)
-        print(matrices[matrix_name])
-
-
-def dump_matrices(matrix_filenames, matrices):
-    """Save all of the matrices to disk."""
-    for matrix_name in matrix_filenames:
-        if not '2spnorb' in matrix_name:
-            np.savetxt(matrix_filenames[matrix_name], matrices[matrix_name])
-        else:
-            np.save('.'.join([stub, 'integrals_AO_x2spnorb.npy']), x2spnorb)
-
-
 if __name__ == '__main__':
 
     def getargs():
@@ -255,7 +250,8 @@ if __name__ == '__main__':
         arg = parser.add_argument
 
         arg("outputfilename",
-            help="""Name of the DALTON output file to parse for matrices.""")
+            help="""Name of the DALTON output file to parse for matrices.""",
+            nargs="*")
         arg("--print-stdout",
             action="store_true",
             help="""Should all the parsed matrices be printed to stdout (usually
@@ -266,7 +262,11 @@ if __name__ == '__main__':
         return args
 
     args = getargs()
-    matrix_headers, matrix_filenames, matrices = parse_matrices_dalton(args.outputfilename, dump=True, print_stdout=args.print_stdout)
-    if args.print_stdout:
-        print_matrices(matrix_headers, matrices)
-    dump_matrices(matrix_filenames, matrices)
+    for outputfilename in args.outputfilename:
+        matrix_headers, matrix_filenames, matrices = parse_matrices_dalton(outputfilename)
+        if args.print_stdout:
+            print('=' * 70)
+            print(stub)
+            print_matrices(matrix_headers, matrices)
+        stub = os.path.splitext(os.path.basename(outputfilename))[0]
+        dump_matrices(stub, matrix_filenames, matrices)

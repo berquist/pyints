@@ -32,3 +32,23 @@ def iterator4(nbfs):
             if ij <= kl:
                 yield i, j, k, l
     return
+
+
+def print_matrices(matrix_headers, matrices): # pragma: no cover
+    """Print all the parsed matrices to stdout."""
+    for matrix_name in matrix_headers:
+        print(matrix_name)
+        print(matrices[matrix_name])
+
+
+def dump_matrices(stub, matrix_filenames, matrices):
+    """Save all of the matrices to disk."""
+    for matrix_name in matrices:
+        if len(matrices[matrix_name].shape) <= 2:
+            filename = os.path.join(os.getcwd(),
+                                    matrix_filenames[matrix_name])
+            np.savetxt(filename, matrices[matrix_name])
+        else:
+            filename = os.path.join(os.getcwd(),
+                                    '.'.join([stub, 'integrals_AO_{}.npy'.format(matrix_name)]))
+            np.save(filename, matrices[matrix_name])
