@@ -11,26 +11,6 @@ import re
 import numpy as np
 
 
-def getargs():
-    """Get and parse command-line arguments."""
-
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    arg = parser.add_argument
-
-    arg("outputfilename",
-        help="""Name of the DALTON output file to parse for matrices.""")
-    arg("--print-stdout",
-        action="store_true",
-        help="""Should all the parsed matrices be printed to stdout (usually
-        the screen)?""")
-
-    args = parser.parse_args()
-
-    return args
-
-
 # RE_ELEMENT = re.compile(r'(([1-9][0-9]*\.?[0-9]*)|(\.[0-9]+))([EeDd]?[+-]?[0-9]+)?')
 # RE_EXPT = re.compile(r'[+-]?\d*$')
 RE_ELEMENT = re.compile(r'([+-]?[0-9]*\.?[0-9]*|[+-]?\.[0-9]+)[EeDd]?([+-]?[0-9]+)?')
@@ -182,7 +162,7 @@ IGNORE_THESE_MATRICES = (
     'HJPOPOVL',
 )
 
-def parse_matrices_dalton(outputfilename, dump=False, print_stdout=False, ignore_headers=IGNORE_THESE_MATRICES):
+def parse_matrices_dalton(outputfilename, ignore_headers=IGNORE_THESE_MATRICES):
     """The main routine. Finds all possible integral matrices in a DALTON
     outputfile automatically and parses them.
     """
@@ -222,8 +202,6 @@ def parse_matrices_dalton(outputfilename, dump=False, print_stdout=False, ignore
             for line in outputfile:
                 if 'Integrals of operator: {}'.format(matrix_headers[matrix_name]) in line:
                     matrices[matrix_name] = sparse_to_dense_matrix_dalton(parse_matrix_dalton(outputfile), nbasis)
-                    if dump:
-                        np.savetxt(matrix_filenames[matrix_name], matrices[matrix_name])
                     break
 
     # If present, dump the two-electron spin-orbit integrals.
@@ -233,33 +211,62 @@ def parse_matrices_dalton(outputfilename, dump=False, print_stdout=False, ignore
             matrices['x2spnorb'] = x2spnorb
             matrices['y2spnorb'] = y2spnorb
             matrices['z2spnorb'] = z2spnorb
-            if dump:
-                np.save('.'.join([stub, 'integrals_AO_x2spnorb.npy']), x2spnorb)
-                np.save('.'.join([stub, 'integrals_AO_y2spnorb.npy']), y2spnorb)
-                np.save('.'.join([stub, 'integrals_AO_z2spnorb.npy']), z2spnorb)
             break
 
-    # Print all the parsed matrices to stdout if asked.
-    if print_stdout:
-        for matrix_name in matrix_headers:
-            print(matrix_name)
-            print(matrices[matrix_name])
-
     # Find the total energy and the nuclear repulsion energy.
-    with open(outputfilename) as outputfile:
-        for line in outputfile:
-            if '@    Nuclear repulsion:' in line:
-                V_nn = parse_element_dalton(line.split()[3])
-            if '@     Converged SCF energy' in line:
-                E_total = parse_element_dalton(line.split()[-2])
+    # with open(outputfilename) as outputfile:
+    #     for line in outputfile:
+    #         if '@    Nuclear repulsion:' in line:
+    #             V_nn = parse_element_dalton(line.split()[3])
+    #         if '@     Converged SCF energy' in line:
+    #             E_total = parse_element_dalton(line.split()[-2])
 
-    if dump:
-        np.savetxt('.'.join([stub, 'nuclear_repulsion_energy.txt']), np.array([V_nn]))
-        np.savetxt('.'.join([stub, 'total_energy.txt']), np.array([E_total]))
+    # if dump:
+    #     np.savetxt('.'.join([stub, 'nuclear_repulsion_energy.txt']), np.array([V_nn]))
+    #     np.savetxt('.'.join([stub, 'total_energy.txt']), np.array([E_total]))
 
     return matrix_headers, matrix_filenames, matrices
 
 
+def print_matrices(matrix_headers, matrices): # pragma: no cover
+    """Print all the parsed matrices to stdout."""
+    for matrix_name in matrix_headers:
+        print(matrix_name)
+        print(matrices[matrix_name])
+
+
+def dump_matrices(matrix_filenames, matrices):
+    """Save all of the matrices to disk."""
+    for matrix_name in matrix_filenames:
+        if not '2spnorb' in matrix_name:
+            np.savetxt(matrix_filenames[matrix_name], matrices[matrix_name])
+        else:
+            np.save('.'.join([stub, 'integrals_AO_x2spnorb.npy']), x2spnorb)
+
+
 if __name__ == '__main__':
+
+    def getargs():
+        """Get and parse command-line arguments."""
+
+        import argparse
+
+        parser = argparse.ArgumentParser()
+        arg = parser.add_argument
+
+        arg("outputfilename",
+            help="""Name of the DALTON output file to parse for matrices.""")
+        arg("--print-stdout",
+            action="store_true",
+            help="""Should all the parsed matrices be printed to stdout (usually
+            the screen)?""")
+
+        args = parser.parse_args()
+
+        return args
+
     args = getargs()
     matrix_headers, matrix_filenames, matrices = parse_matrices_dalton(args.outputfilename, dump=True, print_stdout=args.print_stdout)
+    if args.print_stdout:
+        print_matrices(matrix_headers, matrices)
+    dump_matrices(matrix_filenames, matrices)

@@ -99,8 +99,25 @@ def test_parse_spin_orbit_2el():
     assert len(l) == len(ref_so2el)
 
 
+def test_parse_matrices_dalton():
+    """Test the end-to-end parsing of matrices from a DALTON output
+    file.
+
+    This does not test the correctness of the output, just that it
+    works.
+    """
+    testcase = 'LiH_STO-3G'
+    stub = 'LiH_STO-3G_dalton'
+    sourcefilename = os.path.join(__refdir__, testcase, '{stub}.out'.format(stub=stub))
+    assert os.path.exists(sourcefilename)
+    res = parse_matrices_dalton.parse_matrices_dalton(sourcefilename)
+    matrix_headers, matrix_filenames, matrices = res
+    print(matrices.keys())
+
+
 if __name__ == '__main__':
     test_parse_element_dalton()
     test_parse_matrix_dalton()
     test_sparse_to_dense_matrix_dalton()
     test_parse_spin_orbit_2el()
+    test_parse_matrices_dalton()
